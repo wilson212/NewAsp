@@ -31,6 +31,13 @@ class Controller
 		// Always set a post and get actions
 		if(!isset($_POST['action'])) $_POST['action'] = null;
 		if(!isset($_GET['action']))  $_GET['action'] = null;
+		
+		// Get / Set our current task
+		$task = (isset($_GET['task'])) ? $_GET['task'] : false;
+		if($task == false)
+		{
+			(isset($_POST['task'])) ? $_GET['task'] = $_POST['task'] : $_GET['task'] = 'home';
+		}
 
 		// Check for login / logout requests
 		if($_POST['action'] == 'login') 
@@ -57,15 +64,8 @@ class Controller
 	
 	protected function loadTask() 
 	{
-		// Get / Set our current task
-		$task = (isset($_GET['task'])) ? $_GET['task'] : false;
-		if($task == false)
-		{
-			$task = (isset($_POST['task'])) ? $_POST['task'] : 'home';
-		}
-		
 		// Uppercase the classname
-		$task = ucfirst( strtolower($task) );
+		$task = ucfirst( strtolower($_GET['task']) );
 		
 		// Process the task by making sure the module exists
 		$file = SYSTEM_PATH . DS . 'modules' . DS . $task . '.php';

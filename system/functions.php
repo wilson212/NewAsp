@@ -482,13 +482,12 @@ function getPageContents($url)
 	// Try file() first
 	if( function_exists('file') && function_exists('fopen') && ini_get('allow_url_fopen') ) 
 	{
-		//ini_set("user_agent","Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 5.0)");
 		ini_set("user_agent","GameSpyHTTP/1.0");
 		$results = @file($url);
 	}
 	
 	// either there was no function, or it failed -- try curl
-	if( !($results) && (function_exists('curl_exec')) ) 
+	if( !$results && function_exists('curl_exec') ) 
 	{
 		$curl_handle = curl_init();
 		curl_setopt($curl_handle, CURLOPT_URL, $url);
@@ -501,17 +500,14 @@ function getPageContents($url)
 		$err = curl_error($curl_handle);
 		if( $err != '' ) 
 		{
-			print "getData(): CURL failed: ";
-			print "$err";
 			return false;
 		}
 		$results = explode("\n",trim($results));
 		curl_close($curl_handle);
 	}
 	
-	if( !$results ) // still nothing, forgetd a'bout it
-	return false;
-	
+	// still nothing, forgetd a'bout it
+	if( !$results ) return false;
 	return $results;
 }
 
