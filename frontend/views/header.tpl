@@ -148,20 +148,15 @@
             	<ul>
                 	<li class="active"><a href="?task=home" class="mws-i-24 i-home">Dashboard</a></li>
 					<li>
-                    	<a href="#" class="mws-i-24 i-list">Configuration</a>
+                    	<a href="#" class="mws-i-24 i-list">System</a>
                         <ul class="closed">
-                        	<li><a href="?task=editconfig">Edit Config</a></li>
-                        	<li><a href="?task=testconfig">Test Config</a></li>
-                        </ul>
-                    </li>
-					<li>
-                    	<a href="#" class="mws-i-24 i-list">Database Ops.</a>
-                        <ul class="closed">
-                        	<li><a href="?task=installdb">Install DB</a></li>
-                        	<li><a href="?task=upgradedb">Upgrade DB</a></li>
-							<li><a href="?task=cleardb">Clear DB</a></li>
-							<li><a href="?task=backupdb">Backup DB</a></li>
-							<li><a href="?task=restoredb">Restore DB</a></li>
+                        	<li><a href="?task=editconfig">Edit Configuration</a></li>
+                        	<li><a href="?task=testconfig">Test System</a></li>
+							<li><a href="?task=installdb">Install Database</a></li>
+                        	<li><a href="?task=upgradedb">Upgrade Database</a></li>
+							<li><a href="?task=cleardb">Clear Database</a></li>
+							<li><a href="?task=backupdb">Backup Database</a></li>
+							<li><a href="?task=restoredb">Restore Database</a></li>
                         </ul>
                     </li>
 					<li>

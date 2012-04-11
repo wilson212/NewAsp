@@ -14,7 +14,7 @@ class Player
 		$this->messages[] = $message;
 	}
 	
-	public function deletePlayer($pid)
+	public function deletePlayers($pid)
 	{
 		if(is_array($pid))
 		{
@@ -22,6 +22,7 @@ class Player
 		}
 		
 		// Build Data Table Array
+		$return = true;
 		$DataTables = array('army','awards','kills','kits','mapinfo','maps','player','player_history','unlocks','vehicles','weapons');
 		foreach ($DataTables as $DataTable) 
 		{
@@ -47,9 +48,12 @@ class Player
 				} 
 				else 
 				{
-					$this->log("<font color='red'>ERROR:</font> Player(s)  *NOT* removed from Table (" . $DataTable . ")!";
+					$return = false;
+					$this->log("<font color='red'>ERROR:</font> Player(s)  *NOT* removed from Table (" . $DataTable . ")!");
 				}
 			}
 		}
+		
+		return $return;
 	}
 }

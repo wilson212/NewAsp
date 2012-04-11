@@ -418,7 +418,7 @@ function verCmp($ver)
 
 function ErrorLog($msg, $lvl)
 {
-	$cfg = new Config();
+	$Config = load_class('Config');
 	
 	switch($lvl) 
 	{
@@ -439,10 +439,11 @@ function ErrorLog($msg, $lvl)
 			break;
 	}
 	
-	if($lvl <= $cfg->get('debug_lvl'))
+	if($lvl <= $Config->get('debug_lvl'))
 	{
 		$err_msg = date('Y-m-d H:i:s')." -- ".$lvl_txt.$msg."\n";
-		$file = @fopen($cfg->get('debug_log'), 'a');
+		$log = ROOT . DS . str_replace(array('/', '\\'), DS, ltrim($Config->get('debug_log'), '/'));
+		$file = @fopen($log, 'a');
 		@fwrite($file, $err_msg);
 		@fclose($file);
 	}

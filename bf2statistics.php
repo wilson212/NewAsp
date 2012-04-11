@@ -113,11 +113,12 @@ ErrorLog($errmsg, 3);
 // Create SNAPSHOT backup file
 if ($data['import'] != 1)
 {
-	$file = @fopen( chkPath($cfg->get('stats_logs')) . $stats_filename, 'wb');
+	$log = str_replace(array('/', '\\'), DS, ltrim($cfg->get('stats_logs'), '/'));
+	$file = @fopen( ROOT . DS . $log . $stats_filename, 'wb');
 	@fwrite($file, $rawdata);
 	@fclose($file);
 	
-	$errmsg = "SNAPSHOT Data Logged (" . chkPath($cfg->get('stats_logs')) . $stats_filename . ")";
+	$errmsg = "SNAPSHOT Data Logged (" . $log . $stats_filename . ")";
 	ErrorLog($errmsg, 3);
 	
 	// Tell the game server that the snapshot has been received
@@ -1322,8 +1323,8 @@ if ($data['pc'] >= $cfg->get('stats_players_min') && $globals['roundtime'] >= $c
 	********************************/
 	if ($cfg->get('stats_move_logs'))
 	{
-		$fn_src = chkPath($cfg->get('stats_logs')) . $stats_filename;
-		$fn_dest = chkPath($cfg->get('stats_logs_store')) . $stats_filename;
+		$fn_src = ROOT . DS . str_replace(array('/', '\\'), DS, ltrim($Config->get('stats_logs'), '/')) . $stats_filename;
+		$fn_dest = ROOT . DS . str_replace(array('/', '\\'), DS, ltrim($Config->get('stats_logs_store'), '/')) . $stats_filename;
 		
 		if (file_exists($fn_src)) 
         {

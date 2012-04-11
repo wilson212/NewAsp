@@ -4,7 +4,7 @@ class Testconfig
 	public function Init() 
 	{
 		// Check for post data
-		if($_POST['action'] == 'test_config')
+		if($_POST['action'] == 'runtests')
 		{
 			$this->ProcessTest();
 		}
@@ -43,56 +43,57 @@ class Testconfig
 			'\se2_0\0\se3_0\6\se4_0\0\se5_0\0\hw0_0\0\hw1_0\0\hw2_0\3\hw3_0\0\hw4_0\0\hw5_0\5\hw6_0\1\hw7_0\8\hw8_0\0\he0_0\1\he1_0\0\he2_0\0\he3_0\3\he4_0\0\he5_0\0\EOF\1';
 		$tst_pid = 999;
 		$tst_mapid = 999;
+		$out = '<p>';
 		
 		// Check Config File Write Access
-		$out = " > Checking Config File...";
+		$out .= " > Checking Config File...<br />";
 		if (!$Fs->is_writable( SYSTEM_PATH . DS .'config.php' )) 
 		{
-			$out .= "\t - Config File Writable: ".__FAIL;
+			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Config File Writable: ".__FAIL;
 		} 
 		else 
 		{
-			$out .= "\t - Config File Writable: ".__PASS;
+			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Config File Writable: ".__PASS;
 		}
 		
 		// Check Log File Write Access
-		$out .= " > Checking Log Files...";
+		$out .= " > Checking Log Files...<br />";
 		$log = str_replace(array('/', '\\'), DS, ltrim($Config->get('debug_log'), '/'));
 		if (!$Fs->is_writable( ROOT . DS . $log ))
 		{
-			$out .= "\t - Error Log File Writable: ".__WARN;
+			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Error Log File Writable: ".__WARN;
 		} 
 		else 
 		{
-			$out .= "\t - Error Log File Writable: ".__PASS;
+			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Error Log File Writable: ".__PASS;
 		}
 		
 		// Check Admin Log
 		$log = str_replace(array('/', '\\'), DS, ltrim($Config->get('admin_log'), '/'));
 		if (!$Fs->is_writable( ROOT . DS . $log ))
 		{
-			$out .= "\t - Admin Log File Writable: ".__WARN;
+			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Admin Log File Writable: ".__WARN;
 		} 
 		else 
 		{
-			$out .= "\t - Admin Log File Writable: ".__PASS;
+			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Admin Log File Writable: ".__PASS;
 		}
 		
 		// Check Database Access
-		$out .= " > Checking Database Config...";
+		$out .= " > Checking Database Config...<br />";
 		$DB = load_database();
 		switch( $DB->status() )
 		{
 			case 0:
-				$out .= "\t - Database host (".$Config->get('db_host').") access: ".__FAIL;
+				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Database host (".$Config->get('db_host').") access: ".__FAIL;
 				break;
 			case -1:
-				$out .= "\t - Database host (".$Config->get('db_host').") access: ".__PASS;
-				$out .= "\t - Database (".$Config->get('db_name').") exists: ".__FAIL;
+				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Database host (".$Config->get('db_host').") access: ".__PASS;
+				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Database (".$Config->get('db_name').") exists: ".__FAIL;
 				break;
 			default:
-				$out .= "\t - Database host (".$Config->get('db_host').") access: ".__PASS;
-				$out .= "\t - Database (".$Config->get('db_name').") exists: ".__PASS;
+				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Database host (".$Config->get('db_host').") access: ".__PASS;
+				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Database (".$Config->get('db_name').") exists: ".__PASS;
 				break;
 		}
 		
@@ -101,56 +102,56 @@ class Testconfig
 		
 		
 		// SNAPSHOTS
-		$out .= " > Checking SNAPSHOT Storage Path...";
+		$out .= " > Checking SNAPSHOT Storage Path...<br />";
 		$path = str_replace(array('/', '\\'), DS, ltrim($Config->get('stats_logs'), '/'));
 		if (!$Fs->is_writable( ROOT . DS . $path ))
 		{
-			$out .= "\t - SNAPSHOT Path Writable: ".__FAIL;
+			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- SNAPSHOT Path Writable: ".__FAIL;
 		} 
 		else 
 		{
-			$out .= "\t - SNAPSHOT Path Writable: ".__PASS;
+			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- SNAPSHOT Path Writable: ".__PASS;
 		}
 		
 		// Snapshot Archive Path
-		$out .= " > Checking SNAPSHOT Archive Storage Path...";
+		$out .= " > Checking SNAPSHOT Archive Storage Path...<br />";
 		$path = str_replace(array('/', '\\'), DS, ltrim($Config->get('stats_logs_store'), '/'));
 		if (!$Fs->is_writable( ROOT . DS . $path ))
 		{
-			$out .= "\t - SNAPSHOT Archive Path Writable: ".__FAIL;
+			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- SNAPSHOT Archive Path Writable: ".__FAIL;
 		} 
 		else 
 		{
-			$out .= "\t - SNAPSHOT Archive Path Writable: ".__PASS;
+			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- SNAPSHOT Archive Path Writable: ".__PASS;
 		}
 
 		// Check Admin Backup Write Access
-		$out .= " > Checking Backup Storage Path...";
+		$out .= " > Checking Backup Storage Path...<br />";
 		$path = str_replace(array('/', '\\'), DS, ltrim($Config->get('admin_backup_path'), '/'));
-		if (!$Fs->is_writable( ROOT . DS . $path ))
+		if (!$Fs->is_writable( $path ))
 		{
-			$out .= "\t - Backup Path Writable: ".__FAIL;
+			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Backup Path Writable: ".__FAIL;
 		} 
 		else 
 		{
-			$out .= "\t - Backup Path Writable: ".__PASS;
+			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Backup Path Writable: ".__PASS;
 		}
 		
 		// Check For Required Functions
-		$out .= " > Checking Remote URL Functions...";
+		$out .= " > Checking Remote URL Functions...<br />";
 		if( function_exists('file') && function_exists('fopen') && ini_get('allow_url_fopen') ) 
 		{
-			$out .= "\t - Remote URL Function Exist ('FOPEN'): ".__PASS;
+			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Remote URL Function Exist ('FOPEN'): ".__PASS;
 			$doURLChecks = true;
 		} 
 		elseif( (function_exists('curl_exec')) ) 
 		{
-			$out .= "\t - Remote URL Function Exist ('CURL'): ".__PASS;
+			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Remote URL Function Exist ('CURL'): ".__PASS;
 			$doURLChecks = true;
 		} 
 		else 
 		{
-			$out .= "\t - Remote URL Function Exist: ".__WARN;
+			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Remote URL Function Exist: ".__WARN;
 			$doURLChecks = false;
 		}
 		
@@ -158,7 +159,7 @@ class Testconfig
 		if ($doURLChecks) 
 		{
 			// Check bf2statistics.php Processing
-			$out .= " > Checking BF2Statistics Processing...";
+			$out .= " > Checking BF2Statistics Processing...<br />";
 			$fh = @fsockopen($_SERVER['HTTP_HOST'], 80);
 			if ($fh) 
 			{
@@ -183,42 +184,42 @@ class Testconfig
 				}
 				if ($responsecode != '200') 
 				{
-					$out .= "\t - BF2Statistics Processing Check: ".__FAIL;
+					$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- BF2Statistics Processing Check: ".__FAIL;
 				} 
 				else 
 				{
-					$out .= "\t - BF2Statistics Processing Check: ".__PASS;
+					$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- BF2Statistics Processing Check: ".__PASS;
 				}
 			} 
 			else 
 			{
-				$out .= "\t - BF2Statistics Processing Check: ".__FAIL;
+				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- BF2Statistics Processing Check: ".__FAIL;
 			}
 			
 			// Check .aspx Page Responses
-			$out .= " > Checking Gamespy (.aspx) File Basic Response...";
+			$out .= " > Checking Gamespy (.aspx) File Basic Response...<br />";
 			$url = "http://".$_SERVER['HTTP_HOST']."/ASP/getbackendinfo.aspx";
 			$response = getPageContents($url);
 			if ($response === false || trim($response[0]) != 'O') 
 			{
-				$out .= "\t - Gamespy (.aspx) Basic Response: ".__FAIL;
+				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Gamespy (.aspx) Basic Response: ".__FAIL;
 			} 
 			else 
 			{
-				$out .= "\t - Gamespy (.aspx) Basic Response: ".__PASS;
+				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Gamespy (.aspx) Basic Response: ".__PASS;
 			}
 			
 			// Advanced request (1)
-			$out .= " > Checking Gamespy (.aspx) File Advanced Responses...";
+			$out .= " > Checking Gamespy (.aspx) File Advanced Responses...<br />";
 			$url = "http://".$_SERVER['HTTP_HOST']."/ASP/getawardsinfo.aspx?pid=". $tst_pid;
 			$response = getPageContents($url);
 			if ($response === false || trim($response[0]) != 'O') 
 			{
-				$out .= "\t - Gamespy (.aspx) Advanced (1) Response: ".__FAIL;
+				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Gamespy (.aspx) Advanced (1) Response: ".__FAIL;
 			} 
 			else 
 			{
-				$out .= "\t - Gamespy (.aspx) Advanced (1) Response: ".__PASS;
+				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Gamespy (.aspx) Advanced (1) Response: ".__PASS;
 			}
 			
 			// Advanced Request (2)
@@ -226,11 +227,11 @@ class Testconfig
 			$response = getPageContents($url);
 			if ($response === false || trim($response[0]) != 'O') 
 			{
-				$out .= "\t - Gamespy (.aspx) Advanced (2) Response: ".__FAIL;
+				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Gamespy (.aspx) Advanced (2) Response: ".__FAIL;
 			} 
 			else 
 			{
-				$out .= "\t - Gamespy (.aspx) Advanced (2) Response: ".__PASS;
+				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Gamespy (.aspx) Advanced (2) Response: ".__PASS;
 			}
 			
 			// Advanced Request (3)
@@ -238,11 +239,11 @@ class Testconfig
 			$response = getPageContents($url);
 			if ($response === false || trim($response[0]) != 'O') 
 			{
-				$out .= "\t - Gamespy (.aspx) Advanced (3) Response: ".__FAIL;
+				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Gamespy (.aspx) Advanced (3) Response: ".__FAIL;
 			} 
 			else 
 			{
-				$out .= "\t - Gamespy (.aspx) Advanced (3) Response: ".__PASS;
+				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Gamespy (.aspx) Advanced (3) Response: ".__PASS;
 			}
 		}
 		
@@ -257,15 +258,39 @@ class Testconfig
 		}
 		
 		// Remove Test Server Data
-		$DB->query("DELETE FROM `servers` WHERE prefix = '{$tst_prefix}';");
-		$out .= " -> Server Info ({$tst_prefix}) removed from Table (servers).";
+		$result = $DB->query("DELETE FROM `servers` WHERE prefix = '{$tst_prefix}';")->result();
+		if(!$result)
+		{
+			$out .= " -> Server Info ({$tst_prefix}) removed from Table (servers): ". __FAIL;
+		}
+		else
+		{
+			$out .= " -> Server Info ({$tst_prefix}) removed from Table (servers): ". __PASS;
+		}
 		
 		// Remove Test Map Data
-		$DB->query("DELETE FROM `mapinfo` WHERE id = {$tst_mapid};");
-		$out .= " -> Map Info ({$tst_mapid}) removed from Table (mapinfo).";
+		$result = $DB->query("DELETE FROM `mapinfo` WHERE id = {$tst_mapid};")->result();
+		if(!$result)
+		{
+			$out .= " -> Map Info ({$tst_mapid}) removed from Table (mapinfo): ". __FAIL;
+		}
+		else
+		{
+			$out .= " -> Map Info ({$tst_mapid}) removed from Table (mapinfo): ". __PASS;
+		}
 		
-		$DB->query("DELETE FROM `round_history` WHERE mapid = {$tst_mapid};");
-		$out .= " -> Map Info ({$tst_mapid}) removed from Table (round_history).";
+		$result = $DB->query("DELETE FROM `round_history` WHERE mapid = {$tst_mapid};")->result();
+		if(!$result)
+		{
+			$out .= " -> Map Info ({$tst_mapid}) removed from Table (round_history): ". __FAIL;
+		}
+		else
+		{
+			$out .= " -> Map Info ({$tst_mapid}) removed from Table (round_history): ". __PASS;
+		}
+		
+		// Finish :)
+		$out .= '</p>';
 		
 		// Determine if our save is a success
 		echo json_encode( array('html' => $out) );
