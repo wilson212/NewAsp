@@ -224,6 +224,34 @@
             die();
         }
     }
+
+/*
+| ---------------------------------------------------------------
+| Method: getDataTables()
+| ---------------------------------------------------------------
+|
+| This function returns an array of all bf2stats table names
+|
+*/	
+	function getDataTables()
+	{
+		return array(
+			'army',
+			'awards',
+			'kills',
+			'kits',
+			'mapinfo',
+			'maps',
+			'player',
+			'player_history',
+			'round_history',
+			'servers',
+			'unlocks',
+			'vehicles',
+			'weapons',
+			'data'
+		);
+	}
 	
 /* 
 	This script checks a remote IP address against a list of authorised hosts/subnets

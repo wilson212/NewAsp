@@ -23,7 +23,7 @@ class Player
 		
 		// Build Data Table Array
 		$return = true;
-		$DataTables = array('army','awards','kills','kits','mapinfo','maps','player','player_history','unlocks','vehicles','weapons');
+		$DataTables = getDataTables();
 		foreach ($DataTables as $DataTable) 
 		{
 			// Check Table Exists

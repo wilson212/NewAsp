@@ -1,12 +1,12 @@
 $(document).ready(function() {
 
 	// Init our validator!
-	$("#installForm").validate();
+	$("#restoreForm").validate();
 	
 	// Create our base loading modal
 	Modal = $("#ajax-dialog").dialog({
 		autoOpen: false, 
-		title: "System Installation", 
+		title: "Restore System Database", 
 		modal: true, 
 		width: "600",
 		buttons: [{
@@ -22,25 +22,18 @@ $(document).ready(function() {
 
 	// ===============================================
 	// bind the Config form using 'ajaxForm' 
-	$('#installForm').ajaxForm({
+	$('#restoreForm').ajaxForm({
 		beforeSubmit: function (arr, data, options)
 		{
-			if( confirm('WARNING: This process will DESTROY existing data within your database!!! Are you sure you wish to continue?') )
-			{
-				// Open the Modal Window
-				Modal.dialog("option", {
-					modal: true, 
-					open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
-					closeOnEscape: false, 
-					draggable: false,
-					resizable: false
-				}).dialog("open");
-				return true;
-			}
-			else
-			{
-				return false;
-			}
+			// Open the Modal Window
+			Modal.dialog("option", {
+				modal: true, 
+				open: function(event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+				closeOnEscape: false, 
+				draggable: false,
+				resizable: false
+			}).dialog("open");
+			return true;
 		},
 		success: function(response, statusText, xhr, $form)  
 		{
@@ -56,15 +49,8 @@ $(document).ready(function() {
 			}
 			else
 			{
-				var button = '<br /><br /><center><input type="button" class="mws-button blue" value="Go Back" onClick="window.location.replace(\'?task=installdb\');"/></center>';
-				if(result.errors == true)
-				{
-					$('.content').html(pre + '<div class="alert error">' + result.message + '</div>' + button + end);
-				}
-				else
-				{
-					$('.content').html(pre + '<div class="alert warning">' + result.message + '</div>' + button + end);
-				}
+				var button = '<br /><br /><center><input type="button" class="mws-button blue" value="Go Back" onClick="window.location.replace(\'?task=restoredb\');"/></center>';
+				$('.content').html(pre + '<div class="alert error">' + result.message + '</div>' + button + end);
 			}
 			Modal.dialog('close');
 		},
