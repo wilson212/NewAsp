@@ -206,4 +206,8 @@
 						<a href="?task=installdb">Click Here to begin Installation</a></div>';
 					}
 				} 
+				elseif(DB_VER !== CODE_VER)
+				{
+					echo '<div class="alert global">Database is outdated. Please <a href="?task=upgradedb">Click Here</a> to upgrade your database to the corrent version</div>';
+				}
 			?>

@@ -11,6 +11,7 @@
 					<th>Prefix</th>
 					<th>Port</th>
 					<th>Query Port</th>
+					<th>Status</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -21,14 +22,10 @@
 						<td>{prefix}</td>
 						<td>{port}</td>
 						<td>{queryport}</td>
+						<td><div id="status_{id}" style="text-align: center;"><img src="frontend/images/core/alerts/loading.gif"></div></td>
 					</tr>
 				{/servers}
 			</tbody>
 		</table>
 	</div>
 </div>
-<script type="text/javascript">
-$(document).ready(function() {
-	$(".mws-datatable-fn").dataTable({sPaginationType: "full_numbers"});
-});
-</script>

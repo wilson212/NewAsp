@@ -347,6 +347,8 @@ $sqlschema[] = array('Servers Table',
 	`name` varchar(100) default NULL,
 	`port` int(6) unsigned default '0',
 	`queryport` int(6) unsigned NOT NULL default '0',
+	`rcon_port` int(6) unsigned default '4711',
+	`rcon_password` varchar(50) default NULL,
 	`lastupdate` datetime NOT NULL default '0000-00-00 00:00:00',
 	PRIMARY KEY  (`id`),
 	UNIQUE KEY `ip-prefix-unq` (`ip`,`prefix`)

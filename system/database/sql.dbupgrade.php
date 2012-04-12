@@ -121,6 +121,11 @@ $sqlupgrade[] = array('Alter Army Table (AIX2 & bf2 Canadian Forces Support)', '
 		ADD COLUMN `best13` int(10) unsigned NOT NULL default '0',
 		ADD COLUMN `worst13` int(10) unsigned NOT NULL default '0',
 		ADD COLUMN `brnd13` int(10) unsigned NOT NULL default '0';");
+		
+$sqlupgrade[] = array('Alter Servers Table (Add Rcon Port / Password)', '1.5.0',
+	"ALTER TABLE `servers`
+		ADD COLUMN `rcon_port` int(6) unsigned default '4711' AFTER `queryport`,
+		ADD COLUMN `rcon_password` varchar(50) default NULL AFTER `rcon_port`;");
 	
 $sqlupgrade[] = array('Update Version Table', $Config->get('db_expected_ver'),
 	"INSERT INTO `_version` VALUES ('".$Config->get('db_expected_ver')."', ".time().");");
