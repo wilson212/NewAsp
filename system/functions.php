@@ -138,6 +138,17 @@
         return $hms;
     }
 	
+/*
+| ---------------------------------------------------------------
+| Function: format_time()
+| ---------------------------------------------------------------
+|
+| Converts a timestamp to a human readable time format
+|
+| @Param: (Int) $sec - The timestamp
+| @Return (String) The array of data
+|
+*/
 	function format_time($seconds)
 	{
 		// Get our seconds to hours:minutes:seconds
@@ -249,31 +260,29 @@
 			'unlocks',
 			'vehicles',
 			'weapons',
-			'data'
 		);
 	}
-	
-/* 
-	This script checks a remote IP address against a list of authorised hosts/subnets
-	Source: http://www.php.net/
 
-	Notes:
-		Host address and subnets are supported, use x.x.x.x/y standard notation.
-		Addresses without subnet (ie, x.x.x.x) are assumed to be a single HOST
-		An address of 0.0.0.0/0 matches ALL HOSTS (ie, disbales check)
-		
-	$auth_hosts = array(
-		"127.0.0.1",
-		"10.0.0.0/8",
-		"172.16.0.0/12",
-		"192.168.0.0/16"
-	);	
+/*
+| ---------------------------------------------------------------
+| Method: isIPInNet()
+| ---------------------------------------------------------------
+|
+| Notes:
+|		Host address and subnets are supported, use x.x.x.x/y standard notation.
+|		Addresses without subnet (ie, x.x.x.x) are assumed to be a single HOST
+|		An address of 0.0.0.0/0 matches ALL HOSTS (ie, disbales check)
+|		
+|	$auth_hosts = array(
+|		"127.0.0.1",
+|		"10.0.0.0/8",
+|		"172.16.0.0/12",
+|		"192.168.0.0/16"
+|	);
+|
 */
 
-// **************************************************************
-// ???
-
-function isIPInNet($ip,$net,$mask) 
+function isIPInNet($ip, $net, $mask) 
 {
 	$lnet = ip2long($net);
 	$lip = ip2long($ip);
@@ -285,9 +294,14 @@ function isIPInNet($ip,$net,$mask)
 	return( strcmp($firstpart, $firstip) == 0 );
 }
 
-// **************************************************************
-// This function check if a ip is in an array of nets (ip and mask)
-
+/*
+| ---------------------------------------------------------------
+| Method: isIPInNetArray()
+| ---------------------------------------------------------------
+|
+| This function checks if an ip is in an array of nets (ip and mask)
+|
+*/
 function isIpInNetArray($theip,$thearray) 
 {
 	$exit_c = false;
@@ -319,16 +333,23 @@ function isIpInNetArray($theip,$thearray)
 	return($exit_c);
 }
 
-// **************************************************************
-// Check to see if an IP is authorized access
-
+/*
+| ---------------------------------------------------------------
+| Method: checkIpAuth()
+| ---------------------------------------------------------------
+|
+| Check to see if an IP is authorized access
+|
+*/
 function checkIpAuth($chkhosts) 
 {
+	// Get our remote connections IP
 	if(isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] != "") 
 	{
 		$ip_s = $_SERVER['REMOTE_ADDR'];
 	}
-		
+
+	// Check for authorized IP
 	if ($ip_s != "" && isIPInNetArray($ip_s, $chkhosts))
 	{
 		return 1;	// Authorised HOST IP
@@ -339,9 +360,14 @@ function checkIpAuth($chkhosts)
 	}
 }
 
-// **************************************************************
-// Check Private IP
-
+/*
+| ---------------------------------------------------------------
+| Method: checkPrivateIp()
+| ---------------------------------------------------------------
+|
+| Checks if the givin IP is a Private (local) IP
+|
+*/
 function checkPrivateIp($ip_s) 
 {
 	// Define Private IPs
@@ -361,9 +387,14 @@ function checkPrivateIp($ip_s)
 	}
 }
 
-// **************************************************************
-// Quote variable to make safe (SQL Injection protection code)
-
+/*
+| ---------------------------------------------------------------
+| Method: qoute_smart()
+| ---------------------------------------------------------------
+|
+| Quote variable to make safe (SQL Injection protection code)
+|
+*/
 function quote_smart($value) 
 {
     // Stripslashes
@@ -380,9 +411,14 @@ function quote_smart($value)
     return $value;
 }
 
-// **************************************************************
-// Get Database Version
-
+/*
+| ---------------------------------------------------------------
+| Method: getDbVer()
+| ---------------------------------------------------------------
+|
+| Get Database Version
+|
+*/
 function getDbVer() 
 {
 	$cfg = load_class('Config');
@@ -399,9 +435,14 @@ function getDbVer()
 	return $curver;
 }
 
-// **************************************************************
-// Version Compare
-
+/*
+| ---------------------------------------------------------------
+| Method: verCmp()
+| ---------------------------------------------------------------
+|
+| Converts the DB version from a float to INT for comparison
+|
+*/
 function verCmp($ver) 
 {
 	$ver_arr = explode(".", $ver);
@@ -416,9 +457,14 @@ function verCmp($ver)
 	return $result;
 }
 
-// **************************************************************
-// Record Error Log
-
+/*
+| ---------------------------------------------------------------
+| Method: ErrorLog()
+| ---------------------------------------------------------------
+|
+| Logs stats errors
+|
+*/
 function ErrorLog($msg, $lvl)
 {
 	$Config = load_class('Config');
@@ -452,9 +498,14 @@ function ErrorLog($msg, $lvl)
 	}
 }
 
-// **************************************************************
-// Check SQL Results
-
+/*
+| ---------------------------------------------------------------
+| Method: checkSQLResult()
+| ---------------------------------------------------------------
+|
+| Used to check SQL Results
+|
+*/
 function checkSQLResult($result, $query) 
 {
 	if(!$result) 
@@ -470,17 +521,27 @@ function checkSQLResult($result, $query)
 	}
 }
 
-// **************************************************************
-// Gets the IP address of the connecting machine using CURL
-
+/*
+| ---------------------------------------------------------------
+| Method: get_ext_ip()
+| ---------------------------------------------------------------
+|
+| Gets the IP Address of the connecting machine
+|
+*/
 function get_ext_ip() 
 {
 	return $_SERVER['REMOTE_ADDR'];
 }
 
-// **************************************************************
-// Uses either file() or CURL to get the contents of a page
-
+/*
+| ---------------------------------------------------------------
+| Method: getPageContents()
+| ---------------------------------------------------------------
+|
+| Uses either file() or CURL to get the contents of a page
+|
+*/
 function getPageContents($url)
 {	
 	// Try file() first
@@ -514,9 +575,7 @@ function getPageContents($url)
 	return $results;
 }
 
-// **************************************************************
-// Check Path - Not sure yet!
-
+// TO BE REMOVED
 function chkPath($path) 
 {
 	if(($path{strlen($path)-1} != "/") && ($path{strlen($path)-1} != "\\")) 

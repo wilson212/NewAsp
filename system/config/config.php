@@ -9,7 +9,7 @@
 $db_expected_ver = '1.4.7';
 $db_host = 'localhost';
 $db_port = 3306;
-$db_name = 'bf2stats';
+$db_name = 'bf2stats2';
 $db_user = 'admin';
 $db_pass = 'admin';
 $admin_user = 'admin';

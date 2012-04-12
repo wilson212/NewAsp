@@ -27,7 +27,7 @@ class Config
 	function __construct() 
 	{
 		// Load the config File
-		$this->configFile = SYSTEM_PATH . DS . 'config.php';
+		$this->configFile = SYSTEM_PATH . DS . 'config'. DS . 'config.php';
 		if( !$this->Load() )
 		{
 			throw new Exception('Failed to load config file!');
