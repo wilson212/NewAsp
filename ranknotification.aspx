@@ -1,7 +1,7 @@
 <?php
 
 /*
-    Copyright (C) 2006  BF2Statistics
+    Copyright (C) 2006-2012  BF2Statistics
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,11 +17,6 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
-/*************************************
- * 08/03/06 - ALPHA build            *
- * 02/04/12 - Release            	 *
- *************************************/
 
 /*
 | ---------------------------------------------------------------
@@ -39,6 +34,12 @@ define('SYSTEM_PATH', ROOT . DS . 'system');
 */
 require(SYSTEM_PATH . DS . 'core'. DS .'Registry.php');
 require(SYSTEM_PATH . DS . 'functions.php');
+
+// Set Error Reporting
+error_reporting(E_ALL);
+ini_set("log_errors", "1");
+ini_set("error_log", SYSTEM_PATH . DS . 'logs' . DS . 'php_errors.log');
+ini_set("display_errors", "0");
  
 //Disable Zlib Compression
 ini_set('zlib.output_compression', '0');

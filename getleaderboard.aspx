@@ -1,7 +1,7 @@
 <?php
 
 /*
-	Copyright (C) 2006  BF2Statistics
+	Copyright (C) 2006-2012  BF2Statistics
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -17,24 +17,6 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
-/****************************************
-* 11/18/05 v0.0.1 - ALPHA build        *
-* 11/28/05 v0.0.2 - Updated for SF     *
-* 11/30/05 v0.0.3 - Fixed query        *
-* 12/01/05 v0.0.4 - Fixed return       *
-* 12/26/05 v0.0.5 - Updated risingstar *
-* 12/27/05 v0.0.6 - Updated query      *
-* 01/03/06 v0.1 - BETA release         *
-* 02/14/06 v0.1.1 - Fixed skillscore   *
-****************************************/
-
-/***************************************
-* 06/12/10 - Fixed vehicle leaderboard *
-* 06/12/10 - Fixed missed player       *
-* 06/12/10 - Add trim                  *
-* 06/12/10 - Tweaked jump to player    *
-****************************************/
 
 /*
 | ---------------------------------------------------------------
@@ -52,6 +34,12 @@ define('SYSTEM_PATH', ROOT . DS . 'system');
 */
 require(SYSTEM_PATH . DS . 'core'. DS .'Registry.php');
 require(SYSTEM_PATH . DS . 'functions.php');
+
+// Set Error Reporting
+error_reporting(E_ALL);
+ini_set("log_errors", "1");
+ini_set("error_log", SYSTEM_PATH . DS . 'logs' . DS . 'php_errors.log');
+ini_set("display_errors", "0");
 
 //Disable Zlib Compression
 ini_set('zlib.output_compression', '0');
@@ -78,16 +66,16 @@ else
 	$num = strlen(preg_replace('/[\t\n]/','',$head));
 	print $head;
 
-	$id = $_GET['id'];
-	$pid = $_GET['pid'] ? $_GET['pid'] : false;
+	$id  = (isset($_GET['id'])) ? $_GET['id'] : false;
+	$pid = (isset($_GET['pid'])) ? $_GET['pid'] : false;
 
 	// Optional parameters
-	$after = $_GET['after'] ? $_GET['after'] : 0;
-	$before = $_GET['before'] ? $_GET['before'] : 0;
-	$pos = $_GET['pos'] ? $_GET['pos'] : 1;
-	$min = ($pos - 1) - $before;
-	$max = $after + 1;
-	$out = "";
+	$after  = (isset($_GET['after'])) ? $_GET['after'] : 0;
+	$before = (isset($_GET['before'])) ? $_GET['before'] : 0;
+	$pos    = (isset($_GET['pos'])) ? $_GET['pos'] : 1;
+	$min    = ($pos - 1) - $before;
+	$max    = $after + 1;
+	$out    = "";
 	
 	if ($type == 'score')
 	{

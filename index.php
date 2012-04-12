@@ -32,6 +32,16 @@ define('TIME_START', microtime(true));
 
 /*
 | ---------------------------------------------------------------
+| Set Error Reporting
+| ---------------------------------------------------------------
+*/
+error_reporting(E_ALL);
+ini_set("log_errors", "1");
+ini_set("error_log", SYSTEM_PATH . DS . 'logs' . DS . 'php_errors.log');
+ini_set("display_errors", "1");
+
+/*
+| ---------------------------------------------------------------
 | Require the needed scripts to launch the system
 | ---------------------------------------------------------------
 */

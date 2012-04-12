@@ -1,7 +1,7 @@
 <?php 
 
 /*
-    Copyright (C) 2006  BF2Statistics
+    Copyright (C) 2006-2012  BF2Statistics
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,17 +17,6 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
-/************************************
- * 11/13/05 v0.0.1 - BETA build     *
- * 11/22/05 v0.0.2 - Updated for SF *
- * 11/28/05 v0.0.3 - Removed strlen *
- * 01/03/06 v0.1 - BETA release     *
- * 02/14/06 v0.1.1 - Updated for EF *
- *                   Changed format *
- * 02/05/06 v0.1.2 - Fixed typo     *
- * 02/04/12 v1.0.0 - Release        *
- ************************************/
 
 //Disable Zlib Compression
 ini_set('zlib.output_compression', '0');

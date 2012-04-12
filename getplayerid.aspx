@@ -1,7 +1,7 @@
 <?php
 
 /*
-	Copyright (C) 2006  BF2Statistics
+	Copyright (C) 2006-2012  BF2Statistics
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -17,18 +17,6 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
-/*****************************************************
-* 11/13/05 v0.0.1 - ALPHA build                     *
-* 01/03/06 v0.1 - BETA release                      *
-* 12/07/06 getplayerinfo.aspx changed to getPID.php *
-*  this is used to replace the pid.txt file on the  *
-*  servers. This is needed to support bots&offline  *
-*  accounts on multiple gameservers.                *
-* 02/02/2012 v1.0 - Updated and fixed for release   *
-*	by Wilson212									*
-* Originally written by ArmEagle                    *
-*****************************************************/
 
 /*
 | ---------------------------------------------------------------
@@ -46,6 +34,12 @@ define('SYSTEM_PATH', ROOT . DS . 'system');
 */
 require(SYSTEM_PATH . DS . 'core'. DS .'Registry.php');
 require(SYSTEM_PATH . DS . 'functions.php');
+
+// Set Error Reporting
+error_reporting(E_ALL);
+ini_set("log_errors", "1");
+ini_set("error_log", SYSTEM_PATH . DS . 'logs' . DS . 'php_errors.log');
+ini_set("display_errors", "0");
 
 // Make sure we have a PID list
 $pidlist = (isset($_GET['playerlist'])) ? $_GET['playerlist'] : 0;

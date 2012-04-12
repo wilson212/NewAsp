@@ -1,7 +1,7 @@
 <?php
 
 /*
-	Copyright (C) 2006  BF2Statistics
+	Copyright (C) 2006-2012  BF2Statistics
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -17,18 +17,8 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
-/********************************************************
- * 06/12/10 - Changed kills/deaths insert method        *
- * 06/12/10 - Kills converted into Combat scores        *
- * 06/12/10 - Removed passengerAssists/driverAssists    *
- * 06/12/10 - Removed cpNeutralizeAssists/cpNeutralizes *
- * 06/12/10 - Fixed Opponent/Victim kills               *
- * 06/12/10 - Fixed missed wins/loss                    *
- * 02/04/12 - Reviewed for Release	                    *
- ********************************************************/
  
- /*
+/*
 | ---------------------------------------------------------------
 | Define ROOT and system paths
 | ---------------------------------------------------------------
@@ -37,11 +27,17 @@ define('DS', DIRECTORY_SEPARATOR);
 define('ROOT', dirname(__FILE__));
 define('SYSTEM_PATH', ROOT . DS . 'system');
 define("_ERR_RESPONSE","E\nH\tresponse\nD\t<font color=\"red\">ERROR</font>: ");
+
+// Set Error Reporting
+error_reporting(E_ALL);
+ini_set("log_errors", "1");
+ini_set("error_log", SYSTEM_PATH . DS . 'logs' . DS . 'php_errors.log');
+ini_set("display_errors", "0");
  
-//Disable Zlib Compression
+// Disable Zlib Compression
 ini_set('zlib.output_compression', '0');
 
-//Make Sure Script doesn't timeout even if the user disconnects!
+// Make Sure Script doesn't timeout even if the user disconnects!
 set_time_limit(0);
 ignore_user_abort(true);
 
@@ -69,20 +65,15 @@ if (!checkIpAuth($cfg->get('game_hosts')))
 
 // Get URL POST data
 $rawdata = file_get_contents('php://input');
-
-// Seperate data
-if ($rawdata) 
-{
-	$gooddata = explode('\\', $rawdata);
-} 
-else 
+if (!$rawdata) 
 {
 	$errmsg = "SNAPSHOT Data NOT found!";
 	ErrorLog($errmsg, 1);
 	die(_ERR_RESPONSE . $errmsg);
 }
 
-// Make key/value pairs
+// Seperate data... Make key/value pairs
+$gooddata = explode('\\', $rawdata);
 $prefix = $gooddata[0];
 $mapname = strtolower($gooddata[1]);
 for ($x = 2; $x < count($gooddata); $x += 2) 
@@ -118,7 +109,7 @@ $errmsg = "SNAPSHOT Data Complete ({$mapname}:{$mapdate})";
 ErrorLog($errmsg, 3);
 
 // Create SNAPSHOT backup file
-if ($data['import'] != 1)
+if (!isset($data['import']) || $data['import'] != 1)
 {
 	$file = @fopen( STATS_LOG_PATH . DS . $stats_filename, 'wb');
 	@fwrite($file, $rawdata);
@@ -131,7 +122,10 @@ if ($data['import'] != 1)
 	$out = "O\n" .
 		"H\tresponse\tmapname\tmapstart\n" .
 		"D\tOK\t$mapname\t$data[mapstart]\n";
+	
+	// Out to the browser now! 
 	echo $out . "$\tOK\t$";
+	ob_flush();
 	flush();
 }
 
@@ -291,13 +285,7 @@ if ($data['pc'] >= $cfg->get('stats_players_min') && $globals['roundtime'] >= $c
 					}
 				}
 			}
-			
-			/*omero, 2006-04-13
-				this is re-introduced from previous version,
-				just in case a N/A address still appears.
-				The AI players address is now handled in 
-				the bf2.stats.stats python module.
-			*/	
+	
 			// Fix N/A ip addresses and fix negative's
 			if ($data["ip_$x"] == 'N/A') $data["ip_$x"] = '127.0.0.1';
 			if ($data["tlw_$x"] < 0) $data["tlw_$x"] = 0;
@@ -508,8 +496,7 @@ if ($data['pc'] >= $cfg->get('stats_players_min') && $globals['roundtime'] >= $c
 				$chng = $decr = 0;
 				if($data["rank_$x"] != $row['rank'])
 				{
-					if ($data["rank_$x"] > $row['rank']) {$chng = 1;}
-					else {$decr = 1;}
+					($data["rank_$x"] > $row['rank']) ? $chng = 1 : $decr = 1;
 				}
 				
 				// Update information 
@@ -617,13 +604,13 @@ if ($data['pc'] >= $cfg->get('stats_players_min') && $globals['roundtime'] >= $c
 			}
 			
 			// Check for missing CANADIAN Army
-			if(!$data["ta13_$x"]) 
+			if(!isset($data["ta13_$x"]) )
             {			
 				$data["ta13_$x"] = 0;
 			}
 			
 			// Check for missing EU Army
-			if(!$data["ta9_$x"])
+			if(!isset($data["ta9_$x"]))
             {
 				$data["ta9_$x"] = 0;
 			}
@@ -701,55 +688,55 @@ if ($data['pc'] >= $cfg->get('stats_players_min') && $globals['roundtime'] >= $c
 				checkSQLResult ($result, $query);
 			}
 		
-		/********************************
-		* Process 'Kills' 
-		********************************/ 
-		ErrorLog("Processing Kill Data (".$data["pID_$x"].")",3);
-		$mvns = array();
-		for ($i = 0, $count = 0; $i < count($gooddata); $i++)
-		{
-			if ($gooddata[$i] == "mvns_$x")
+			/********************************
+			* Process 'Kills' 
+			********************************/ 
+			ErrorLog("Processing Kill Data (".$data["pID_$x"].")",3);
+			$mvns = array();
+			for ($i = 0, $count = 0; $i < count($gooddata); $i++)
 			{
-				$mvns[$count] = $gooddata[$i + 1];
-				$mvns[++$count] = $gooddata[$i + 3];
-				$count++;
+				if ($gooddata[$i] == "mvns_$x")
+				{
+					$mvns[$count] = $gooddata[$i + 1];
+					$mvns[++$count] = $gooddata[$i + 3];
+					$count++;
+				}
 			}
-		}
-		for ($i = 0; $i < count($mvns); $i += 2)
-		{
-			$query = "SELECT count FROM kills WHERE (attacker = " . $data["pID_$x"] . ") AND (victim = {$mvns[$i]})";
-			$result = mysql_query($query);
-			checkSQLResult ($result, $query);
-			if (!mysql_num_rows($result))
+			for ($i = 0; $i < count($mvns); $i += 2)
 			{
-				// Insert information
-				$query = "INSERT INTO kills SET
-					attacker = " . $data["pID_$x"] . ",
-					victim = {$mvns[$i]},
-					count = " . $mvns[$i + 1] . "
-				";
+				$query = "SELECT count FROM kills WHERE (attacker = " . $data["pID_$x"] . ") AND (victim = {$mvns[$i]})";
 				$result = mysql_query($query);
 				checkSQLResult ($result, $query);
+				if (!mysql_num_rows($result))
+				{
+					// Insert information
+					$query = "INSERT INTO kills SET
+						attacker = " . $data["pID_$x"] . ",
+						victim = {$mvns[$i]},
+						count = " . $mvns[$i + 1] . "
+					";
+					$result = mysql_query($query);
+					checkSQLResult ($result, $query);
+				}
+				else
+				{
+					$row = mysql_fetch_array($result);
+					
+					// Only highest value can be count
+					$killcount = ($row['count'] > $mvns[$i + 1]) ? $row['count'] : $mvns[$i + 1];
+					
+					// Update information
+					$query = "UPDATE kills SET
+						count = {$killcount}
+						WHERE (attacker = " . $data["pID_$x"] . ") AND (victim = {$mvns[$i]})
+					";
+					$result_chk = mysql_query($query);
+					checkSQLResult ($result_chk, $query);
+					
+					// Tag item as done
+					$mvns[$i + 1] = 0;
+				}
 			}
-			else
-			{
-				$row = mysql_fetch_array($result);
-				
-                // Only highest value can be count
-		        $killcount = ($row['count'] > $mvns[$i + 1]) ? $row['count'] : $mvns[$i + 1];
-				
-				// Update information
-				$query = "UPDATE kills SET
-					count = {$killcount}
-					WHERE (attacker = " . $data["pID_$x"] . ") AND (victim = {$mvns[$i]})
-				";
-				$result_chk = mysql_query($query);
-				checkSQLResult ($result_chk, $query);
-				
-				// Tag item as done
-				$mvns[$i + 1] = 0;
-			}
-		}
 			
 			/********************************
 			* Process 'Vehicles'
@@ -1221,10 +1208,9 @@ if ($data['pc'] >= $cfg->get('stats_players_min') && $globals['roundtime'] >= $c
 	********************************/
 	// Note: Code borrowed from release by ArmEagle (armeagle@gmail.com)
 	$gamesrv_ip   = $_SERVER['REMOTE_ADDR'];
-	$gamesrv_name = $_SERVER['REMOTE_HOST'];
 	ErrorLog("Processing Game Server: {$gamesrv_ip}",3);
-	$gamesrv_port = ($data['gameport']) ? $data['gameport'] : 16567;	//Set to Default if no data
-	$gamesrv_qryport = ($data['queryport']) ? $data['queryport'] : 29900;	//Set to Default if no data
+	$gamesrv_port = (isset($data['gameport'])) ? $data['gameport'] : 16567;	//Set to Default if no data
+	$gamesrv_qryport = (isset($data['queryport'])) ? $data['queryport'] : 29900;	//Set to Default if no data
 	$query = "SELECT * FROM servers WHERE ip = '{$gamesrv_ip}' AND prefix = '{$prefix}'";
 	$result = mysql_query($query);
 	checkSQLResult ($result, $query);
@@ -1266,12 +1252,12 @@ if ($data['pc'] >= $cfg->get('stats_players_min') && $globals['roundtime'] >= $c
 		$query = "INSERT INTO mapinfo SET
 			id = {$mapid},
 			name = '{$mapname}',
-			score = {$globals[mapscore]},
-			time = {$globals[roundtime]},
+			score = {$globals['mapscore']},
+			time = {$globals['roundtime']},
 			times = 1,
-			kills = {$globals[mapkills]},
-			deaths = {$globals[mapdeaths]},
-			custom = {$globals[custommap]}
+			kills = {$globals['mapkills']},
+			deaths = {$globals['mapdeaths']},
+			custom = {$globals['custommap']}
 		";
 		$result = mysql_query($query);
 		checkSQLResult ($result, $query);
@@ -1280,12 +1266,12 @@ if ($data['pc'] >= $cfg->get('stats_players_min') && $globals['roundtime'] >= $c
 	{
 		$row = mysql_fetch_array($result);
 		$query = "UPDATE mapinfo SET
-			score = `score` + {$globals[mapscore]},
-			time = `time` + {$globals[roundtime]},
+			score = `score` + {$globals['mapscore']},
+			time = `time` + {$globals['roundtime']},
 			times = `times` + 1,
-			kills = `kills` + {$globals[mapkills]},
-			deaths = `deaths` + {$globals[mapdeaths]},
-			custom = {$globals[custommap]}
+			kills = `kills` + {$globals['mapkills']},
+			deaths = `deaths` + {$globals['mapdeaths']},
+			custom = {$globals['custommap']}
 			WHERE id = {$mapid}
 		";
 		$result = mysql_query($query);
@@ -1297,17 +1283,17 @@ if ($data['pc'] >= $cfg->get('stats_players_min') && $globals['roundtime'] >= $c
 	********************************/
 	ErrorLog("Processing Round History Data",3);
 	$query = "INSERT INTO round_history SET
-		`timestamp` = {$data[mapstart]},
+		`timestamp` = {$data['mapstart']},
 		`mapid` = {$mapid},
-		`time` = {$globals[roundtime]},
-		`team1` = {$data[ra1]},
-		`team2` = {$data[ra2]},
-		`tickets1` = {$data[rs1]},
-		`tickets2` = {$data[rs2]},
-		`pids1` = {$globals[team1_pids]},
-		`pids1_end` = {$globals[team1_pids_end]},
-		`pids2` = {$globals[team2_pids]},
-		`pids2_end` = {$globals[team2_pids_end]}		
+		`time` = {$globals['roundtime']},
+		`team1` = {$data['ra1']},
+		`team2` = {$data['ra2']},
+		`tickets1` = {$data['rs1']},
+		`tickets2` = {$data['rs2']},
+		`pids1` = {$globals['team1_pids']},
+		`pids1_end` = {$globals['team1_pids_end']},
+		`pids2` = {$globals['team2_pids']},
+		`pids2_end` = {$globals['team2_pids_end']}		
 	";
 	$result = mysql_query($query);
 	checkSQLResult ($result, $query);
@@ -1315,11 +1301,6 @@ if ($data['pc'] >= $cfg->get('stats_players_min') && $globals['roundtime'] >= $c
 	/********************************
 	* Process 'SMoC/GEN'
 	********************************/
-	/*
-		omero, 2006-04-15
-		do check for SMOC and General Ranks,
-		only for non-AI players
-	*/	
 	ErrorLog("Processing SMOC and General Ranks",3);
 	smocCheck();
 	genCheck();
@@ -1327,7 +1308,7 @@ if ($data['pc'] >= $cfg->get('stats_players_min') && $globals['roundtime'] >= $c
 	/********************************
 	* Process 'Archive Data File'
 	********************************/
-	if ($cfg->get('stats_move_logs'))
+	if ($cfg->get('stats_move_logs') == 1)
 	{
 		$fn_src = STATS_LOG_PATH . DS . $stats_filename;
 		$fn_dest = STATS_STORE_PATH . DS . $stats_filename;
@@ -1345,11 +1326,20 @@ if ($data['pc'] >= $cfg->get('stats_players_min') && $globals['roundtime'] >= $c
 			if (file_exists($fn_dest)) 
             {
 				unlink($fn_src);
+				$errmsg = "SNAPSHOT Data File Moved! ({$fn_src} -> {$fn_dest})";
+				ErrorLog($errmsg, 3);
+			}
+			else
+			{
+				$errmsg = "SNAPSHOT Data File *NOT* Moved! Server was unable to create Data File. ({$fn_dest})";
+				ErrorLog($errmsg, 2);
 			}
 		}
-		
-		$errmsg = "SNAPSHOT Data File Moved! ({$fn_src} -> {$fn_dest})";
-		ErrorLog($errmsg, 3);
+		else
+		{
+			$errmsg = "SNAPSHOT Log File Does Exists! Unable to move to storage path ({$fn_src})";
+			ErrorLog($errmsg, 2);
+		}
 	}
 	$errmsg = "SNAPSHOT Data File Processed: {$stats_filename}";
 	ErrorLog($errmsg, -1);

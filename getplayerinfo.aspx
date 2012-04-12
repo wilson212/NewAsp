@@ -1,7 +1,7 @@
 <?php
 
 /*
-	Copyright (C) 2006  BF2Statistics
+	Copyright (C) 2006-2012  BF2Statistics
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -16,53 +16,21 @@
 	You should have received a copy of the GNU General Public License
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+    ----------------------------------------------------------------------------------------
+
+	URL:http://bf2.fun-o-matic.org/index.php/BF2_Statistics
+
+	Each function returns data in a similar standard format,
+	the data is simple text with tab seperated data values.
+	The opening line will either be an O or an E, an E signifies an error has occurred,
+	whereas an O is valid data.
+	The last line of the returned data starts with a $
+	followed by the number of bytes in the message (without tabs, newlines, or the length itself),
+	followed by a final $.
+	When valid data is returned, the lines consist of header and data rows,
+	indicated by H and D. Each header row is followed by one or more data rows.
 */
-
-/**************************************
-* 12/01/05 v0.0.1 - ALPHA build       *
-* 12/02/05 v0.0.2 - Updated query     *
-* 12/03/05 v0.0.3 - Updated query     *
-* 12/08/05 v0.0.4 - Updated query     *
-* 12/09/05 v0.0.5 - Removed nvg/gm    *
-* 12/10/05 v0.0.6 - Updated query     *
-* 12/11/05 v0.0.7 - Updated query     *
-* 12/12/05 v0.0.8 - Updated for MNG   *
-* 12/14/05 v0.0.9 - Updated for MNG   *
-*                   Added abs-        *
-* 12/23/05 v0.0.10 - Added tkills     *
-* 12/25/05 v0.0.11 - Updated query    *
-* 12/27/05 v0.0.12 - Updated query    *
-* 12/29/05 v0.0.13 - Updated for MNG  *
-* 01/03/06 v0.1 - BETA release        *
-* 01/05/06 v0.1.1 - Updated query     *
-* 02/14/06 v0.1.2 - Fixed skillscore  *
-* 06/17/06 v0.1.3 - EF and AF support *
-*                  added by Wolverine *
-* 06/24/06 v0.1.4 - Validated output  *
-*		against gamespy	              *
-* 07/26/06 v0.1.6 - Added transpose   *
-*		  support                     *
-*		Correct output data			  *
-* 07/31/06 v0.1.7 - Corrected Best    *
-*		  Round Result Data           *
-*		added support for Mode0/1/2	  *
-*		added error check for kit/    *
-*		  weapon/vehicle/map query 	  *
-* 08/02/06 v0.1.8 - Added support for * 
-*		mtm- data in gamespy query   *
-*		Added prelim. support for v1.4 patch *
-* 08/08/06 v0.1.9 - Added support for * 
-*		mbs- & mws- data in gamespy query   *
-**************************************/
-
-/****************************************************
-* 06/12/10 - Add Highway tampa/Operation blue pearl *
-* 06/12/10 - Fixed missed weapons                   *
-* 06/12/10 - Fixed Opponent/victim                  *
-* 06/12/10 - Remade Header                          *
-* 06/12/10 - Fixed abr-                             *
-* 02/04/12 v1.0.0 Release & Fixes					*
-****************************************************/
 
 /*
 | ---------------------------------------------------------------
@@ -81,22 +49,14 @@ define('SYSTEM_PATH', ROOT . DS . 'system');
 require(SYSTEM_PATH . DS . 'core'. DS .'Registry.php');
 require(SYSTEM_PATH . DS . 'functions.php');
 
+// Set Error Reporting
+error_reporting(E_ALL);
+ini_set("log_errors", "1");
+ini_set("error_log", SYSTEM_PATH . DS . 'logs' . DS . 'php_errors.log');
+ini_set("display_errors", "0");
+
 //Disable Zlib Compression
 ini_set('zlib.output_compression', '0'); 
-
-/*
-URL:http://bf2.fun-o-matic.org/index.php/BF2_Statistics
-
-Each function returns data in a similar standard format,
-the data is simple text with tab seperated data values.
-The opening line will either be an O or an E, an E signifies an error has occurred,
-whereas an O is valid data.
-The last line of the returned data starts with a $
-followed by the number of bytes in the message (without tabs, newlines, or the length itself),
-followed by a final $.
-When valid data is returned, the lines consist of header and data rows,
-indicated by H and D. Each header row is followed by one or more data rows.
-*/
 
 // Import configuration
 $cfg = load_class('Config');

@@ -1,7 +1,7 @@
 <?php
 
 /*
-    Copyright (C) 2006  BF2Statistics
+    Copyright (C) 2006-2012  BF2Statistics
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,23 +17,6 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
-/********************************************
- * 11/14/05 v0.0.1 - ALPHA build            *
- * 11/14/05 v0.0.2 - Removed name parameter *
- * 11/15/05 v0.0.3 - Added redundancy check *
- * 11/26/05 v0.0.4 - Updated for SF         *
- * 01/03/06 v0.1 - BETA release             *
- * 01/25/06 v0.1.1 - Added allunlocks       *
- * 02/14/06 v0.1.2 - Updated for EF         *
- *                 - Fixed unlocks          *
- * 07/27/06 v0.1.3 - Added unlock tier 		*
- *	support									*
- *  07/27/06 v0.1.4 - Added bonus unlock 	*
- *	support									*
- * 06/12/10 - Fixed undefined unlock 		*
- * 02/04/12 - v1.0 Release, cleaned up		*
- ********************************************/
  
 /*
 | ---------------------------------------------------------------
@@ -51,6 +34,12 @@ define('SYSTEM_PATH', ROOT . DS . 'system');
 */
 require(SYSTEM_PATH . DS . 'core'. DS .'Registry.php');
 require(SYSTEM_PATH . DS . 'functions.php');
+
+// Set Error Reporting
+error_reporting(E_ALL);
+ini_set("log_errors", "1");
+ini_set("error_log", SYSTEM_PATH . DS . 'logs' . DS . 'php_errors.log');
+ini_set("display_errors", "0");
 
 //Disable Zlib Compression
 ini_set('zlib.output_compression', '0');
