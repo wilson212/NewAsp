@@ -22,6 +22,9 @@ class Controller
 		$this->Auth = load_class('Auth');
 		$this->Config = load_class('Config');
 		
+		// Define our database version!
+		define('DB_VER', getDbVer());
+		
 		// First, Lets make sure the IP can view the ASP
 		if(!checkIpAuth( $this->Config->get('admin_hosts') )) 
 		{

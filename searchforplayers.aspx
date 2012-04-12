@@ -24,11 +24,28 @@
  * 02/04/12 v1.0 - Release       *
  *********************************/
  
+/*
+| ---------------------------------------------------------------
+| Define ROOT and system paths
+| ---------------------------------------------------------------
+*/
+define('DS', DIRECTORY_SEPARATOR);
+define('ROOT', dirname(__FILE__));
+define('SYSTEM_PATH', ROOT . DS . 'system');
+
+/*
+| ---------------------------------------------------------------
+| Require the needed scripts to launch the system
+| ---------------------------------------------------------------
+*/
+require(SYSTEM_PATH . DS . 'core'. DS .'Registry.php');
+require(SYSTEM_PATH . DS . 'functions.php');
+ 
 //Disable Zlib Compression
 ini_set('zlib.output_compression', '0');
 
+// Make sure we have a Nick to go by
 $nick = (isset($_GET['nick'])) ? $_GET['nick'] : false;
-
 if (!$nick || $nick == '')
 {
     print 'Invalid syntax!';
@@ -44,9 +61,9 @@ else
 	print $head;
 
 	// Import configuration
-	require('includes/utils.php');
-	$cfg = new Config();
-	
+	$cfg = load_class('Config');
+
+	// Establish database connection
 	$connection = @mysql_connect($cfg->get('db_host'), $cfg->get('db_user'), $cfg->get('db_pass'));
 	@mysql_select_db($cfg->get('db_name'), $connection);
 	

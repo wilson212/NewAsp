@@ -103,7 +103,8 @@ class Auth
     public function login($username, $password)
     {
         // Initialize or retrieve the current values for the login variables
-		$loginAttempts = !isset($_POST['loginAttempts']) ? 1 : $_POST['loginAttempts'];
+		if(!isset($_POST['loginAttempts'])) $_POST['loginAttempts'] = 1;
+		$loginAttempts = $_POST['loginAttempts'];
 		
 		// If the posted username and/or password doesnt match whats set in config.
 		if($username != $this->Config->get('admin_user') || $password != $this->Config->get('admin_pass')) 

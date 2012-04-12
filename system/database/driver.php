@@ -129,7 +129,7 @@ class Database
 	public function fetch_array()
 	{
 		// Make sure we have someting to return
-		if(mysql_num_rows($this->sql) == 0)
+		if($this->result() == false || mysql_num_rows($this->sql) == 0)
 		{
 			return FALSE;
 		}
@@ -160,7 +160,7 @@ class Database
 	public function fetch_row($query)
 	{
 		// Make sure we have someting to return
-		if(mysql_num_rows($this->sql) == 0)
+		if($this->result() == false || mysql_num_rows($this->sql) == 0)
 		{
 			return FALSE;
 		}
@@ -181,7 +181,7 @@ class Database
 	public function fetch_column()
 	{
 		// Make sure we have someting to return
-		if(mysql_num_rows($this->sql) == 0)
+		if($this->result() == false || mysql_num_rows($this->sql) == 0)
 		{
 			return FALSE;
 		}
@@ -202,6 +202,7 @@ class Database
 */ 
 	public function num_rows()
 	{
+		if($this->result() == false) return 0;
 		return mysql_num_rows($this->sql);
 	}
 

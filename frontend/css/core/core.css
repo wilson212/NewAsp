@@ -619,6 +619,17 @@ div#mws-footer
 	margin: 0;
 }
 
+.alert.global { 
+	width: 95%; 
+	margin-top: -50px; 
+	margin-left: auto; 
+	margin-right: auto;
+	text-align: center;
+	background-color: #fdefbd; 
+	border-color: #d4b64b; 
+	color: #675100;
+	font-size: 125%;
+}
 .alert.success { background-image: url("../../images/core/alerts/tick-circle.png"); background-color: #d1e8d2; border-color: #339933; color: #00632E; }
 .alert.error { background-image: url("../../images/core/alerts/cross-circle.png"); background-color: #facfcf; border-color: #dc1c1c; color: #820101; }
 .alert.warning { background-image: url("../../images/core/alerts/exclamation.png"); background-color: #fdefbd; border-color: #d4b64b; color: #675100; }

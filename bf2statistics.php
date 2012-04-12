@@ -36,6 +36,7 @@
 define('DS', DIRECTORY_SEPARATOR);
 define('ROOT', dirname(__FILE__));
 define('SYSTEM_PATH', ROOT . DS . 'system');
+define("_ERR_RESPONSE","E\nH\tresponse\nD\t<font color=\"red\">ERROR</font>: ");
  
 //Disable Zlib Compression
 ini_set('zlib.output_compression', '0');
@@ -44,16 +45,19 @@ ini_set('zlib.output_compression', '0');
 set_time_limit(0);
 ignore_user_abort(true);
 
-// Set POINTS!!!!!
-$killscore = 5;
-
 // Import configuration
 require( SYSTEM_PATH . DS . 'core'. DS .'Registry.php' );
 require( SYSTEM_PATH . DS . 'functions.php' );
 
 // Start the config class
 $cfg = load_class('Config');
-DEFINE("_ERR_RESPONSE","E\nH\tresponse\nD\t<font color=\"red\">ERROR</font>: ");
+
+// Define a few more paths
+define('STATS_LOG_PATH', ROOT . DS . str_replace(array('/', '\\'), DS, trim($cfg->get('stats_logs'), '/')));
+define('STATS_STORE_PATH', ROOT . DS . str_replace(array('/', '\\'), DS, trim($cfg->get('stats_logs_store'), '/')));
+
+// Set POINTS!!!!!
+$killscore = 5;
 
 // Check remote host is authorised (simple security check)
 if (!checkIpAuth($cfg->get('game_hosts'))) 
@@ -75,7 +79,7 @@ else
 {
 	$errmsg = "SNAPSHOT Data NOT found!";
 	ErrorLog($errmsg, 1);
-	die(_ERR_RESPONSE.$errmsg);
+	die(_ERR_RESPONSE . $errmsg);
 }
 
 // Make key/value pairs
@@ -103,7 +107,10 @@ $backendawardsdata = buildBackendAwardsData($data['v']);
 // Generate SNAPSHOT Filename
 $mapdate = date('Ymd_Hi', (int)$data['mapstart']);
 $stats_filename  = '';
-if ($prefix != '') {$stats_filename .= $prefix . '-';}
+if ($prefix != '') 
+{
+	$stats_filename .= $prefix . '-';
+}
 $stats_filename .= $mapname . '_' . $mapdate . $cfg->get('stats_ext');
 
 // SNAPSHOT Data OK
@@ -113,12 +120,11 @@ ErrorLog($errmsg, 3);
 // Create SNAPSHOT backup file
 if ($data['import'] != 1)
 {
-	$log = str_replace(array('/', '\\'), DS, ltrim($cfg->get('stats_logs'), '/'));
-	$file = @fopen( ROOT . DS . $log . $stats_filename, 'wb');
+	$file = @fopen( STATS_LOG_PATH . DS . $stats_filename, 'wb');
 	@fwrite($file, $rawdata);
 	@fclose($file);
 	
-	$errmsg = "SNAPSHOT Data Logged (" . $log . $stats_filename . ")";
+	$errmsg = "SNAPSHOT Data Logged (" . STATS_LOG_PATH . DS . $stats_filename . ")";
 	ErrorLog($errmsg, 3);
 	
 	// Tell the game server that the snapshot has been received
@@ -151,7 +157,7 @@ $connection = @mysql_connect($cfg->get('db_host'), $cfg->get('db_user'), $cfg->g
 $globals = array();
 
 //Determine Round Time
-$globals['roundtime'] = $data[mapend] - $data[mapstart];
+$globals['roundtime'] = $data['mapend'] - $data['mapstart'];
 
 // Initialise Other Global Data
 $globals['mapscore'] = $globals['mapkills'] = $globals['mapdeaths'] = 0;
@@ -1323,8 +1329,8 @@ if ($data['pc'] >= $cfg->get('stats_players_min') && $globals['roundtime'] >= $c
 	********************************/
 	if ($cfg->get('stats_move_logs'))
 	{
-		$fn_src = ROOT . DS . str_replace(array('/', '\\'), DS, ltrim($Config->get('stats_logs'), '/')) . $stats_filename;
-		$fn_dest = ROOT . DS . str_replace(array('/', '\\'), DS, ltrim($Config->get('stats_logs_store'), '/')) . $stats_filename;
+		$fn_src = STATS_LOG_PATH . DS . $stats_filename;
+		$fn_dest = STATS_STORE_PATH . DS . $stats_filename;
 		
 		if (file_exists($fn_src)) 
         {

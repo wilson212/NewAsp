@@ -30,8 +30,27 @@
 * Originally written by ArmEagle                    *
 *****************************************************/
 
+/*
+| ---------------------------------------------------------------
+| Define ROOT and system paths
+| ---------------------------------------------------------------
+*/
+define('DS', DIRECTORY_SEPARATOR);
+define('ROOT', dirname(__FILE__));
+define('SYSTEM_PATH', ROOT . DS . 'system');
+
+/*
+| ---------------------------------------------------------------
+| Require the needed scripts to launch the system
+| ---------------------------------------------------------------
+*/
+require(SYSTEM_PATH . DS . 'core'. DS .'Registry.php');
+require(SYSTEM_PATH . DS . 'functions.php');
+
+// Make sure we have a PID list
 $pidlist = (isset($_GET['playerlist'])) ? $_GET['playerlist'] : 0;
 
+// Get our Player Nick
 if(isset($_POST['nick'])) 
 {
 	$nick = $_POST['nick'];
@@ -44,9 +63,9 @@ else
 if(isset($nick) && $nick != '') 
 {
 	// Import configuration
-	require('includes/utils.php');
-	$cfg = new Config();
+	$cfg = load_class('Config');
 
+	// Establish database connection
 	$connection = @mysql_connect($cfg->get('db_host'), $cfg->get('db_user'), $cfg->get('db_pass'));
 	@mysql_select_db($cfg->get('db_name'), $connection);
 	
@@ -105,9 +124,9 @@ if(isset($nick) && $nick != '')
 elseif($pidlist) 
 {
 	// Import configuration
-	require('includes/utils.php');
-	$cfg = new Config();
+	$cfg = load_class('Config');
 
+	// Establish database connection
 	$connection = @mysql_connect($cfg->get('db_host'), $cfg->get('db_user'), $cfg->get('db_pass'));
 	@mysql_select_db($cfg->get('db_name'), $connection);
 	

@@ -43,6 +43,8 @@ class Testconfig
 			'\se2_0\0\se3_0\6\se4_0\0\se5_0\0\hw0_0\0\hw1_0\0\hw2_0\3\hw3_0\0\hw4_0\0\hw5_0\5\hw6_0\1\hw7_0\8\hw8_0\0\he0_0\1\he1_0\0\he2_0\0\he3_0\3\he4_0\0\he5_0\0\EOF\1';
 		$tst_pid = 999;
 		$tst_mapid = 999;
+		$errors = false;
+		$warns = false;
 		$out = '<p>';
 		
 		// Check Config File Write Access
@@ -50,6 +52,7 @@ class Testconfig
 		if (!$Fs->is_writable( SYSTEM_PATH . DS .'config.php' )) 
 		{
 			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Config File Writable: ".__FAIL;
+			$errors = true;
 		} 
 		else 
 		{
@@ -62,6 +65,7 @@ class Testconfig
 		if (!$Fs->is_writable( ROOT . DS . $log ))
 		{
 			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Error Log File Writable: ".__WARN;
+			$warns = true;
 		} 
 		else 
 		{
@@ -73,6 +77,7 @@ class Testconfig
 		if (!$Fs->is_writable( ROOT . DS . $log ))
 		{
 			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Admin Log File Writable: ".__WARN;
+			$warns = true;
 		} 
 		else 
 		{
@@ -86,10 +91,12 @@ class Testconfig
 		{
 			case 0:
 				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Database host (".$Config->get('db_host').") access: ".__FAIL;
+				$errors = true;
 				break;
 			case -1:
 				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Database host (".$Config->get('db_host').") access: ".__PASS;
 				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Database (".$Config->get('db_name').") exists: ".__FAIL;
+				$errors = true;
 				break;
 			default:
 				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Database host (".$Config->get('db_host').") access: ".__PASS;
@@ -107,6 +114,7 @@ class Testconfig
 		if (!$Fs->is_writable( ROOT . DS . $path ))
 		{
 			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- SNAPSHOT Path Writable: ".__FAIL;
+			$errors = true;
 		} 
 		else 
 		{
@@ -119,6 +127,7 @@ class Testconfig
 		if (!$Fs->is_writable( ROOT . DS . $path ))
 		{
 			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- SNAPSHOT Archive Path Writable: ".__FAIL;
+			$errors = true;
 		} 
 		else 
 		{
@@ -131,6 +140,7 @@ class Testconfig
 		if (!$Fs->is_writable( $path ))
 		{
 			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Backup Path Writable: ".__FAIL;
+			$errors = true;
 		} 
 		else 
 		{
@@ -152,6 +162,7 @@ class Testconfig
 		else 
 		{
 			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Remote URL Function Exist: ".__WARN;
+			$warns = true;
 			$doURLChecks = false;
 		}
 		
@@ -185,6 +196,7 @@ class Testconfig
 				if ($responsecode != '200') 
 				{
 					$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- BF2Statistics Processing Check: ".__FAIL;
+					$errors = true;
 				} 
 				else 
 				{
@@ -194,6 +206,7 @@ class Testconfig
 			else 
 			{
 				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- BF2Statistics Processing Check: ".__FAIL;
+				$errors = true;
 			}
 			
 			// Check .aspx Page Responses
@@ -203,6 +216,7 @@ class Testconfig
 			if ($response === false || trim($response[0]) != 'O') 
 			{
 				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Gamespy (.aspx) Basic Response: ".__FAIL;
+				$errors = true;
 			} 
 			else 
 			{
@@ -216,6 +230,7 @@ class Testconfig
 			if ($response === false || trim($response[0]) != 'O') 
 			{
 				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Gamespy (.aspx) Advanced (1) Response: ".__FAIL;
+				$errors = true;
 			} 
 			else 
 			{
@@ -228,6 +243,7 @@ class Testconfig
 			if ($response === false || trim($response[0]) != 'O') 
 			{
 				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Gamespy (.aspx) Advanced (2) Response: ".__FAIL;
+				$errors = true;
 			} 
 			else 
 			{
@@ -240,6 +256,7 @@ class Testconfig
 			if ($response === false || trim($response[0]) != 'O') 
 			{
 				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Gamespy (.aspx) Advanced (3) Response: ".__FAIL;
+				$errors = true;
 			} 
 			else 
 			{
@@ -250,7 +267,8 @@ class Testconfig
 		// Remove Test Player
 		if( !$Player->deletePlayers($tst_pid) )
 		{
-			$out .= " -> Remove Test Player Data: ". __FAIL;
+			$out .= " -> Remove Test Player Data: ". __WARN;
+			$warns = true;
 		}
 		else
 		{
@@ -261,7 +279,8 @@ class Testconfig
 		$result = $DB->query("DELETE FROM `servers` WHERE prefix = '{$tst_prefix}';")->result();
 		if(!$result)
 		{
-			$out .= " -> Server Info ({$tst_prefix}) removed from Table (servers): ". __FAIL;
+			$out .= " -> Server Info ({$tst_prefix}) removed from Table (servers): ". __WARN;
+			$warn = true;
 		}
 		else
 		{
@@ -272,7 +291,8 @@ class Testconfig
 		$result = $DB->query("DELETE FROM `mapinfo` WHERE id = {$tst_mapid};")->result();
 		if(!$result)
 		{
-			$out .= " -> Map Info ({$tst_mapid}) removed from Table (mapinfo): ". __FAIL;
+			$out .= " -> Map Info ({$tst_mapid}) removed from Table (mapinfo): ". __WARN;
+			$warns = true;
 		}
 		else
 		{
@@ -282,7 +302,8 @@ class Testconfig
 		$result = $DB->query("DELETE FROM `round_history` WHERE mapid = {$tst_mapid};")->result();
 		if(!$result)
 		{
-			$out .= " -> Map Info ({$tst_mapid}) removed from Table (round_history): ". __FAIL;
+			$out .= " -> Map Info ({$tst_mapid}) removed from Table (round_history): ". __WARN;
+			$warns = true;
 		}
 		else
 		{
@@ -293,7 +314,14 @@ class Testconfig
 		$out .= '</p>';
 		
 		// Determine if our save is a success
-		echo json_encode( array('html' => $out) );
+		$s = ($errors == false) ? true : false;
+		echo json_encode( 
+			array(
+				'success' => $s,
+				'warnings' => $warns,
+				'html' => $out
+			)
+		);
 	}
 }
 ?>

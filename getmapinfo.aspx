@@ -23,40 +23,53 @@
  * 02/02/2012 v1.0 - Updated and fixed for release  *
  *	by Wilson212									*
  ****************************************************/
+ 
+/*
+| ---------------------------------------------------------------
+| Define ROOT and system paths
+| ---------------------------------------------------------------
+*/
+define('DS', DIRECTORY_SEPARATOR);
+define('ROOT', dirname(__FILE__));
+define('SYSTEM_PATH', ROOT . DS . 'system');
+
+/*
+| ---------------------------------------------------------------
+| Require the needed scripts to launch the system
+| ---------------------------------------------------------------
+*/
+require(SYSTEM_PATH . DS . 'core'. DS .'Registry.php');
+require(SYSTEM_PATH . DS . 'functions.php');
 
 //Disable Zlib Compression
 ini_set('zlib.output_compression', '0');
 
+// Make sure we have the needed params
 $pid 	 = (isset($_GET['pid'])) ? $_GET['pid'] : 0;
 $mapid 	 = (isset($_GET['mapid'])) ? $_GET['mapid'] : 0;
 $mapname = (isset($_GET['mapname'])) ? $_GET['mapname'] : '';
 $limit	 = (isset($_GET['customonly'])) ? $_GET['customonly'] : 0;
 
 // Import configuration
-require('includes/utils.php');
-$cfg = new Config();
+$cfg = load_class('Config');
 
-if ($limit == 1) 
-{
-	// Limit results to custom maps ONLY
-	$maplimit = " AND id >= " . $cfg->get('game_custom_mapid');
-} 
-else 
-{
-	$maplimit = "";
-}
+// Limit results to custom maps ONLY
+$maplimit = ($limit == 1) ? " AND id >= " . $cfg->get('game_custom_mapid') : '';
 
+// Make sure our params is valid
 if (!is_numeric($pid) || !is_numeric($mapid) || !is_numeric($limit)) 
 {
 	die("Invalid Parameters!");
 }
 
+// Check for valid map ID
 if ($mapid && !is_numeric($mapid)) 
 {
 	print 'Invalid syntax!';
 } 
 elseif ($pid && is_numeric($pid)) 
 {
+	// Establish a database connection
 	$connection = @mysql_connect($cfg->get('db_host'), $cfg->get('db_user'), $cfg->get('db_pass'));
 	@mysql_select_db($cfg->get('db_name'), $connection);
 	

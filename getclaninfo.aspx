@@ -23,11 +23,28 @@
  * 02/04/12 v1.0.0 - Release	        *
 ****************************************/
 
+/*
+| ---------------------------------------------------------------
+| Define ROOT and system paths
+| ---------------------------------------------------------------
+*/
+define('DS', DIRECTORY_SEPARATOR);
+define('ROOT', dirname(__FILE__));
+define('SYSTEM_PATH', ROOT . DS . 'system');
+
+/*
+| ---------------------------------------------------------------
+| Require the needed scripts to launch the system
+| ---------------------------------------------------------------
+*/
+require(SYSTEM_PATH . DS . 'core'. DS .'Registry.php');
+require(SYSTEM_PATH . DS . 'functions.php');
+
 //Disable Zlib Compression
 ini_set('zlib.output_compression', '0');
 
+// Make sure we have a listtype and it valid
 $listtype = (isset($_GET['type'])) ? $_GET['type'] : 0;
-
 if (!is_numeric($listtype)) 
 {
 	$num = 0;
@@ -91,32 +108,33 @@ else
 	}
 
 	// Import configuration
-	require('includes/utils.php');
-	$cfg = new Config();
+	$cfg = load_class('Config');
 
+	// Establish Database connection
 	$connection = @mysql_connect($cfg->get('db_host'), $cfg->get('db_user'), $cfg->get('db_pass'));
 	@mysql_select_db($cfg->get('db_name'), $connection);
 
-		$out = "O\n" .
-			"H\tsize\tasof\n";
+	// Prepare output header
+	$out = "O\n" .
+		"H\tsize\tasof\n";
 
-		// Return List of Players that match criteria
-		$query = "SELECT id, name FROM player WHERE ip != '0.0.0.0'" . $where . " ORDER BY id ASC";
-		$result = mysql_query($query) or die(mysql_error());
-		$numrows = mysql_num_rows($result);
-		
-		$out .= "D\t{$numrows}\t" . time() . "\n" .
-			"H\tpid\tnick\n";
-			
-			while ($row = mysql_fetch_array($result))
-			{
-				$pid = $row['id'];
-				$name = $row['name'];
-				$out .= "D\t$pid\t$name\n";
-			}
+	// Return List of Players that match criteria
+	$query = "SELECT id, name FROM player WHERE ip != '0.0.0.0'" . $where . " ORDER BY id ASC";
+	$result = mysql_query($query) or die(mysql_error());
+	$numrows = mysql_num_rows($result);
+	
+	$out .= "D\t{$numrows}\t" . time() . "\n" .
+		"H\tpid\tnick\n";
 
-		$num = strlen(preg_replace('/[\t\n]/','',$out));
-		print $out . "$\t" . $num . "\t$";
+	while ($row = mysql_fetch_array($result))
+	{
+		$pid = $row['id'];
+		$name = $row['name'];
+		$out .= "D\t$pid\t$name\n";
+	}
+
+	$num = strlen(preg_replace('/[\t\n]/','',$out));
+	print $out . "$\t" . $num . "\t$";
 
 	// Close database connection
 	@mysql_close($connection);

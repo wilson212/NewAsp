@@ -64,12 +64,25 @@
 * 02/04/12 v1.0.0 Release & Fixes					*
 ****************************************************/
 
+/*
+| ---------------------------------------------------------------
+| Define ROOT and system paths
+| ---------------------------------------------------------------
+*/
+define('DS', DIRECTORY_SEPARATOR);
+define('ROOT', dirname(__FILE__));
+define('SYSTEM_PATH', ROOT . DS . 'system');
+
+/*
+| ---------------------------------------------------------------
+| Require the needed scripts to launch the system
+| ---------------------------------------------------------------
+*/
+require(SYSTEM_PATH . DS . 'core'. DS .'Registry.php');
+require(SYSTEM_PATH . DS . 'functions.php');
+
 //Disable Zlib Compression
 ini_set('zlib.output_compression', '0'); 
-
-$pid = (isset($_GET['pid'])) ? $_GET['pid'] : false;
-$info = (isset($_GET['info'])) ? $_GET['info'] : '';
-$transpose = (isset($_GET['transpose'])) ? $_GET['transpose'] : 0;
 
 /*
 URL:http://bf2.fun-o-matic.org/index.php/BF2_Statistics
@@ -85,12 +98,13 @@ When valid data is returned, the lines consist of header and data rows,
 indicated by H and D. Each header row is followed by one or more data rows.
 */
 
-//omero, 2006-04-15
-//better have this close to the to the beginning
 // Import configuration
-require('includes/utils.php');
-$cfg = new Config();
+$cfg = load_class('Config');
 
+// Make sure we have the required Params and they are valid!
+$pid = (isset($_GET['pid'])) ? $_GET['pid'] : false;
+$info = (isset($_GET['info'])) ? $_GET['info'] : '';
+$transpose = (isset($_GET['transpose'])) ? $_GET['transpose'] : 0;
 if (!$pid || !is_numeric($pid) || !is_numeric($transpose) || $info == '') 
 {
 	$num = 0;
@@ -118,6 +132,7 @@ else
 	//correct length of message will be calculated later
 	//$num = 25;
 
+	// Establish database connection
 	$connection = @mysql_connect($cfg->get('db_host'), $cfg->get('db_user'), $cfg->get('db_pass'));
 	@mysql_select_db($cfg->get('db_name'), $connection);
 
@@ -199,11 +214,15 @@ else
 			{
 				$query = "SELECT * FROM mapinfo WHERE id >= " . $cfg->get('game_custom_mapid');
 				$resultm = mysql_query($query) or die(mysql_error());
-				if (!mysql_num_rows($resultm)) {
+				if (!mysql_num_rows($resultm)) 
+				{
 					// No Custom Maps found, ignoring section
-				} else {
+				} 
+				else 
+				{
 					$usermaps = array();
-					while ($rowum = mysql_fetch_array($resultm)) {
+					while ($rowum = mysql_fetch_array($resultm)) 
+					{
 						$usermaps[] = $rowum['id'];
 					}
 					asort($usermaps);
@@ -293,7 +312,10 @@ else
 		
 			# For MNG
 			$name = trim($row['name']);
-			if (strpos($info, 'mng-') !== false) {$name = htmlspecialchars($name);}
+			if (strpos($info, 'mng-') !== false) 
+			{
+				$name = htmlspecialchars($name);
+			}
 
 			// Weapons
 			$query = "SELECT * FROM weapons WHERE id = {$pid}";
@@ -355,7 +377,7 @@ else
             } 
 
 			# For MNG
-			if (strpos($info, 'mng-') !== false) {$favon = htmlspecialchars($favon);}
+			if (strpos($info, 'mng-') !== false) $favon = htmlspecialchars($favon);
 			
 
 			// Favorite victim 
@@ -379,7 +401,7 @@ else
 			}
 
 			# For MNG
-			if (strpos($info, 'mng-') !== false) {$favvn = htmlspecialchars($favvn);}
+			if (strpos($info, 'mng-') !== false) $favvn = htmlspecialchars($favvn);
 
 
 			// Favorite kit
@@ -387,14 +409,23 @@ else
 			$result = mysql_query($query) or die(mysql_error());
 			$row2 = mysql_fetch_array($result);
 			arsort($row2);
-			if (is_numeric(key($row2))) {$favk = key($row2);}
-			else {next($row2); $favk = key($row2);}
+			if (is_numeric(key($row2))) 
+			{
+				$favk = key($row2);
+			}
+			else 
+			{
+				next($row2); $favk = key($row2);
+			}
 
 			// Favorite map
 			$favmap = array();
 			$query = "SELECT time FROM maps WHERE id = {$pid}";
 			$result = mysql_query($query) or die(mysql_error());
-			while ($row2 = mysql_fetch_array($result))	{$favmap[] = $row2['time'];}
+			while ($row2 = mysql_fetch_array($result))	
+			{
+				$favmap[] = $row2['time'];
+			}
 			rsort($favmap);
 			$query = "SELECT mapid FROM maps WHERE (id = {$pid}) AND (time = {$favmap[0]})";
 			$result = mysql_query($query) or die(mysql_error());
@@ -412,8 +443,14 @@ else
 			else 
 			{ 
 				arsort($row2);
-				if (is_numeric(key($row2))) {$favv = key($row2);}
-				else {next($row2); $favv = key($row2);}
+				if (is_numeric(key($row2))) 
+				{
+					$favv = key($row2);
+				}
+				else 
+				{
+					next($row2); $favv = key($row2);
+				}
             }         
 			
 			// Road Kills
@@ -428,8 +465,14 @@ else
 			$result = mysql_query($query) or die(mysql_error());
 			$row2 = mysql_fetch_array($result);
 			arsort($row2);
-			if (is_numeric(key($row2))) {$favw = key($row2);}
-			else {next($row2); $favw = key($row2);}    
+			if (is_numeric(key($row2))) 
+			{
+				$favw = key($row2);
+			}
+			else 
+			{
+				next($row2); $favw = key($row2);
+			}    
             
 			
 			// Sergeant Major Of The Corps
@@ -448,15 +491,12 @@ else
 			if ($roww['fired8'] != 0) {$a8 = ($roww['hit8'] / $roww['fired8']) * 100;}
 			if ($roww['knifefired'] != 0) {$a9 = ($roww['knifehit'] / $roww['knifefired']) * 100;}
 			if ($roww['shockpadfired'] != 0) {$a10 = ($roww['shockpadhit'] / $roww['shockpadfired']) * 100;}
-
 			if (($roww['c4fired'] + $roww['claymorefired'] + $roww['atminefired']) != 0)
 			{
-
 				$exphts = $roww['c4hit'] + $roww['claymorehit'] + $roww['atminehit'];
 				$expfrd = $roww['c4fired'] + $roww['claymorefired'] + $roww['atminefired'];
 				$a11 = (($exphts) / ($expfrd)) * 100;
 			}
-
 			if ($roww['handgrenadefired'] != 0) {$a12 = ($roww['handgrenadehit'] / $roww['handgrenadefired']) * 100;}
 
 			

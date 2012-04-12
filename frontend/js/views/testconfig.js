@@ -40,8 +40,27 @@ $(document).ready(function() {
             timeout: 30000, // in milliseconds
             success: function(result) 
             {
+				// Create our message!
+				if(result.success == true)
+				{
+					if(result.warnings == true)
+					{
+						var message = '<div class="alert warning">Not all System Checks Passed... But your current configuration is good enough to start recieving stats.</div><br />';
+					}
+					else
+					{
+						var message = '<div class="alert success">All System Checks Passed! Your system is ready to start recieving stats.</div><br />';
+					}
+				}
+				else
+				{
+					var message = '<div class="alert error">Some System Checks Failed! You need to Look at the list below and try and fix these errors. Most errors can be fixed by '
+					+ 'double checking your <a href="?task=editconfig">configuration</a>, and fixing read/write access to the ASP directories</div><br />';
+				}
+				// Create our button
 				var button = '<br /><br /><center><input id="refresh" type="button" class="mws-button blue" value="Refresh Window" onClick="window.location.reload();"/></center>';
-				$('.mws-panel-content').html(result.html + button);
+				
+				$('.mws-panel-content').html(message + result.html + button);
 				Modal.dialog('close');
 			},
 			error: function(request, status, err) 

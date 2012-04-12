@@ -357,42 +357,17 @@ function quote_smart($value)
 
 function getDbVer() 
 {
-	$cfg = new Config();
+	$cfg = load_class('Config');
+	$DB = load_database();
 	$curver = '0.0.0';
 	
-	$connection = @mysql_connect($cfg->get('db_host'), $cfg->get('db_user'), $cfg->get('db_pass'));
-	if(!$connection) 
-	{
-		// DB Server error
-	}
-	else
+	// Can only query the database when its online ;)
+	if($DB->status() == 1) 
 	{
 		$query = "SELECT dbver FROM _version";
-		if(!mysql_select_db($cfg->get('db_name'), $connection)) 
-		{
-			// DB Error
-		}
-		else
-		{
-			$result = mysql_query($query);
-			if($result && mysql_num_rows($result)) 
-			{
-				$row = mysql_fetch_array($result);
-				$curver = $row['dbver'];
-			}
-			else
-			{
-				$query = "SHOW TABLES LIKE 'player'";
-				$result = mysql_query($query);
-				if(mysql_num_rows($result)) 
-				{
-					$curver = '1.2+';
-				}
-			}
-		}
+		$curver = $DB->query($query, TRUE)->fetch_column();
+		if($curver == false) $curver = '0.0.0';
 	}
-	// Close database connection
-	@mysql_close($connection);
 	return $curver;
 }
 
@@ -492,7 +467,6 @@ function getPageContents($url)
 	{
 		$curl_handle = curl_init();
 		curl_setopt($curl_handle, CURLOPT_URL, $url);
-		//curl_setopt($curl_handle, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 5.0)");
 		curl_setopt($curl_handle, CURLOPT_USERAGENT, "GameSpyHTTP/1.0");
 		curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 1);

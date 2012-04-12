@@ -35,11 +35,29 @@
 * 06/12/10 - Add trim                  *
 * 06/12/10 - Tweaked jump to player    *
 ****************************************/
+
+/*
+| ---------------------------------------------------------------
+| Define ROOT and system paths
+| ---------------------------------------------------------------
+*/
+define('DS', DIRECTORY_SEPARATOR);
+define('ROOT', dirname(__FILE__));
+define('SYSTEM_PATH', ROOT . DS . 'system');
+
+/*
+| ---------------------------------------------------------------
+| Require the needed scripts to launch the system
+| ---------------------------------------------------------------
+*/
+require(SYSTEM_PATH . DS . 'core'. DS .'Registry.php');
+require(SYSTEM_PATH . DS . 'functions.php');
+
 //Disable Zlib Compression
 ini_set('zlib.output_compression', '0');
 
+// Make sure we have a type, and its valid
 $type = (isset($_GET['type'])) ? $_GET['type'] : false;
-
 if (!$type) 
 {
     print 'Invalid syntax!';
@@ -47,12 +65,13 @@ if (!$type)
 else
 {
 	// Import configuration
-	require('includes/utils.php');
-	$cfg = new Config();
+	$cfg = load_class('Config');
 	
+	// Establish a database connection
 	$connection = @mysql_connect($cfg->get('db_host'), $cfg->get('db_user'), $cfg->get('db_pass'));
 	@mysql_select_db($cfg->get('db_name'), $connection);
 
+	// Prepare our output header
 	$head = "O\n" .
 		"H\tsize\tasof\n";
 	
@@ -447,51 +466,15 @@ else
 			}
 		}
 	}
-	/*
-#NOTE: found these types in EA query
-	elseif ($type == 'timeplayed')
+	else 
 	{
-http://bf2web.gamespy.com/ASP/getleaderboard.aspx?type=timeplayed&id=
-O
-H	size	asof
-D	1032605	1133420553
-H	n	pid	nick	totaltime	playerrank	countrycode
-D	1	45545295	Rips01	152890067	9	DE
-D	2	44144747	Frogblast	152357459	7	US
-D	3	46240523	Mr.Riddle01	152202830	7	AT
+		print 'Unknown type!';
 	}
-	elseif ($type == 'map')
-	{
-id=mapid
-http://bf2web.gamespy.com/ASP/getleaderboard.aspx?type=map&id=100
-O
-H	size	asof
-D	609235	1133420930
-H	n	pid	nick	bestroundscore	wins	losses	completed	incomplete	fullgames	time	playerrank	countrycode
-D	1	49096356	GoThiC.KiLLa	1463	60	53	77	36	0	92910	7	US
-D	2	43445898	[KSK]Skeletor	1441	7	8	8	8	0	16317	6	DE
-D	3	45533306	[DPS]Strike	1345	56	45	43	60	0	87516	8	US
-	}
-	elseif ($type == 'army')
-	{
-id=armyid
-http://bf2web.gamespy.com/ASP/getleaderboard.aspx?type=army&id=0
-O
-H	size	asof
-D	718173	1133420624
-H	n	pid	nick	bestscore	wins	losses	timeplayed	playerrank	countrycode
-D	1	45719422	{TA}FireStorm	259	2559	948	3081930	10	US
-D	2	44602655	RAID|EPoX	246	2206	1697	3243239	10	FR
-D	3	45006981	Phantom0701	146	2035	431	2094545	10	CN
-	}
-*/
-	else {print 'Unknown type!';}
 
 	$num += strlen(preg_replace('/[\t\n]/','',$out));
 	print $out . "$\t" . $num . "\t$";
 
 	// Close database connection
 	@mysql_close($connection);
-	
 }
 ?>

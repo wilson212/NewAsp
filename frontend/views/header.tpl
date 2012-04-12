@@ -129,7 +129,7 @@
         </div>
 		
 		<div id="title">Private Stats Admin</div>
-		<div id="dbver">Code Version: <?php echo CODE_VER; ?> || Database Version: 1.4.7 </div>
+		<div id="dbver">Code Version: <?php echo CODE_VER; ?> || Database Version: <?php echo DB_VER ?> </div>
         
     </div>
     
@@ -149,37 +149,44 @@
                 	<li class="active"><a href="?task=home" class="mws-i-24 i-home">Dashboard</a></li>
 					<li>
                     	<a href="#" class="mws-i-24 i-list">System</a>
-                        <ul class="closed">
-                        	<li><a href="?task=editconfig">Edit Configuration</a></li>
-                        	<li><a href="?task=testconfig">Test System</a></li>
-							<li><a href="?task=installdb">Install Database</a></li>
-                        	<li><a href="?task=upgradedb">Upgrade Database</a></li>
-							<li><a href="?task=cleardb">Clear Database</a></li>
-							<li><a href="?task=backupdb">Backup Database</a></li>
-							<li><a href="?task=restoredb">Restore Database</a></li>
-                        </ul>
-                    </li>
-					<li>
-                    	<a href="#" class="mws-i-24 i-list">Manage Players</a>
-                        <ul class="closed">
-                        	<li><a href="?task=editplayers">Edit Players</a></li>
-                        	<li><a href="?task=banplayers">Ban Players</a></li>
-							<li><a href="?task=unbanplayers">UnBan Players</a></li>
-							<li><a href="?task=resetunlocks">Reset Player Unlocks</a></li>
-							<li><a href="?task=mergeplayers">Merge Players</a></li>
-							<li><a href="?task=deleteplayers">Delete Players</a></li>
-                        </ul>
-                    </li>
-                	<li>
-                    	<a href="#" class="mws-i-24 i-list">Server Admin</a>
-                        <ul class="closed">
-                        	<li><a href="?task=serverinfo">Server Info</a></li>
-                        	<li><a href="?task=mapinfo">Map Info</a></li>
-							<li><a href="?task=validateranks">Validate Ranks</a></li>
-							<li><a href="?task=checkawards">Check Awards</a></li>
-							<li><a href="?task=importlogs">Import Logs</a></li>
-                        </ul>
-                    </li>
+						<?php if(DB_VER == '0.0.0') { ?>
+							<ul>
+								<li><a href="?task=editconfig">Edit Configuration</a></li>
+								<li><a href="?task=installdb">Install Database</a></li>
+							</ul>
+						<?php }else{ ?>
+							<ul class="closed">
+								<li><a href="?task=editconfig">Edit Configuration</a></li>
+								<li><a href="?task=testconfig">Test System</a></li>
+								<li><a href="?task=installdb">Install Database</a></li>
+								<li><a href="?task=upgradedb">Upgrade Database</a></li>
+								<li><a href="?task=cleardb">Clear Database</a></li>
+								<li><a href="?task=backupdb">Backup Database</a></li>
+								<li><a href="?task=restoredb">Restore Database</a></li>
+							</ul>
+						</li>
+						<li>
+							<a href="#" class="mws-i-24 i-list">Manage Players</a>
+							<ul class="closed">
+								<li><a href="?task=editplayers">Edit Players</a></li>
+								<li><a href="?task=banplayers">Ban Players</a></li>
+								<li><a href="?task=unbanplayers">UnBan Players</a></li>
+								<li><a href="?task=resetunlocks">Reset Player Unlocks</a></li>
+								<li><a href="?task=mergeplayers">Merge Players</a></li>
+								<li><a href="?task=deleteplayers">Delete Players</a></li>
+							</ul>
+						</li>
+						<li>
+							<a href="#" class="mws-i-24 i-list">Server Admin</a>
+							<ul class="closed">
+								<li><a href="?task=serverinfo">Server Info</a></li>
+								<li><a href="?task=mapinfo">Map Info</a></li>
+								<li><a href="?task=validateranks">Validate Ranks</a></li>
+								<li><a href="?task=checkawards">Check Awards</a></li>
+								<li><a href="?task=importlogs">Import Logs</a></li>
+							</ul>
+						</li>
+						<?php } ?>
                 	<li><a href="index.php?action=logout" class="mws-i-24 i-cog">Logout</a></li>
                 </ul>
             </div>            
@@ -190,3 +197,13 @@
 			
 			<!-- Inner Container Start -->
             <div class="container">
+			<?php 
+				if(DB_VER == '0.0.0') 
+				{
+					if($_GET['task'] !== 'installdb' && $_GET['task'] !== 'editconfig')
+					{
+						echo '<div class="alert global">Unable to establish a database connection. If you need to setup the ASP, 
+						<a href="?task=installdb">Click Here to begin Installation</a></div>';
+					}
+				} 
+			?>

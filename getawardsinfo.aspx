@@ -27,11 +27,28 @@
  * 02/04/12 v1.0 - Release	             *
  *****************************************/
 
+/*
+| ---------------------------------------------------------------
+| Define ROOT and system paths
+| ---------------------------------------------------------------
+*/
+define('DS', DIRECTORY_SEPARATOR);
+define('ROOT', dirname(__FILE__));
+define('SYSTEM_PATH', ROOT . DS . 'system');
+
+/*
+| ---------------------------------------------------------------
+| Require the needed scripts to launch the system
+| ---------------------------------------------------------------
+*/
+require(SYSTEM_PATH . DS . 'core'. DS .'Registry.php');
+require(SYSTEM_PATH . DS . 'functions.php');
+
 //Disable Zlib Compression
 ini_set('zlib.output_compression', '0');
- 
-$pid = (isset($_GET['pid'])) ? $_GET['pid'] : false;
 
+// Make sure we have a Player ID and its valid!
+$pid = (isset($_GET['pid'])) ? $_GET['pid'] : false;
 if (!$pid || !is_numeric($pid))
 {
     print 'Invalid syntax!';
@@ -39,30 +56,36 @@ if (!$pid || !is_numeric($pid))
 else
 {
 	// Import configuration
-	require('includes/utils.php');
-	$cfg = new Config();
+	$cfg = load_class('Config');
 	
+	// Connect to the database
 	$connection = @mysql_connect($cfg->get('db_host'), $cfg->get('db_user'), $cfg->get('db_pass'));
 	@mysql_select_db($cfg->get('db_name'), $connection);
 	
+	// Prepare our output header
 	$head = "O\n" .
 		"H\tpid\tasof\n" .
 		"D\t$pid\t" . time() . "\n" .
 		"H\taward\tlevel\twhen\tfirst\n";
 	
+	// Query and get all of the Players awards
 	$query = "SELECT awd, level, earned, first FROM awards WHERE id = {$pid} ORDER BY id";
 	$result = mysql_query($query) or die(mysql_error());
 
 	$count = 0;
 	$out = "";
-	
 	if (mysql_num_rows($result))
 	{
 		while ($row = mysql_fetch_array($result))
 		{
-			if (($row['awd'] > 2000000) && ($row['awd'] < 3000000)) {$first = $row['first'];} #medals
-			else {$first = 0;}
-			
+			if (($row['awd'] > 2000000) && ($row['awd'] < 3000000)) 
+			{
+				$first = $row['first'];  #medals
+			}
+			else 
+			{
+				$first = 0;
+			}
 			$out .= "D\t$row[awd]\t$row[level]\t$row[earned]\t$first\n";
 		}
 	}
