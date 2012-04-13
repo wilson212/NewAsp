@@ -8,7 +8,7 @@ function build_navigation()
 	// Section links
 	$task = $_GET['task'];
 	$system = array('editconfig','testconfig','installdb','upgradedb','cleardb','backupdb','restoredb');
-	$players = array('editplayers','banplayers','unbanplayers','resetunlocks','mergeplayers','deleteplayers');
+	$players = array('manageplayers','mergeplayers','importplayer');
 	$server = array('serverinfo','mapinfo','validateranks','checkawards','importlogs');
 	
 	// Prepare for open/closed sections
@@ -46,12 +46,9 @@ function build_navigation()
 					<li'; if($Plyrs == true) $html .= ' class="active"'; $html .= '>
 						<a href="#" class="mws-i-24 i-list">Manage Players</a>
 						<ul'; if($Plyrs == false) $html .= ' class="closed"'; $html .= '>
-							<li><a href="?task=editplayers">Edit Players</a></li>
-							<li><a href="?task=banplayers">Ban Players</a></li>
-							<li><a href="?task=unbanplayers">UnBan Players</a></li>
-							<li><a href="?task=resetunlocks">Reset Player Unlocks</a></li>
+							<li><a href="?task=manageplayers">Manage Players</a></li>
 							<li><a href="?task=mergeplayers">Merge Players</a></li>
-							<li><a href="?task=deleteplayers">Delete Players</a></li>
+							<li><a href="?task=importplayer">Import Player From EA</a></li>
 						</ul>
 					</li>
 					<li'; if($Svr == true) $html .= ' class="active"'; $html .= '>

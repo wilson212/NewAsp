@@ -157,7 +157,7 @@ class Database
 | Returns a single row of data from the database
 |
 */
-	public function fetch_row($query)
+	public function fetch_row()
 	{
 		// Make sure we have someting to return
 		if($this->result() == false || mysql_num_rows($this->sql) == 0)
