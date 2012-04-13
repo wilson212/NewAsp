@@ -26,6 +26,8 @@
 define('DS', DIRECTORY_SEPARATOR);
 define('ROOT', dirname(__FILE__));
 define('SYSTEM_PATH', ROOT . DS . 'system');
+define('SNAPSHOT_TEMP_PATH', SYSTEM_PATH . DS . 'snapshots' . DS . 'incomplete');
+define('SNAPSHOT_STORE_PATH', SYSTEM_PATH . DS . 'snapshots' . DS . 'processed');
 define("_ERR_RESPONSE","E\nH\tresponse\nD\t<font color=\"red\">ERROR</font>: ");
 
 // Set Error Reporting
@@ -47,10 +49,6 @@ require( SYSTEM_PATH . DS . 'functions.php' );
 
 // Start the config class
 $cfg = load_class('Config');
-
-// Define a few more paths
-define('STATS_LOG_PATH', ROOT . DS . str_replace(array('/', '\\'), DS, trim($cfg->get('stats_logs'), '/')));
-define('STATS_STORE_PATH', ROOT . DS . str_replace(array('/', '\\'), DS, trim($cfg->get('stats_logs_store'), '/')));
 
 // Set POINTS!!!!!
 $killscore = 5;
@@ -91,7 +89,7 @@ if ($data['EOF'] != 1)
 
 
 // Import Backend Awards Data
-require( SYSTEM_PATH . DS . 'data.awards.php' );
+require( SYSTEM_PATH . DS . 'data' . DS . 'awards.php' );
 $awardsdata = buildAwardsData($data['v']);
 $backendawardsdata = buildBackendAwardsData($data['v']);
 
@@ -102,7 +100,7 @@ if ($prefix != '')
 {
 	$stats_filename .= $prefix . '-';
 }
-$stats_filename .= $mapname . '_' . $mapdate . $cfg->get('stats_ext');
+$stats_filename .= $mapname . '_' . $mapdate . '.txt';
 
 // SNAPSHOT Data OK
 $errmsg = "SNAPSHOT Data Complete ({$mapname}:{$mapdate})";
@@ -111,11 +109,11 @@ ErrorLog($errmsg, 3);
 // Create SNAPSHOT backup file
 if (!isset($data['import']) || $data['import'] != 1)
 {
-	$file = @fopen( STATS_LOG_PATH . DS . $stats_filename, 'wb');
+	$file = @fopen( SNAPSHOT_TEMP_PATH . DS . $stats_filename, 'wb');
 	@fwrite($file, $rawdata);
 	@fclose($file);
 	
-	$errmsg = "SNAPSHOT Data Logged (" . STATS_LOG_PATH . DS . $stats_filename . ")";
+	$errmsg = "SNAPSHOT Data Logged (" . SNAPSHOT_TEMP_PATH . DS . $stats_filename . ")";
 	ErrorLog($errmsg, 3);
 	
 	// Tell the game server that the snapshot has been received
@@ -129,23 +127,37 @@ if (!isset($data['import']) || $data['import'] != 1)
 	flush();
 }
 
+// Open database connection
+$connection = @mysql_connect($cfg->get('db_host'), $cfg->get('db_user'), $cfg->get('db_pass'));
+if(!$connection)
+{
+	$errmsg = "Failed to establish Database connection";
+	ErrorLog($errmsg, 1);
+	die();
+}
+
+// Select Database
+$db_selection = @mysql_select_db($cfg->get('db_name'), $connection);
+if(!$db_selection)
+{
+	$errmsg = "Failed to select database (". $cfg->get('db_name') .")";
+	ErrorLog($errmsg, 1);
+	die();
+}
+
 // Check Database Version
 $curdbver = getDbVer();
 if ($curdbver != $cfg->get('db_expected_ver')) 
 {
-	$errmsg = "Database version expected: ".$cfg->get('db_expected_ver').", Found: {$curdbver}";
+	$errmsg = "Database version expected: ".$cfg->get('db_expected_ver').", Found: ". $curdbver;
 	ErrorLog($errmsg, 1);
 	die();
 } 
 else 
 {
-	$errmsg = "Database version expected: ".$cfg->get('db_expected_ver').", Found: {$curdbver}";
+	$errmsg = "Database version expected: ".$cfg->get('db_expected_ver').", Found: ". $curdbver;
 	ErrorLog($errmsg, 3);
 }
-
-// Open database connection
-$connection = @mysql_connect($cfg->get('db_host'), $cfg->get('db_user'), $cfg->get('db_pass'));
-@mysql_select_db($cfg->get('db_name'), $connection);
 
 // Global variables
 $globals = array();
@@ -1308,39 +1320,37 @@ if ($data['pc'] >= $cfg->get('stats_players_min') && $globals['roundtime'] >= $c
 	/********************************
 	* Process 'Archive Data File'
 	********************************/
-	if ($cfg->get('stats_move_logs') == 1)
+	$fn_src = SNAPSHOT_TEMP_PATH . DS . $stats_filename;
+	$fn_dest = SNAPSHOT_STORE_PATH . DS . $stats_filename;
+	
+	if (file_exists($fn_src)) 
 	{
-		$fn_src = STATS_LOG_PATH . DS . $stats_filename;
-		$fn_dest = STATS_STORE_PATH . DS . $stats_filename;
+		if (file_exists($fn_dest)) 
+		{
+			$errmsg = "SNAPSHOT Data File Already Exists, Over-writing! ({$fn_src} -> {$fn_dest})";
+			ErrorLog($errmsg, 2);
+		}
+		copy($fn_src, $fn_dest);
 		
-		if (file_exists($fn_src)) 
-        {
-			if (file_exists($fn_dest)) 
-            {
-				$errmsg = "SNAPSHOT Data File Already Exists, Over-writing! ({$fn_src} -> {$fn_dest})";
-				ErrorLog($errmsg, 2);
-			}
-			copy($fn_src, $fn_dest);
-			
-			// Remove the original ONLY if it copies
-			if (file_exists($fn_dest)) 
-            {
-				unlink($fn_src);
-				$errmsg = "SNAPSHOT Data File Moved! ({$fn_src} -> {$fn_dest})";
-				ErrorLog($errmsg, 3);
-			}
-			else
-			{
-				$errmsg = "SNAPSHOT Data File *NOT* Moved! Server was unable to create Data File. ({$fn_dest})";
-				ErrorLog($errmsg, 2);
-			}
+		// Remove the original ONLY if it copies
+		if (file_exists($fn_dest)) 
+		{
+			unlink($fn_src);
+			$errmsg = "SNAPSHOT Data File Moved! ({$fn_src} -> {$fn_dest})";
+			ErrorLog($errmsg, 3);
 		}
 		else
 		{
-			$errmsg = "SNAPSHOT Log File Does Exists! Unable to move to storage path ({$fn_src})";
+			$errmsg = "SNAPSHOT Data File *NOT* Moved! Server was unable to create Data File. ({$fn_dest})";
 			ErrorLog($errmsg, 2);
 		}
 	}
+	else
+	{
+		$errmsg = "SNAPSHOT Log File Does Exists! Unable to move to storage path ({$fn_src})";
+		ErrorLog($errmsg, 2);
+	}
+
 	$errmsg = "SNAPSHOT Data File Processed: {$stats_filename}";
 	ErrorLog($errmsg, -1);
 }

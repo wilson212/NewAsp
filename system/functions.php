@@ -182,6 +182,20 @@
 	
 /*
 | ---------------------------------------------------------------
+| Function: microtime_float()
+| ---------------------------------------------------------------
+|
+| Returns the absolute microtime in a float
+|
+*/
+	function microtime_float() 
+	{
+		list($usec, $sec) = explode(" ", microtime());
+		return ((float)$usec + (float)$sec);
+	}
+	
+/*
+| ---------------------------------------------------------------
 | Method: get_database_stats()
 | ---------------------------------------------------------------
 |
@@ -491,7 +505,7 @@ function ErrorLog($msg, $lvl)
 	if($lvl <= $Config->get('debug_lvl'))
 	{
 		$err_msg = date('Y-m-d H:i:s')." -- ".$lvl_txt.$msg."\n";
-		$log = ROOT . DS . str_replace(array('/', '\\'), DS, ltrim($Config->get('debug_log'), '/'));
+		$log = SYSTEM_PATH . DS . 'logs' . DS . 'stats_debug.log';
 		$file = @fopen($log, 'a');
 		@fwrite($file, $err_msg);
 		@fclose($file);

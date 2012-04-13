@@ -114,6 +114,11 @@ class Template
 */
 	protected function output()
 	{
+		// Include template file if it exists
+		$___file = ROOT . DS . 'frontend' . DS . 'template.php';
+		if(file_exists( $___file )) include( $___file );
+		unset($___file);
+		
 		// use output buffering to catch the page. We do this so 
         // we can catch php errors in the template
         ob_start();

@@ -61,8 +61,8 @@ class Testconfig
 		
 		// Check Log File Write Access
 		$out .= " > Checking Log Files...<br />";
-		$log = str_replace(array('/', '\\'), DS, ltrim($Config->get('debug_log'), '/'));
-		if (!$Fs->is_writable( ROOT . DS . $log ))
+		$log = SYSTEM_PATH . DS . 'logs' . DS . 'stats_debug.log';
+		if (!$Fs->is_writable( $log ))
 		{
 			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Error Log File Writable: ".__WARN;
 			$warns = true;
@@ -73,8 +73,8 @@ class Testconfig
 		}
 		
 		// Check Admin Log
-		$log = str_replace(array('/', '\\'), DS, ltrim($Config->get('admin_log'), '/'));
-		if (!$Fs->is_writable( ROOT . DS . $log ))
+		$log = SYSTEM_PATH . DS . 'logs' . DS . 'admin_event.log';
+		if (!$Fs->is_writable( $log ))
 		{
 			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Admin Log File Writable: ".__WARN;
 			$warns = true;
@@ -101,6 +101,17 @@ class Testconfig
 			default:
 				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Database host (".$Config->get('db_host').") access: ".__PASS;
 				$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Database (".$Config->get('db_name').") exists: ".__PASS;
+				
+				// Check Database Version
+				$curdbver = getDbVer();
+				if ($curdbver != $Config->get('db_expected_ver')) 
+				{
+					$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Database version (".$Config->get('db_expected_ver')."): ".__FAIL;
+				} 
+				else 
+				{
+					$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Database version (".$Config->get('db_expected_ver')."): ".__PASS;
+				}
 				break;
 		}
 		
@@ -110,8 +121,8 @@ class Testconfig
 		
 		// SNAPSHOTS
 		$out .= " > Checking SNAPSHOT Storage Path...<br />";
-		$path = str_replace(array('/', '\\'), DS, ltrim($Config->get('stats_logs'), '/'));
-		if (!$Fs->is_writable( ROOT . DS . $path ))
+		$path = SYSTEM_PATH . DS . 'snapshots' . DS . 'unprocessed';
+		if (!$Fs->is_writable( $path ))
 		{
 			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- SNAPSHOT Path Writable: ".__FAIL;
 			$errors = true;
@@ -123,8 +134,8 @@ class Testconfig
 		
 		// Snapshot Archive Path
 		$out .= " > Checking SNAPSHOT Archive Storage Path...<br />";
-		$path = str_replace(array('/', '\\'), DS, ltrim($Config->get('stats_logs_store'), '/'));
-		if (!$Fs->is_writable( ROOT . DS . $path ))
+		$path = SYSTEM_PATH . DS . 'snapshots' . DS . 'processed';
+		if (!$Fs->is_writable( $path ))
 		{
 			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- SNAPSHOT Archive Path Writable: ".__FAIL;
 			$errors = true;

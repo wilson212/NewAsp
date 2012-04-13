@@ -4,6 +4,10 @@ body
 	color:#323232;
 	font:13px/1.5 'PTSansRegular', Arial, Helvetica, sans-serif;
 }
+#mws-login h1 img
+{
+	margin: -4px 3px 0 0;
+}
 
 .mws-inset
 {
@@ -141,5 +145,5 @@ div#mws-login input.mws-login-password.error
 div#mws-login input.mws-login-button
 {
 	width:100%;
-	border:1px solid #284609;
+	border:1px solid #980b15;
 }

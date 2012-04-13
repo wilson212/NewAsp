@@ -10,6 +10,7 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,maximum-scale=1" />
 
 	<!-- Required Stylesheets -->
+	<link rel="icon" type="image/png" href="frontend/images/bf2_icon.png">
 	<link rel="stylesheet" type="text/css" href="frontend/css/reset.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="frontend/css/text.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="frontend/css/fonts/ptsans/stylesheet.css" media="screen" />
@@ -41,7 +42,7 @@
 
     <div id="mws-login-wrapper">
         <div id="mws-login">
-            <h1>Private Stats Admin Login</h1>
+            <h1><img src="frontend/images/bf2_icon.png">Private Stats Admin Login</h1>
             <div class="mws-login-lock"><img src="frontend/css/icons/24/locked-2.png" alt="" /></div>
             <div id="mws-login-form">
                 <form class="mws-form" action="index.php?task=<?php echo $_GET['task']; ?>" method="post">
@@ -57,7 +58,7 @@
                         </div>
                     </div>
                     <div class="mws-form-row">
-                        <input type="submit" value="Login" class="mws-button green mws-login-button" />
+                        <input type="submit" value="Login" class="mws-button red mws-login-button" />
                     </div>
                 </form>
             </div>

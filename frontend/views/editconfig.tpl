@@ -53,33 +53,6 @@
 				<!-- Stats Processing -->
 				<h3 style="margin-left: 50px; margin-top: 35px;">Stats Processing Options</h3>
 				<div class="mws-form-row">
-					<label>Snapshot Logs Ext:</label>
-					<div class="mws-form-item small">
-						<input type="text" class="mws-textinput" name="cfg__stats_ext" value="{config.stats_ext}" title="Extension for SNAPSHOT logs (Default: '.stats')."/>
-					</div>
-				</div>
-				<div class="mws-form-row">
-					<label>Snapshot Logs Path:</label>
-					<div class="mws-form-item small">
-						<input type="text" class="mws-textinput" name="cfg__stats_logs" value="{config.stats_logs}" title="Path to store SNAPSHOT logs during processing (Include trailing '/')."/>
-					</div>
-				</div>
-				<div class="mws-form-row">
-					<label>Archive Snapshots?:</label>
-					<div class="mws-form-item small">
-						<select name="cfg__stats_move_logs" title="Archive SNAPSHOTS logs after processing">
-							<option value="1" <?php if('{config.stats_move_logs}' == '1') echo 'selected="selected"'; ?>>Yes</option>
-							<option value="0" <?php if('{config.stats_move_logs}' == '0') echo 'selected="selected"'; ?>>No</option>
-						</select>
-					</div>
-				</div>
-				<div class="mws-form-row">
-					<label>Snapshot Archive Path:</label>
-					<div class="mws-form-item small">
-						<input type="text" class="mws-textinput" name="cfg__stats_logs_store" value="{config.stats_logs_store}" title="Path to archive SNAPSHOT logs after processing (Include trailing '/')."/>
-					</div>
-				</div>
-				<div class="mws-form-row">
 					<label>Min. Game Time (Round):</label>
 					<div class="mws-form-item small">
 						<input type="text" class="mws-textinput" name="cfg__stats_min_game_time" value="{config.stats_min_game_time}" title="Minimum game time of total round in SNAPSHOT before processing (Seconds)?"/>
@@ -232,21 +205,9 @@
 					</div>
 				</div>
 				<div class="mws-form-row">
-					<label>Admin Log Path:</label>
+					<label>Stats Logging:</label>
 					<div class="mws-form-item small">
-						<input type="text" class="mws-textinput" name="cfg__admin_log" value="{config.admin_log}" title="File to log admin actions. Leave blank to disable."/>
-					</div>
-				</div>
-				<div class="mws-form-row">
-					<label>Error Log Path:</label>
-					<div class="mws-form-item small">
-						<input type="text" class="mws-textinput" name="cfg__debug_log" value="{config.debug_log}" title="Location of Error Log File."/>
-					</div>
-				</div>
-				<div class="mws-form-row">
-					<label>Error Level:</label>
-					<div class="mws-form-item small">
-						<select name="cfg__debug_lvl" title="Error Logging Level (Includes all message above selected option).">
+						<select name="cfg__debug_lvl" title="Stats Debug Logging Level (Includes all message above selected option).">
 							<option value="0" <?php if('{config.debug_lvl}' == '0') echo 'selected="selected"'; ?>>Security (0)</option>
 							<option value="1" <?php if('{config.debug_lvl}' == '1') echo 'selected="selected"'; ?>>Errors (1)</option>
 							<option value="2" <?php if('{config.debug_lvl}' == '2') echo 'selected="selected"'; ?>>Warning (2)</option>

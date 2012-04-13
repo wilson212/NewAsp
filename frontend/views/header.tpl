@@ -10,6 +10,7 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,maximum-scale=1" />
 
 	<!-- Required Stylesheets -->
+	<link rel="icon" type="image/png" href="frontend/images/bf2_icon.png">
 	<link rel="stylesheet" type="text/css" href="frontend/css/reset.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="frontend/css/text.css" media="screen" />
 	<link rel="stylesheet" type="text/css" href="frontend/css/fonts/ptsans/stylesheet.css" media="screen" />
@@ -146,48 +147,7 @@
             <!-- Main Navigation -->
             <div id="mws-navigation">
             	<ul>
-                	<li class="active"><a href="?task=home" class="mws-i-24 i-home">Dashboard</a></li>
-					<li>
-                    	<a href="#" class="mws-i-24 i-list">System</a>
-						<?php if(DB_VER == '0.0.0') { ?>
-							<ul>
-								<li><a href="?task=editconfig">Edit Configuration</a></li>
-								<li><a href="?task=installdb">Install Database</a></li>
-							</ul>
-						<?php }else{ ?>
-							<ul class="closed">
-								<li><a href="?task=editconfig">Edit Configuration</a></li>
-								<li><a href="?task=testconfig">Test System</a></li>
-								<li><a href="?task=installdb">Install Database</a></li>
-								<li><a href="?task=upgradedb">Upgrade Database</a></li>
-								<li><a href="?task=cleardb">Clear Database</a></li>
-								<li><a href="?task=backupdb">Backup Database</a></li>
-								<li><a href="?task=restoredb">Restore Database</a></li>
-							</ul>
-						</li>
-						<li>
-							<a href="#" class="mws-i-24 i-list">Manage Players</a>
-							<ul class="closed">
-								<li><a href="?task=editplayers">Edit Players</a></li>
-								<li><a href="?task=banplayers">Ban Players</a></li>
-								<li><a href="?task=unbanplayers">UnBan Players</a></li>
-								<li><a href="?task=resetunlocks">Reset Player Unlocks</a></li>
-								<li><a href="?task=mergeplayers">Merge Players</a></li>
-								<li><a href="?task=deleteplayers">Delete Players</a></li>
-							</ul>
-						</li>
-						<li>
-							<a href="#" class="mws-i-24 i-list">Server Admin</a>
-							<ul class="closed">
-								<li><a href="?task=serverinfo">Server Info</a></li>
-								<li><a href="?task=mapinfo">Map Info</a></li>
-								<li><a href="?task=validateranks">Validate Ranks</a></li>
-								<li><a href="?task=checkawards">Check Awards</a></li>
-								<li><a href="?task=importlogs">Import Logs</a></li>
-							</ul>
-						</li>
-						<?php } ?>
-                	<li><a href="index.php?action=logout" class="mws-i-24 i-cog">Logout</a></li>
+                	<?php build_navigation(); ?>
                 </ul>
             </div>            
         </div>
