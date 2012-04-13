@@ -17,7 +17,7 @@ $(document).ready(function() {
 		width: "600",
 	});
 
-    // bind the Config form using 'ajaxForm' 
+    // bind the Players form using 'ajaxForm' 
     $('#mws-validate').ajaxForm({
         beforeSubmit: function (arr, data, options)
         {

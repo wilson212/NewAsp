@@ -13,12 +13,36 @@ class Serverinfo
 		{
 			$this->Process($result);
 		}
+		elseif($_POST['action'] == 'configure')
+		{
+			$this->Configure();
+		}
 		else
 		{
 			// Setup the template
 			$Template = load_class('Template');
 			$Template->set('servers', $result);
 			$Template->render('serverinfo');
+		}
+	}
+	
+	public function Configure()
+	{
+		// Get our post data
+		$port = mysql_real_escape_string($_POST['port']);
+		$password = mysql_real_escape_string($_POST['password']);
+		$id = mysql_real_escape_string($_POST['id']);
+		
+		// Load database and query
+		$this->DB = load_database();
+		$result = $this->DB->query("UPDATE `servers` SET `rcon_port` = '$port', `rcon_password` = '$password' WHERE `id`=$id;")->result();
+		if(!$result)
+		{
+			echo json_encode( array('success' => false, 'message' => 'Error updating Rcon data in the database. Please refresh the page and try again.') );
+		}
+		else
+		{
+			echo json_encode( array('success' => true, 'message' => 'Rcon data saved Successfully!') );
 		}
 	}
 	
@@ -49,7 +73,6 @@ class Serverinfo
 		}
 		
 		echo json_encode( array('data' => $data) );
-		
 	}
 }
 ?>
