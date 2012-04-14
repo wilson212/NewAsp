@@ -1,6 +1,6 @@
 <div class="mws-panel grid_8">
 	<div class="mws-panel-header">
-		<span class="mws-i-24 i-table-1">Map Info</span>
+		<span class="mws-i-24 i-globe">Map Info</span>
 	</div>
 	<div class="mws-panel-body">
 		<table class="mws-datatable-fn mws-table">

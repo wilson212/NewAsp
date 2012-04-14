@@ -1,6 +1,6 @@
 <?php
 
-$rankdata = array(
+$ranks = array(
 	1 => array(
 		'title' => 'Private First Class',
 		'points' => 150,
@@ -77,12 +77,6 @@ $rankdata = array(
 			'1220803' => 1, // Helicopter Badge
 			'1222016' => 1  // Transport Badge
 		)
-	),
-	11 => array(
-		'title' => 'Sergeant Major of the Corps',
-		'points' => -1,
-		'has_rank' => array(9, 10),
-		'has_awards' => array()
 	),
 	12 => array(
 		'title' => '2nd Lieutenant',

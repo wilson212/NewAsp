@@ -1,6 +1,6 @@
 <div class="mws-panel grid_8">
 	<div class="mws-panel-header">
-		<span class="mws-i-24 i-alert">Restore Database</span>
+		<span class="mws-i-24 i-tools">Restore Database</span>
 	</div>
 	<div class="mws-panel-body">
 		<div class="content">

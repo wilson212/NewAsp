@@ -13,7 +13,7 @@ class Manageplayers
 					break;
 					
 				case "player":
-					$this->getPlayer($_POST['id']);
+					$this->processPlayer($_POST['id']);
 					break;
 					
 				case "action":
@@ -219,7 +219,7 @@ class Manageplayers
 				}
 			}
 			
-			// Add manage button!
+			// Add manage button and country flag... also fancy little permban yes/no
 			$C = ($row[5] == '') ? 'US' : strtoupper($row[5]);
 			$flag = $C .'.png';
 			$row[5] = '<img src="frontend/images/flags/'. $flag .'" height="16" width="24" alt="'. $C .'">';
@@ -231,7 +231,7 @@ class Manageplayers
 		echo json_encode( $output );
 	}
 	
-	public function getPlayer($pid)
+	public function processPlayer($pid)
 	{
 		// Load the database
 		$DB = load_database();

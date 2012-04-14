@@ -1,6 +1,6 @@
 <div class="mws-panel grid_8">
 	<div class="mws-panel-header">
-		<span class="mws-i-24 i-alert">Backup System Database</span>
+		<span class="mws-i-24 i-box-incoming-2">Backup System Database</span>
 	</div>
 	<div class="mws-panel-body">
 		<div class="mws-panel-content">

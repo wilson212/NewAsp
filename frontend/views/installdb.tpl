@@ -1,6 +1,6 @@
 <div class="mws-panel grid_8">
 	<div class="mws-panel-header">
-		<span class="mws-i-24 i-alert">Install BF2 Private Stats Database</span>
+		<span class="mws-i-24 i-repeat">Install BF2 Private Stats Database</span>
 	</div>
 	<div class="mws-panel-body">
 		<div class="content">

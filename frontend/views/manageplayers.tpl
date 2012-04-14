@@ -1,6 +1,6 @@
 <div class="mws-panel grid_8">
 	<div class="mws-panel-header">
-		<span class="mws-i-24 i-table-1">Manage Players</span>
+		<span class="mws-i-24 i-running-man">Manage Players</span>
 	</div>
 	<div class="mws-panel-body">
 		<table class="mws-datatable-fn mws-table">

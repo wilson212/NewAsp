@@ -1,6 +1,6 @@
 <div class="mws-panel grid_8">
 	<div class="mws-panel-header">
-		<span class="mws-i-24 i-alert">Upgrade System Database</span>
+		<span class="mws-i-24 i-refresh">Upgrade System Database</span>
 	</div>
 	<div class="mws-panel-body">
 		<div class="mws-panel-content">
