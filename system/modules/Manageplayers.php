@@ -306,7 +306,7 @@ class Manageplayers
 		{
 				
 			case "delete":
-				echo json_encode( array('success' => $Player->deletePlayers($pid)) );
+				echo json_encode( array('success' => $Player->deletePlayer($pid)) );
 				break;
 		}
 	}

@@ -1,18 +1,37 @@
 <?php
 class Player
 {
+    /* Class Variables */
     protected $DB;
     protected $messages = array();
+    protected $rankdata = false;
+    protected $awardsdata = false;
     
+/*
+| ---------------------------------------------------------------
+| Constructer
+| ---------------------------------------------------------------
+*/ 
     public function __construct()
     {
+        // Init DB connection
         $this->DB = load_database();
+        
+        // Load Rank data
+        if(!$this->rankdata)
+        {
+            include( SYSTEM_PATH . DS . 'data'. DS . 'ranks.php' );
+            $this->rankdata = $ranks;
+        }
     }
     
 /*
 | ---------------------------------------------------------------
 | Method: log()
 | ---------------------------------------------------------------
+|
+| This method logs messages from the methods in this class
+|
 */ 
     protected function log($message)
     {
@@ -23,14 +42,12 @@ class Player
 | ---------------------------------------------------------------
 | Method: deletePlayer()
 | ---------------------------------------------------------------
+|
+| This method is used to delete all player data from all bf2 tables
+|
 */   
-    public function deletePlayers($pid)
+    public function deletePlayer($pid)
     {
-        if(is_array($pid))
-        {
-            $pid = implode(", ", $pid);
-        }
-        
         // Build Data Table Array
         $return = true;
         $DataTables = getDataTables();
@@ -44,22 +61,22 @@ class Player
                 $query = "DELETE FROM `" . $DataTable . "` ";
                 if ($DataTable == 'kills') 
                 {
-                    $query .= "WHERE ((attacker IN ({$pid})) OR (victim IN ({$pid})));";
+                    $query .= "WHERE `attacker` = {$pid} OR `victim` = {$pid};";
                 } 
                 else 
                 {
-                    $query .= "WHERE id IN ({$pid});";
+                    $query .= "WHERE `id` = {$pid};";
                 }
 
                 $result = $this->DB->query($query)->result();
                 if ($result) 
                 {
-                    $this->log("Player(s) removed from Table (" . $DataTable . ").");
+                    $this->log("Player removed from Table (" . $DataTable . ").");
                 } 
                 else 
                 {
                     $return = false;
-                    $this->log("<font color='red'>ERROR:</font> Player(s)  *NOT* removed from Table (" . $DataTable . ")!");
+                    $this->log("Player *NOT* removed from Table (" . $DataTable . ")!");
                 }
             }
         }
@@ -71,30 +88,30 @@ class Player
 | ---------------------------------------------------------------
 | Method: validateRank()
 | ---------------------------------------------------------------
+|
+| This method will validate and correct the given players rank
+| based on the values stored in the "system/data/ranks.php"
+|
 */    
-    public function validateRank($pid, $force = false)
+    public function validateRank($pid)
     {
-        // Declare this!
-        static $rankdata = false;
-        
         // Get our player
         $query = "SELECT `id`, `score`, `rank` FROM `player` WHERE `id`=". mysql_real_escape_string($pid);
         $this->DB->query($query);
         if($this->DB->num_rows())
         {
             // Setup our player variables
-            $row = $this->DB->fetch_row();
-            $expRank = 0;
-            $pid = (int)$row['id'];
+            $row   = $this->DB->fetch_row();
+            $pid   = (int)$row['id'];
             $score = (int)$row['score'];
             $rank  = (int)$row['rank'];
             
-            // Inlcude our rank data
-            include_once( SYSTEM_PATH . DS . 'data'. DS . 'ranks.php' );
-            if($rankdata == false) $rankdata = $ranks;
+            // Our set rank and expected ranks
+            $setRank = 0;
+            $expRank = 0;
             
             // Figure out which rank we are suppossed to be by points
-            foreach($rankdata as $key => $value)
+            foreach($this->rankdata as $key => $value)
             {
                 // Keep going till we are no longer in the correct point range
                 if($value['points'] != -1 && ($value['points'] < $score))
@@ -103,81 +120,102 @@ class Player
                 }
             }
             
-            // No SGM or the corps here
-            if($expRank == 11) $expRank--;
-            
-            // Dont promote MSG to 1SG or MGYSGT to SGM if there are the lower rank isnt in the has_rank list!
-            if(($rank == 7 && $expRank == 8) ||($rank == 9 && $expRank == 10))
+            // SetRank if we are good!
+            if($rank == $expRank)
             {
-                if(is_array($rankdata[$expRank]['has_rank']))
-                {
-                    if(!in_array($rank)) $expRank--;
-                }
-                elseif($rankdata[$expRank]['has_rank'] != $rank)
-                {
-                    $expRank--;
-                }
+                $setRank = $rank;
             }
 
-            // Only update if Rank is less than expected or we are forcing our hand here
-            if($rank < $expRank || ($force == true && $rank != $expRank && $rank != 21))
+            // If the rank isnt as expected, and we are not a 4 start gen... then we need to process ranks
+            elseif($rank != $expRank && $rank != 21)
             {
-                // If rank requires medals, then we have to check if the player has them
-                if(!empty($rankdata[$expRank]['has_awards']))
+                // Get player awards
+                $query = "SELECT * FROM `awards` WHERE `id` = ". mysql_real_escape_string($pid);
+                $awards = $this->DB->query($query)->fetch_array();
+                if($awards == false) $awards = array();
+                
+                // Build our player awards list
+                $player_awards = array();
+                foreach($awards as $value)
                 {
-                    $good = true;
-                    $query = "SELECT * FROM `awards` WHERE `id` = ". mysql_real_escape_string($pid);
-                    $this->DB->query($query);
-                    if($this->DB->num_rows())
+                    $player_awards[$value['awd']] = $value['level'];
+                }
+                
+                // Prevent rank skipping unless the player meets ALL prior rank requirements
+                for($i = 1; $i <= $expRank; $i++)
+                {
+                    // First, we must check to see if the set rank is IN the net rank Reqs.
+                    $ranklist = $this->rankdata[$i]['has_rank'];
+                    if(is_array($ranklist))
                     {
-                        // Build a list of player awards
-                        $awards = $this->DB->fetch_array();
-                        foreach($awards as $value)
+                        if(!in_array($setRank, $ranklist))
                         {
-                            $player_awards[$value['awd']] = $value['level'];
+                            // Check if we are higher ranking
+                            $higher = true;
+                            foreach($ranklist as $r)
+                            {
+                                if($setRank < $r) $higher = false;
+                            }
+                            
+                            // If we arent higher rank then the list reqs, then we must
+                            // skip to the next rank :(
+                            if($higher == false) continue;
                         }
-                        
-                        // Another ;)
-                        foreach($rankdata[$expRank]['has_awards'] as $award => $level)
+                    }
+                    elseif( !($setRank >= $ranklist) )
+                    {
+                        // Break if the user doesnt have the corret (or higher) rank for rankup
+                        break;
+                    }
+
+                    // If rank requires medals, then we have to check if the player has them
+                    if(!empty($this->rankdata[$i]['has_awards']))
+                    {
+                        // Good marker
+                        $good = true;
+
+                        // Make sure the player has each reward required
+                        foreach($this->rankdata[$i]['has_awards'] as $award => $level)
                         {
                             // Check if the award is in the list of players earned awards
                             if(array_key_exists($award, $player_awards))
                             {
-                                $lvl = $player_awards[$award];
-                                
                                 // Check to see if the level of the earned award is geater or equalvalue of the required award
-                                if($lvl >= $level)
+                                if($player_awards[$award] >= $level)
                                 {
                                     // The award is good, move to the next award in the loop
                                     continue;
                                 }
                                 else
                                 {
-                                    // return FALSE because the level is too low
+                                    // Award level is too low
                                     $good = false;
                                 }
                             }
                             else
                             {
-                                // Return FALSE because the user doesnt have the award
+                                // The user doesnt have the award
                                 $good = false;
                             }
+                        }
+                        
+                        // If we have the req. medals for this rank
+                        if($good == true)
+                        {
+                            $setRank = $i;
                         }
                     }
                     else
                     {
-                        $good = false;
-                    }
-                    
-                    // If we cant have this rank, then go back one more
-                    if($good == false)
-                    {
-                        $expRank = $expRank -1;
+                        $setRank = $i;
                     }
                 }
-                
-                // Update Database
-                $query = "UPDATE `player` SET `rank` = ".$expRank." WHERE `id` = ". $pid;
+            }
+            
+            // Update Database if we arent a 4 star gen, or smoc with a higher rank award
+            if(($rank == 11 && $setRank > 11) || ($rank != 21 && $rank != $setRank))
+            {
+                $query = "UPDATE `player` SET `rank` = ". $setRank ." WHERE `id` = ". $pid;
                 if (!$this->DB->query($query)->result()) 
                 {
                     return FALSE;
@@ -192,11 +230,15 @@ class Player
             return FALSE;
         }
     }
- 
+
 /*
 | ---------------------------------------------------------------
 | Method: checkAwards()
 | ---------------------------------------------------------------
+|
+| This method will validate and correct the given players 'army'
+| awards based on the values stored in the "system/data/awards.php"
+|
 */  
     public function checkAwards($pid)
     {

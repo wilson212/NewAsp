@@ -26,13 +26,13 @@ class Importlogs
 		$files = array();
 
 		// Get the file names of all incomplete snapshots
-		$dir = @opendir( SYSTEM_PATH . DS . 'snapshots' . DS . 'incomplete' . DS );
+		$dir = @opendir( SYSTEM_PATH . DS . 'snapshots' . DS . 'temp' . DS );
 		if(!$dir)
 		{
 			echo json_encode( 
 				array(
 					'success' => false, 
-					'message' => 'Unable to open snapshot directory ('. SYSTEM_PATH . DS . 'snapshots' . DS . 'incomplete' . DS .')'
+					'message' => 'Unable to open snapshot directory ('. SYSTEM_PATH . DS . 'snapshots' . DS . 'temp' . DS .')'
 				)
 			);
 			die();
@@ -45,7 +45,7 @@ class Importlogs
 			{
 				if( preg_match($regex, $file, $sort) )
 				{
-					$files[] = SYSTEM_PATH . DS . 'snapshots' . DS . 'incomplete' . DS . "|" . $file;
+					$files[] = SYSTEM_PATH . DS . 'snapshots' . DS . 'temp' . DS . "|" . $file;
 				}
 			}
 		}
@@ -105,14 +105,20 @@ class Importlogs
 			
 			// post the data
 			$fh = @fsockopen($_SERVER['HTTP_HOST'], 80);
-			fwrite($fh, "POST /ASP/bf2statistics.php HTTP/1.1\r\n");
-			fwrite($fh, "HOST: localhost\r\n");
-			fwrite($fh, "User-Agent: GameSpyHTTP/1.0\r\n");
-			fwrite($fh, "Content-Type: application/x-www-form-urlencoded\r\n");
-			fwrite($fh, "Content-Length: " . strlen($data) . "\r\n\r\n");
-			fwrite($fh, $data . "\r\n");
-			fclose($fh);
-			$total++;
+            if($fh)
+            {
+                fwrite($fh, "POST /ASP/bf2statistics.php HTTP/1.1\r\n");
+                fwrite($fh, "HOST: localhost\r\n");
+                fwrite($fh, "User-Agent: GameSpyHTTP/1.0\r\n");
+                fwrite($fh, "Content-Type: application/x-www-form-urlencoded\r\n");
+                fwrite($fh, "Content-Length: " . strlen($data) . "\r\n\r\n");
+                fwrite($fh, $data . "\r\n");
+                fclose($fh);
+                
+                // Remove the old unprocesed file
+                unlink($file[0] . $file[1]);
+                $total++;
+            }
 		}
 
 		// Success

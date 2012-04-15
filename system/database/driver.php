@@ -136,7 +136,7 @@ class Database
 		else
 		{
 			$i = 0;
-			while($row = mysql_fetch_assoc($this->sql))
+			while($row = mysql_fetch_array($this->sql))
 			{
 				foreach($row as $colname => $value)
 				{
@@ -205,6 +205,20 @@ class Database
 		if($this->result() == false) return 0;
 		return mysql_num_rows($this->sql);
 	}
+    
+/*
+| ---------------------------------------------------------------
+| Function: insert_id()
+| ---------------------------------------------------------------
+|
+| Returns the last insert ID
+| @Return: (int)
+|
+*/
+    public function insert_id()
+    {
+        return mysql_insert_id($this->sql);
+    }
 
 /*
 | ---------------------------------------------------------------

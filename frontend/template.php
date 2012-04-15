@@ -22,7 +22,7 @@ function build_navigation()
 					<a href="?task=home" class="mws-i-24 i-home">Dashboard</a>
 				</li>
 				<li'; if($Sys == true) $html .= ' class="active"'; $html .= '>
-				<a href="#" class="mws-i-24 i-list">System</a>'; 
+				<a href="#" class="mws-i-24 i-tools">System</a>'; 
 				if(DB_VER == '0.0.0') 
 				{ 
 					$html .= '<ul>
@@ -44,7 +44,7 @@ function build_navigation()
 						</ul>
 					</li>
 					<li'; if($Plyrs == true) $html .= ' class="active"'; $html .= '>
-						<a href="#" class="mws-i-24 i-list">Manage Players</a>
+						<a href="#" class="mws-i-24 i-users">Manage Players</a>
 						<ul'; if($Plyrs == false) $html .= ' class="closed"'; $html .= '>
 							<li><a href="?task=manageplayers">Manage Players</a></li>
 							<li><a href="?task=mergeplayers">Merge Players</a></li>
@@ -52,7 +52,7 @@ function build_navigation()
 						</ul>
 					</li>
 					<li'; if($Svr == true) $html .= ' class="active"'; $html .= '>
-						<a href="#" class="mws-i-24 i-list">Server Admin</a>
+						<a href="#" class="mws-i-24 i-graph">Server Admin</a>
 						<ul'; if($Svr == false) $html .= ' class="closed"'; $html .= '>
 							<li><a href="?task=serverinfo">Server Info</a></li>
 							<li><a href="?task=mapinfo">Map Info</a></li>
@@ -63,6 +63,6 @@ function build_navigation()
 					</li>';
 				}
 	$html .= '
-					<li><a href="index.php?action=logout" class="mws-i-24 i-cog">Logout</a></li>'. PHP_EOL;
+					<li><a href="index.php?action=logout" class="mws-i-24 i-off">Logout</a></li>'. PHP_EOL;
 	echo $html;
 }

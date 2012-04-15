@@ -121,7 +121,7 @@ class Testconfig
 		
 		// SNAPSHOTS
 		$out .= " > Checking SNAPSHOT Storage Path...<br />";
-		$path = SYSTEM_PATH . DS . 'snapshots' . DS . 'unprocessed';
+		$path = SYSTEM_PATH . DS . 'snapshots' . DS . 'temp'. DS;
 		if (!$Fs->is_writable( $path ))
 		{
 			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- SNAPSHOT Path Writable: ".__FAIL;
@@ -134,7 +134,7 @@ class Testconfig
 		
 		// Snapshot Archive Path
 		$out .= " > Checking SNAPSHOT Archive Storage Path...<br />";
-		$path = SYSTEM_PATH . DS . 'snapshots' . DS . 'processed';
+		$path = SYSTEM_PATH . DS . 'snapshots' . DS . 'processed'. DS;
 		if (!$Fs->is_writable( $path ))
 		{
 			$out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- SNAPSHOT Archive Path Writable: ".__FAIL;
@@ -276,7 +276,7 @@ class Testconfig
 		}
 		
 		// Remove Test Player
-		if( !$Player->deletePlayers($tst_pid) )
+		if( !$Player->deletePlayer($tst_pid) )
 		{
 			$out .= " -> Remove Test Player Data: ". __WARN;
 			$warns = true;
