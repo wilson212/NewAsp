@@ -20,8 +20,15 @@ class Player
         // Load Rank data
         if(!$this->rankdata)
         {
-            include( SYSTEM_PATH . DS . 'data'. DS . 'ranks.php' );
+            require( SYSTEM_PATH . DS . 'data'. DS . 'ranks.php' );
             $this->rankdata = $ranks;
+        }
+        
+        // Import Backend Awards Data
+        if(!$this->awardsdata)
+        {
+            require_once( SYSTEM_PATH . DS . 'data' . DS . 'awards.php' );
+            $this->awardsdata = buildBackendAwardsData('xpack');
         }
     }
     
@@ -36,6 +43,19 @@ class Player
     protected function log($message)
     {
         $this->messages[] = $message;
+    }
+    
+/*
+| ---------------------------------------------------------------
+| Method: messages()
+| ---------------------------------------------------------------
+|
+| This method returns all the logged messages
+|
+*/ 
+    public function messages()
+    {
+        return $this->messages;
     }
   
 /*
@@ -233,15 +253,101 @@ class Player
 
 /*
 | ---------------------------------------------------------------
-| Method: checkAwards()
+| Method: checkBackendAwards()
 | ---------------------------------------------------------------
 |
 | This method will validate and correct the given players 'army'
 | awards based on the values stored in the "system/data/awards.php"
 |
 */  
-    public function checkAwards($pid)
+    public function checkBackendAwards($pid)
     {
-    
+        // Where clause Substitution String
+        $awards_substr = "###";
+        $awards = $this->awardsdata;
+        $pid = mysql_real_escape_string($pid);
+        
+        $query = "SELECT `id` FROM `player` WHERE `id` = ". $pid;
+        $result = $this->DB->query( $query )->result();
+        if(!$result) return false;
+        
+        foreach ($awards as $award) 
+        {
+            // Check if Player already has Award
+            $query = "SELECT `awd`, `level` FROM `awards` WHERE (id = " . $pid . ") AND (awd = {$award[0]}) LIMIT 1";
+            $awardrows = $this->DB->query( $query )->num_rows();
+            
+            // Recieveing ribbon awards multiple times is NOT supported
+            if (!$awardrows || $award[2] == 2) 
+            {
+                // Loop through each award, and check the criteria
+                $chkcriteria = false;
+                foreach ($award[3] as $criteria) 
+                {
+                    // Recieveing ribbon awards multiple times is NOT supported
+                    if ($award[2] == 2) 
+                    {
+                        // Can receive multiple times
+                        if ($awardrows > 0) 
+                        {
+                            $rowawd = $this->DB->fetch_row();
+                            $where = str_replace($awards_substr, $rowawd['level'] + 1, $criteria[3]);
+                        } 
+                        else 
+                        {
+                            $where = str_replace($awards_substr, 1, $criteria[3]);
+                        }
+                    } 
+                    else 
+                    {
+                        $where = $criteria[3];
+                    }
+                    
+                    // Check to see if the player meets the requirments for the award
+                    $query = "SELECT {$criteria[1]} AS checkval FROM {$criteria[0]} WHERE (id = " . $pid . ") AND ({$where}) ORDER BY id;";
+                    $this->DB->query( $query )->result();
+                    if ($this->DB->num_rows() > 0) 
+                    {
+                        $rowchk = $this->DB->fetch_row();
+                        if ($rowchk['checkval'] >= $criteria[2]) 
+                        {
+                            $chkcriteria = true;
+                        } 
+                        else 
+                        {
+                            $chkcriteria = false;
+                            break;
+                        }
+                    }
+                }
+                
+                // If player is meets the requirements, but hasnt been awarded the reward...
+                if ($chkcriteria && $awardrows == 0) 
+                {
+                    // Insert information
+                    $this->log("Award Missing ({$award[0]}) for Player ({$pid})");
+                    $query = "INSERT INTO awards SET
+                        id = " . $pid . ",
+                        awd = {$award[0]},
+                        level = 1,
+                        earned = " . time() . ",
+                        first = 0;";
+                    $this->DB->query( $query ); 
+                }
+                
+                // Else, if Player has award but doesnt meet requirements
+                elseif (!$chkcriteria && $awardrows > 0) 
+                {
+                    if ($rowawd['awd'] == $award[0]) 
+                    {
+                        // Delete information
+                        $this->log("Player ({$pid}) Has Award ({$award[0]}), but does not meet requirements!");
+                        $query = "DELETE FROM awards WHERE (id = " . $pid . " AND awd = {$award[0]});";
+                        $this->DB->query( $query );
+                    }
+                }
+            }
+        }
+        return TRUE;
     }
 }

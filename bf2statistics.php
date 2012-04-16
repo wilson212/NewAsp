@@ -29,7 +29,7 @@
     define('SYSTEM_PATH', ROOT . DS . 'system');
     define('SNAPSHOT_TEMP_PATH', SYSTEM_PATH . DS . 'snapshots' . DS . 'temp');
     define('SNAPSHOT_STORE_PATH', SYSTEM_PATH . DS . 'snapshots' . DS . 'processed');
-    define("_ERR_RESPONSE","E\nH\tresponse\nD\t<font color=\"red\">ERROR</font>: ");
+    define("_ERR_RESPONSE", "E\nH\tresponse\nD\t<font color=\"red\">ERROR</font>: ");
     define('Killscore', 5);
 
 
@@ -480,7 +480,7 @@
                             // SNAPSHOT rank data appears to be incorrect, will use current db rank
                             $data["rank_$x"] = $rank_db;
                             $errmsg = "Rank Correction (".$data["pID_$x"]."), using db rank ({$rank_db})";
-                            ErrorLog($errmsg,2);
+                            ErrorLog($errmsg, 2);
                         }
                     }
                     
@@ -697,7 +697,7 @@
                 /********************************
                 * Process 'Kills' 
                 ********************************/ 
-                ErrorLog("Processing Kill Data (".$data["pID_$x"].")",3);
+                ErrorLog("Processing Kill Data (".$data["pID_$x"].")", 3);
                 $mvns = array();
                 for ($i = 0, $count = 0; $i < count($gooddata); $i++)
                 {
@@ -747,7 +747,7 @@
                 /********************************
                 * Process 'Vehicles'
                 ********************************/
-                ErrorLog("Processing Vehicle Data (".$data["pID_$x"].")",3);
+                ErrorLog("Processing Vehicle Data (".$data["pID_$x"].")", 3);
                 $query = "SELECT * FROM vehicles WHERE id = " . $data["pID_$x"] . "";
                 $result = $DB->query( $query )->result();
                 checkSQLResult ($result, $query);
@@ -791,7 +791,7 @@
                 /********************************
                 * Process 'Kits'
                 ********************************/
-                ErrorLog("Processing Kit Data (".$data["pID_$x"].")",3);
+                ErrorLog("Processing Kit Data (".$data["pID_$x"].")", 3);
                 $query = "SELECT * FROM kits WHERE id = " . $data["pID_$x"] . "";
                 $result = $DB->query( $query )->result();
                 checkSQLResult ($result, $query);
@@ -831,7 +831,7 @@
                 /********************************
                 * Process 'Weapons'
                 ********************************/
-                ErrorLog("Processing Weapon Data (".$data["pID_$x"].")",3);
+                ErrorLog("Processing Weapon Data (".$data["pID_$x"].")", 3);
                 if ($data['v'] != 'xpack')
                 {
                     $data["te6_$x"] = 0;
@@ -1037,7 +1037,7 @@
                 /********************************
                 * Process 'Maps'
                 ********************************/
-                ErrorLog("Processing Map Data (".$data["pID_$x"].")",3);
+                ErrorLog("Processing Map Data (".$data["pID_$x"].")", 3);
                 $query = "SELECT * FROM maps WHERE (id = " . $data["pID_$x"] . ") AND (mapid = {$mapid})";
                 $result = $DB->query( $query )->result();
                 checkSQLResult ($result, $query);
@@ -1080,10 +1080,11 @@
                 /********************************
                 * Process 'Awards'
                 ********************************/
-                ErrorLog("Processing Award Data (".$data["pID_$x"].")",3);
+                ErrorLog("Processing Award Data (".$data["pID_$x"].")", 3);
+                
                 // Check if Minimal Central Update
                 $awdsReqComplete = $cfg->get('stats_awds_complete');
-                if ($centralupdate == 2) 
+                if ($centralupdate == 2)
                 {
                     // Ignore any Award Data in SnapShot as this could mess up current data
                     $complete = 0;
@@ -1095,13 +1096,18 @@
                     // Check Backend Awards
                     checkBackendAwards();
                     
+                    // Build our awards array, and get our awards data
                     $awards = array();
                     getAwards();
-                    if (count($awards))
+                    $count = count($awards);
+                    if ($count)
                     {
-                        for ($i = 0; $i < count($awards); $i += 2)
+                        for ($i = 0; $i < $count; $i += 2)
                         {
-                            if (($awards[$i] > 2000000) && ($awards[$i] < 3000000)) #medals
+                            $first = 0;
+
+                            // If award is a medal, no need to check level
+                            if ($awards[$i] > 2000000 && $awards[$i] < 3000000)
                             {
                                 $query = "SELECT level FROM awards WHERE (id = " . $data["pID_$x"] . ") AND (awd = {$awards[$i]})";
                             }
@@ -1113,19 +1119,20 @@
                             checkSQLResult ($result, $query);
                             if (!mysql_num_rows($result))
                             {
-                                if (($awards[$i] > 2000000) && ($awards[$i] < 3000000)) #medals
+                                if ($awards[$i] > 2000000 && $awards[$i] < 3000000) #medals
                                 {
                                     $first = time();
                                 }
-                                elseif (($awards[$i] < 2000000) && ($awards[$i + 1] > 1)) #badges
+                                elseif ($awards[$i] < 2000000 && $awards[$i + 1] > 1) #badges
                                 {
-                                    $first = 0;
                                     // Need to do extra work for Badges as more than one badge per round may have been awarded
-                                    for ($j = 1; $j < $awards[$i + 1]; $j++){
+                                    for ($j = 1; $j < $awards[$i + 1]; $j++)
+                                    {
                                         $query = "SELECT level FROM awards WHERE (id = " . $data["pID_$x"] . ") AND (awd = {$awards[$i]}) AND (level = {$j})";
                                         $result = $DB->query( $query )->result();
                                         checkSQLResult ($result, $query);
-                                        if (!mysql_num_rows($result)) {
+                                        if (!mysql_num_rows($result)) 
+                                        {
                                             // Pre-requistite badge missing, insert it with lower timestamp to ensure order is maintained.
                                             $query = "INSERT INTO awards SET
                                                 id = " . $data["pID_$x"] . ",
@@ -1137,10 +1144,6 @@
                                             checkSQLResult ($result, $query);
                                         }
                                     }
-                                } 
-                                else 
-                                {
-                                    $first = 0;
                                 }
                                 
                                 // Insert information
@@ -1155,7 +1158,8 @@
                             }
                             else
                             {
-                                if (($awards[$i] > 2000000) && ($awards[$i] < 3000000)) #medals
+                                // If award is a medal
+                                if ($awards[$i] > 2000000 && $awards[$i] < 3000000)
                                 {
                                     $row = mysql_fetch_array($result);
 
@@ -1208,7 +1212,7 @@
                 else 
                 {
                     // Too many "data holes" break out!
-                    ErrorLog("Data Hole Limit Reached: $totalplayers",1);
+                    ErrorLog("Data Hole Limit Reached: $totalplayers", 1);
                     break;
                 }
             }
@@ -1220,7 +1224,7 @@
         ********************************/
         // Note: Code borrowed from release by ArmEagle (armeagle@gmail.com)
         $gamesrv_ip   = $_SERVER['REMOTE_ADDR'];
-        ErrorLog("Processing Game Server: {$gamesrv_ip}",3);
+        ErrorLog("Processing Game Server: {$gamesrv_ip}", 3);
         $gamesrv_port = (isset($data['gameport'])) ? $data['gameport'] : 16567;	//Set to Default if no data
         $gamesrv_qryport = (isset($data['queryport'])) ? $data['queryport'] : 29900;	//Set to Default if no data
         $query = "SELECT * FROM servers WHERE ip = '{$gamesrv_ip}' AND prefix = '{$prefix}'";
@@ -1313,9 +1317,8 @@
         /********************************
         * Process 'SMoC/GEN'
         ********************************/
-        ErrorLog("Processing SMOC and General Ranks",3);
-        smocCheck();
-        genCheck();
+        if($cfg->get('stats_process_smoc') != 0) { ErrorLog("Processing SMOC Rank", 3); smocCheck(); }
+        if($cfg->get('stats_process_gen') != 0) { ErrorLog("Processing GENERAL Rank", 3); genCheck(); }
 
         /********************************
         * Process 'Archive Data File'
@@ -1378,7 +1381,7 @@
             if (isset($data[$awdkey])) 
             {
                 $awards[] = $award[0];
-                $awards[] = ($award[2]==0)?$data[$awdkey]:$award[2];
+                $awards[] = ($award[2] == 0) ? $data[$awdkey] : $award[2];
             }
         }
     }
@@ -1387,31 +1390,35 @@
     function checkBackendAwards() 
     {
         
-        global $data, $x, $backendawardsdata;
-        global $awards_substr, $DB;
+        global $data, $x, $backendawardsdata, $DB;
         
-        // Calculate Awards
+        // Where clause Substitution String
+        $awards_substr = "###";
+        
+        // Loop through each award, and check the criteria
         foreach ($backendawardsdata as $award) 
         {
             // Check if Player already has Award
-            $query = "SELECT awd, level FROM awards WHERE (id = " . $data["pID_$x"] . ") AND (awd = {$award[0]})";
+            $query = "SELECT awd, level FROM awards WHERE (id = " . $data["pID_$x"] . ") AND (awd = {$award[0]}) LIMIT 1";
             $awdresult = $DB->query( $query )->result();
             checkSQLResult ($awdresult, $query);
-            // Check if player has award
-            // Recieveing these awards multiple times is NOT supported...yet!
-            if (!mysql_num_rows($awdresult) || $award[2] == 2) 
+            $awardrows = $DB->num_rows();
+
+            // Recieveing ribbon awards multiple times is NOT supported
+            if (!$awardrows || $award[2] == 2) 
             {
                 // Check Criteria
                 $chkcriteria = false;
                 foreach ($award[3] as $criteria) 
                 {
+                    // If award is medal, We Can receive multiple times
                     if ($award[2] == 2) 
                     {
                         // Can receive multiple times
-                        if (mysql_num_rows($awdresult)>0) 
+                        if ($awardrows > 0) 
                         {
-                            $rowawd = mysql_fetch_array($awdresult);
-                            $where = str_replace($awards_substr, $rowawd['level']+1, $criteria[3]);
+                            $rowawd = $DB->fetch_row();
+                            $where = str_replace($awards_substr, $rowawd['level'] + 1, $criteria[3]);
                         } 
                         else 
                         {
@@ -1422,14 +1429,14 @@
                     {
                         $where = $criteria[3];
                     }
-                    $query = "SELECT {$criteria[1]} AS checkval FROM {$criteria[0]}\n" .
-                        "WHERE (id = " . $data["pID_$x"] . ") AND ({$where})\n" .
-                        "GROUP BY id;";
+                    
+                    // Check to see if the player meets the requirments for the award
+                    $query = "SELECT {$criteria[1]} AS checkval FROM {$criteria[0]} WHERE (id = " . $data["pID_$x"]. ") AND ({$where}) ORDER BY id;";
                     $chkresult = $DB->query( $query )->result();
                     checkSQLResult ($chkresult, $query);
-                    if (mysql_num_rows($chkresult)>0) 
+                    if ($DB->num_rows() > 0) 
                     {
-                        $rowchk = mysql_fetch_array($chkresult);
+                        $rowchk = $DB->fetch_row();
                         if ($rowchk['checkval'] >= $criteria[2]) 
                         {
                             $chkcriteria = true;
@@ -1441,6 +1448,8 @@
                         }
                     }
                 }
+                
+                // If the player meets the reqs... award the award
                 if ($chkcriteria) 
                 {	
                     $data[$award[1] . "_$x"] = 1;
@@ -1460,7 +1469,10 @@
         checkSQLResult ($result, $query);
         if (mysql_num_rows($result))
         {
-            while ($row = mysql_fetch_array($result)) {$players[$row['id']] = $row['score'];}
+            while ($row = mysql_fetch_array($result)) 
+            {
+                $players[$row['id']] = $row['score'];
+            }
             arsort($players);
             $id = key($players);
             
@@ -1476,15 +1488,17 @@
                 $mintenure = $row['earned'] + ($cfg->get('stats_rank_tenure') * 24 * 60 * 60);
                 if ($id != $row['id'] && time() >= $mintenure)
                 {
+                    // Delete the SGMOC award
                     $query = "DELETE FROM awards WHERE (id = " . $row['id'] . ") AND (awd = 6666666)";
                     $result = $DB->query( $query )->result();
                     checkSQLResult ($result, $query);
                     
+                    // Change current SMOC rank back to SGM
                     $query = "UPDATE player SET rank = 10, chng = 0, decr = 1 WHERE id = " . $row['id'];
                     $result = $DB->query( $query )->result();
                     checkSQLResult ($result, $query);
                     
-                    // Award new
+                    // Award new SGMOC award
                     $query = "INSERT INTO awards SET
                         id = {$id},
                         awd = 6666666,
@@ -1493,6 +1507,7 @@
                     $result = $DB->query( $query )->result();
                     checkSQLResult ($result, $query);
                     
+                    // Update new SGMOC's ranks
                     $query = "UPDATE player SET rank = 11, chng = 1, decr = 0 WHERE id = {$id}";
                     $result = $DB->query( $query )->result();
                     checkSQLResult ($result, $query);
@@ -1500,7 +1515,7 @@
             }
             else
             {
-                // Award new
+                // Award new SGMOC award
                 $query = "INSERT INTO awards SET
                     id = {$id},
                     awd = 6666666,
@@ -1509,6 +1524,7 @@
                 $result = $DB->query( $query )->result();
                 checkSQLResult ($result, $query);
                 
+                // Set new SGMOC's ranks
                 $query = "UPDATE player SET rank = 11, chng = 1, decr = 0 WHERE id = {$id}";
                 $result = $DB->query( $query )->result();
                 checkSQLResult ($result, $query);
@@ -1517,7 +1533,7 @@
     }
 
     // Check for GEN
-    function genCheck() #TODO
+    function genCheck()
     {
         global $cfg, $DB;
         

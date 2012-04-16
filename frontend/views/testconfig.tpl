@@ -4,9 +4,9 @@
 	</div>
 	<div class="mws-panel-body">
 		<div class="mws-panel-content">
-			<p style="text-align: center">
+			<p>
 				This area will allow you test the setup and configuration of your "Gamespy" database server. It is normal to sometimes see a few <font color="orange"><b>Warn</b></font>'s
-				, you can ignore these without too much worry. If you see any <font color="red"><b>FAIL</b></font>'s, then you will need to go back and reconfigure your system.
+				, you can ignore these without too much worry. If you see any <font color="red"><b>FAIL</b></font>'s, then you will need to go back and reconfigure your system.<br /><br />
 				<font color="red">Note:</font> During this test, sample data will be loaded into your database. This will be removed after the test. 
 				<br /><br />
 				<center>

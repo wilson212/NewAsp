@@ -2,7 +2,7 @@ $(document).ready(function() {
 	// Create our base loading modal
 	Modal = $("#ajax-dialog").dialog({
 		autoOpen: false, 
-		title: "Validate Player Ranks", 
+		title: "Check & Validate Player Awards", 
 		modal: true, 
 		width: "600",
 		buttons: [{
@@ -18,7 +18,7 @@ $(document).ready(function() {
 	//Modal.parent().find(".ui-dialog-buttonset .ui-button-text:eq(0)").text("Close Window");
 
 	// Bind the Test Button button to an action
-    $("#validate").click(function() {
+    $("#check-awards").click(function() {
 		// Open the Modal Window
 		Modal.dialog("option", {
 			modal: true, 
@@ -29,13 +29,13 @@ $(document).ready(function() {
 		}).dialog("open");
 		
 		// Lock the button so we dont click again after errors
-		$("#validate").attr("disabled", true).attr('value', 'Please Refresh Window');
+		$("#check-awards").attr("disabled", true).attr('value', 'Please Refresh Window');
 	
 		// Begin the Ajax Request
 		$.ajax({
             type: "POST",
-            url: '?task=validateranks',
-            data: { action : 'validate' },
+            url: '?task=checkawards',
+            data: { action : 'check' },
             dataType: "json",
             timeout: 300000, // in milliseconds
             success: function(result) 
@@ -43,11 +43,11 @@ $(document).ready(function() {
 				// Create our message!
 				if(result.success == true)
 				{
-					var message = '<div class="alert success">All Player Ranks Validated Successfully! You may see any changes made in the "ASP/system/logs/validate_ranks.log" file.</div><br />';
+					var message = '<div class="alert success">All Player Backend Awards Validated Successfully! You may see any changes made in the "ASP/system/logs/validate_awards.log" file.</div><br />';
 				}
 				else
 				{
-					var message = '<div class="alert error">Rank Validating Failed to Complete! Please check your error log for errors.</div><br />';
+					var message = '<div class="alert error">Checking Awards Failed to Complete! Please check your error log for errors.</div><br />';
 				}
 				// Create our button
 				var button = '<br /><br /><center><input id="refresh" type="button" class="mws-button blue" value="Refresh Window" onClick="window.location.reload();"/></center>';

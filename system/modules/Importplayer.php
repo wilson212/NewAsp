@@ -360,44 +360,45 @@ class Importplayer
 				";
 				$result = $DB->query($query)->result();
 			}
+        }
 
-			// Insert unlocks
-			for ($i = 11; $i < 100; $i += 11)
-			{
-				$query = "INSERT INTO unlocks SET
-					id = {$pid},
-					kit = {$i},
-					state = 'n'
-				";
-				$result = $DB->query($query)->result();
+        // Insert all unlocks as NO... Unlocks are processed in the getunlocksinfo.aspx
+        // When the player first visits the bfhq
+        for ($i = 11; $i < 100; $i += 11)
+        {
+            $query = "INSERT INTO unlocks SET
+                id = {$pid},
+                kit = {$i},
+                state = 'n'
+            ";
+            $result = $DB->query($query)->result();
 
-			}
-			for ($i = 111; $i < 556; $i += 111)
-			{
-				$query = "INSERT INTO unlocks SET
-					id = {$pid},
-					kit = {$i},
-					state = 'n'
-				";
-				$result = $DB->query($query)->result();
-			}
-			
-			// Awards
-			$query = "SELECT * FROM awards WHERE id = {$pid}";
-			$result = $DB->query($query)->result();
-			if (!$DB->num_rows())
-			{
-				foreach($playerinfoData4 as $key => $value) 
-				{
-				   // Insert information
-					$query = "INSERT INTO awards (`id`, `awd`, `level`, `earned`, `first`) 
-						VALUES ('".$pid."', '".$value['id']."', '".$value['level']."', '".$value['when']."', '".$value['first']."')"; 
-					$DB->query($query);
-				} 
-			}
-		}
+        }
+        for ($i = 111; $i < 556; $i += 111)
+        {
+            $query = "INSERT INTO unlocks SET
+                id = {$pid},
+                kit = {$i},
+                state = 'n'
+            ";
+            $result = $DB->query($query)->result();
+        }
+        
+        // Awards
+        $query = "SELECT * FROM awards WHERE id = {$pid}";
+        $result = $DB->query($query)->result();
+        if (!$DB->num_rows())
+        {
+            foreach($playerinfoData4 as $key => $value) 
+            {
+               // Insert information
+                $query = "INSERT INTO awards (`id`, `awd`, `level`, `earned`, `first`) 
+                    VALUES ('".$pid."', '".$value['id']."', '".$value['level']."', '".$value['when']."', '".$value['first']."')"; 
+                $DB->query($query);
+            } 
+        }
 		
 		// Success
-		echo json_encode( array('success' => true, 'message' => "Player with PID {$pid} has been successfully imported !") );
+		echo json_encode( array('success' => true, 'message' => "Player {$playerinfoData1["nick"]} (PID: {$pid}) has been successfully imported !") );
 	}
 }

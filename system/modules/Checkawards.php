@@ -1,10 +1,10 @@
 <?php
-class Validateranks
+class Checkawards
 {
 	public function Init() 
 	{
 		// Check for post data
-		if($_POST['action'] == 'validate')
+		if($_POST['action'] == 'check')
 		{
 			$this->Process();
 		}
@@ -12,7 +12,7 @@ class Validateranks
 		{
 			// Setup the template
 			$Template = load_class('Template');
-			$Template->render('validateranks');
+			$Template->render('checkawards');
 		}
 	}
 	
@@ -27,20 +27,20 @@ class Validateranks
 		
 		foreach($pids as $pid)
 		{
-			$Player->validateRank($pid['id']);
+			$Player->checkBackendAwards($pid['id']);
 		}
-        
+
         // Log the Player messages if any'
         $messages = $Player->messages();
         if(count($messages))
         {
-            $err_msg = "Validate Rank Logging Started: ". date('Y-m-d H:i:s') . PHP_EOL;
+            $err_msg = "Check Awards Logging Started: ". date('Y-m-d H:i:s') . PHP_EOL;
             foreach($messages as $err)
             {
                 $err_msg .= $err . PHP_EOL;
             }
             $err_msg .= PHP_EOL;
-            $log = SYSTEM_PATH . DS . 'logs' . DS . 'validate_ranks.log';
+            $log = SYSTEM_PATH . DS . 'logs' . DS . 'validate_awards.log';
             $file = @fopen($log, 'a');
             @fwrite($file, $err_msg);
             @fclose($file);
