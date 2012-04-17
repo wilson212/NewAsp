@@ -1,27 +1,27 @@
 <?php
 class Mergeplayers
 {
-	public function Init() 
-	{
-		// Check for post data
-		if($_POST['action'] == 'merge')
-		{
-			$this->Process();
-		}
-		else
-		{
-			// Setup the template
-			$Template = load_class('Template');
-			$Template->render('mergeplayers');
-		}
-	}
-	
-	public function Process()
-	{
-		// Make Sure Script doesn't timeout
-		set_time_limit(0);
+    public function Init() 
+    {
+        // Check for post data
+        if($_POST['action'] == 'merge')
+        {
+            $this->Process();
+        }
+        else
+        {
+            // Setup the template
+            $Template = load_class('Template');
+            $Template->render('mergeplayers');
+        }
+    }
+    
+    public function Process()
+    {
+        // Make Sure Script doesn't timeout
+        set_time_limit(0);
 
-		// Load the database and player class
+        // Load the database and player class
         $DB = load_database();
         $Player = load_class('Player');
         
@@ -490,6 +490,6 @@ class Mergeplayers
         $file = @fopen($log, 'a');
         @fwrite($file, $lines);
         @fclose($file);
-	}
+    }
 }
 ?>

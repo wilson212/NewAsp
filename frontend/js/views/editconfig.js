@@ -1,5 +1,8 @@
 $(document).ready(function() {
 
+    // Init our validator!
+	$("#configForm").validate();
+
 	// ===============================================
     // bind the Config form using 'ajaxForm' 
     $('#configForm').ajaxForm({

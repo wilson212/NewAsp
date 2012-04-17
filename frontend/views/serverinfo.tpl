@@ -40,7 +40,7 @@
 					
 					<div class="mws-form-inline">
 						<div class="mws-form-row">
-							<label>Rcon Port:</label>
+							<label>Rcon Port (<font color="red">required</font>):</label>
 							<div class="mws-form-item large">
 								<input id="rcon-port" type="text" name="port" class="mws-textinput required" />
 							</div>
@@ -48,7 +48,7 @@
 						<div class="mws-form-row">
 							<label>Rcon Password:</label>
 							<div class="mws-form-item large">
-								<input id="rcon-pass" type="password" name="password" class="mws-textinput required" />
+								<input id="rcon-pass" type="password" name="password" class="mws-textinput" />
 							</div>
 						</div>
 					</div>

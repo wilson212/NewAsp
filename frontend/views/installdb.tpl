@@ -43,7 +43,7 @@
 					<div class="mws-form-row">
 						<label>Database Password:</label>
 						<div class="mws-form-item small">
-							<input type="password" class="mws-textinput required" name="cfg__db_pass" title="Password for Database Username."/>
+							<input type="password" class="mws-textinput" name="cfg__db_pass" title="Password for Database Username."/>
 						</div>
 					</div>
 					<div class="mws-button-row">
