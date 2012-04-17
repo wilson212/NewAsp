@@ -121,6 +121,19 @@ class Testconfig
             $out .= __PASS;
         }
         
+        // Check merge players log
+        $out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Merge Players Log File Writable (system/logs/merge_players.log): ";
+        $log = SYSTEM_PATH . DS . 'logs' . DS . 'merge_players.log';
+        if (!$Fs->is_writable( $log ))
+        {
+            $out .= __WARN;
+            $warns = true;
+        } 
+        else 
+        {
+            $out .= __PASS;
+        }
+        
         // Check validate awards log
         $out .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- Validate Awards Log File Writable (system/logs/validate_awards.log): ";
         $log = SYSTEM_PATH . DS . 'logs' . DS . 'validate_awards.log';
