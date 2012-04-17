@@ -164,30 +164,33 @@ class Player
                 // Prevent rank skipping unless the player meets ALL prior rank requirements
                 for($i = 1; $i <= $expRank; $i++)
                 {
+                    /// Process Has Rank ///
+
                     // First, we must check to see if the set rank is IN the net rank Reqs.
-                    $ranklist = $this->rankdata[$i]['has_rank'];
-                    if(is_array($ranklist))
+                    $reqRank = $this->rankdata[$i]['has_rank'];
+                    if(is_array($reqRank))
                     {
-                        if(!in_array($setRank, $ranklist))
+                        if(!in_array($setRank, $reqRank))
                         {
-                            // Check if we are higher ranking
-                            $higher = true;
-                            foreach($ranklist as $r)
+                            // Check to see if the current ranks points match
+                            if($this->rankdata[$i]['points'] != $this->rankdata[$setRank]['points'])
                             {
-                                if($setRank < $r) $higher = false;
+                                continue;
                             }
-                            
-                            // If we arent higher rank then the list reqs, then we must
-                            // skip to the next rank :(
-                            if($higher == false) continue;
                         }
                     }
-                    elseif( !($setRank >= $ranklist) )
+                    elseif( $setRank != $reqRank)
                     {
-                        // Break if the user doesnt have the corret (or higher) rank for rankup
-                        break;
-                    }
-
+                        // Check to see if the current ranks points match, if the do
+                        // We can continue, otherwise we cant go any higher
+                        if($this->rankdata[$i]['points'] != $this->rankdata[$setRank]['points'])
+                        {
+                            continue;
+                        }
+                    }   
+                    
+                    /// Process Has Awards ///
+                    
                     // If rank requires medals, then we have to check if the player has them
                     if(!empty($this->rankdata[$i]['has_awards']))
                     {
@@ -230,11 +233,23 @@ class Player
                         $setRank = $i;
                     }
                 }
+                
+                // Done :)
             }
             
             // Update Database if we arent a 4 star gen, or smoc with a higher rank award
             if(($rank == 11 && $setRank > 11) || ($rank != 21 && $rank != $setRank))
             {
+                // Log
+                $this->log(
+                    " -> Rank Correction (".$row['id']."):". PHP_EOL
+                    ."\tScore: ". $score . PHP_EOL
+                    ."\tExpected: ". $expRank . PHP_EOL
+                    ."\tFound: ".$rank . PHP_EOL
+                    ."\tNew Rank: ".$setRank
+                );
+                
+                // Query the update
                 $query = "UPDATE `player` SET `rank` = ". $setRank ." WHERE `id` = ". $pid;
                 if (!$this->DB->query($query)->result()) 
                 {
@@ -325,7 +340,7 @@ class Player
                 if ($chkcriteria && $awardrows == 0) 
                 {
                     // Insert information
-                    $this->log("Award Missing ({$award[0]}) for Player ({$pid})");
+                    $this->log("Award Missing ({$award[0]}) for Player ({$pid}). Adding award to Players Awards...");
                     $query = "INSERT INTO awards SET
                         id = " . $pid . ",
                         awd = {$award[0]},
@@ -341,7 +356,7 @@ class Player
                     if ($rowawd['awd'] == $award[0]) 
                     {
                         // Delete information
-                        $this->log("Player ({$pid}) Has Award ({$award[0]}), but does not meet requirements!");
+                        $this->log("Player ({$pid}) Has Award ({$award[0]}), but does not meet requirements! Removing award...");
                         $query = "DELETE FROM awards WHERE (id = " . $pid . " AND awd = {$award[0]});";
                         $this->DB->query( $query );
                     }

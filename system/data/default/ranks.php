@@ -1,6 +1,33 @@
 <?php
 
-$rankdata = array(
+/*
+	Copyright (C) 2006-2012  BF2Statistics
+
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/*
+|
+| NOTE: for special ranks, set points to -1. This will make the rank
+| un-obtainable via rank validation.
+|
+| 'has_awards' => array( <award_id> => <level> )
+|
+*/ 
+
+$ranks = array(
 	1 => array(
 		'title' => 'Private First Class',
 		'points' => 150,
@@ -46,7 +73,7 @@ $rankdata = array(
 	8 => array(
 		'title' => 'First Sergeant',
 		'points' => 20000,
-		'has_rank' => array(6, 7),
+		'has_rank' => 6,
 		'has_awards' => array(
 			'1031105' => 1, // Engineer Combat Badge
 			'1031109' => 1, // Sniper Combat Badge
@@ -78,10 +105,10 @@ $rankdata = array(
 			'1222016' => 1  // Transport Badge
 		)
 	),
-	11 => array(
-		'title' => 'Sergeant Major of the Corps',
+    11 => array(
+		'title' => 'Sergeant Major of the Corp',
 		'points' => -1,
-		'has_rank' => array(9, 10),
+		'has_rank' => 10,
 		'has_awards' => array()
 	),
 	12 => array(
@@ -153,6 +180,12 @@ $rankdata = array(
 		'title' => 'Lieutenant General',
 		'points' => 200000,
 		'has_rank' => 19,
+		'has_awards' => array()
+	),
+    21 => array(
+		'title' => 'General',
+		'points' => -1,
+		'has_rank' => 20,
 		'has_awards' => array()
 	),
 );
