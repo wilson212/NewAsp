@@ -30,7 +30,7 @@
     define('SNAPSHOT_TEMP_PATH', SYSTEM_PATH . DS . 'snapshots' . DS . 'temp');
     define('SNAPSHOT_STORE_PATH', SYSTEM_PATH . DS . 'snapshots' . DS . 'processed');
     define("_ERR_RESPONSE", "E\nH\tresponse\nD\t<font color=\"red\">ERROR</font>: ");
-    define('Killscore', 5);
+    define('Killscore', 2); // Points per kill
 
 
 /*
@@ -471,6 +471,9 @@
                     {
                         $country = $row['country'];
                     }
+                    
+                    // Fix empty country
+                    if(empty($country)) $country = 'xx';
 
                     // Verify/Correct Rank
                     if (!$cfg->get('stats_rank_check'))
@@ -516,10 +519,10 @@
                         ip = '" . $data["ip_$x"] . "',
                         score = `score` + " . $data["rs_$x"] . ",
                         cmdscore = `cmdscore` + " . $data["cs_$x"] . ",
-                        skillscore = {$row[skillscore]} + (" . $data["kk0_$x"] . " + " . $data["kk1_$x"] . " + " . $data["kk2_$x"] . " + " . $data["kk3_$x"] . " + " . $data["kk4_$x"] . " + " . $data["kk5_$x"] . " + " . $data["kk6_$x"] . ") * ". Killscore .",
+                        skillscore = {$row['skillscore']} + (" . $data["kk0_$x"] . " + " . $data["kk1_$x"] . " + " . $data["kk2_$x"] . " + " . $data["kk3_$x"] . " + " . $data["kk4_$x"] . " + " . $data["kk5_$x"] . " + " . $data["kk6_$x"] . ") * ". Killscore .",
                         teamscore = `teamscore` + " . $data["ts_$x"] . ",
-                        kills = {$row[kills]} + " . $data["kk0_$x"] . " + " . $data["kk1_$x"] . " + " . $data["kk2_$x"] . " + " . $data["kk3_$x"] . " + " . $data["kk4_$x"] . " + " . $data["kk5_$x"] . " + " . $data["kk6_$x"] . ",
-                        deaths = {$row[deaths]} + " . $data["dk0_$x"] . " + " . $data["dk1_$x"] . " + " . $data["dk2_$x"] . " + " . $data["dk3_$x"] . " + " . $data["dk4_$x"] . " + " . $data["dk5_$x"] . " + " . $data["dk6_$x"] . ",
+                        kills = {$row['kills']} + " . $data["kk0_$x"] . " + " . $data["kk1_$x"] . " + " . $data["kk2_$x"] . " + " . $data["kk3_$x"] . " + " . $data["kk4_$x"] . " + " . $data["kk5_$x"] . " + " . $data["kk6_$x"] . ",
+                        deaths = {$row['deaths']} + " . $data["dk0_$x"] . " + " . $data["dk1_$x"] . " + " . $data["dk2_$x"] . " + " . $data["dk3_$x"] . " + " . $data["dk4_$x"] . " + " . $data["dk5_$x"] . " + " . $data["dk6_$x"] . ",
                         captures = `captures` + " . $data["cpc_$x"] . ",
                         captureassists = `captureassists` + " . $data["cpa_$x"] . ",
                         defends = `defends` + " . $data["cpd_$x"] . ",
