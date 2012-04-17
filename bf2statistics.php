@@ -137,7 +137,10 @@
         
         // Out to the browser now! 
         echo $out . "$\tOK\t$";
-        ob_flush();
+        if(ob_get_level() > 0)
+        {
+            @ob_flush();
+        }
         flush();
     }
 

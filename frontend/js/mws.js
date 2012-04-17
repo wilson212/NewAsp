@@ -21,6 +21,7 @@ $(document).ready(function() {
 			$(this).next('ul').slideToggle('fast', function() {
 				$(this).toggleClass('closed');
 			});
+            $("div#mws-navigation ul li").not($(this).parent()).find("ul").slideUp('fast');
 			event.preventDefault();
 		}
 	});
