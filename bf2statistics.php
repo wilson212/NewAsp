@@ -90,11 +90,14 @@
         die(_ERR_RESPONSE . $errmsg);
     }
 
-    // Seperate data... Make key/value pairs
+    // Convret snapshot string into an array
     $gooddata = explode('\\', $rawdata);
     $prefix = $gooddata[0];
     $mapname = strtolower($gooddata[1]);
-    for ($x = 2; $x < count($gooddata); $x += 2) 
+    
+    // Convert all the data into key => value pairs
+    $size = count($gooddata);
+    for ($x = 2; $x < $size; $x += 2) 
     {
         $data[$gooddata[$x]] = $gooddata[$x + 1];
     }
@@ -123,12 +126,21 @@
     // Create SNAPSHOT backup file
     if (!isset($data['import']) || $data['import'] != 1)
     {
-        $file = @fopen( SNAPSHOT_TEMP_PATH . DS . $stats_filename, 'wb');
-        @fwrite($file, $rawdata);
-        @fclose($file);
-        
-        $errmsg = "SNAPSHOT Data Logged (" . SNAPSHOT_TEMP_PATH . DS . $stats_filename . ")";
-        ErrorLog($errmsg, 3);
+        $file = SNAPSHOT_TEMP_PATH . DS . $stats_filename;
+        $handle = @fopen($file, 'wb');
+        if($handle)
+        {
+            @fwrite($handle, $rawdata);
+            @fclose($handle);
+            
+            $errmsg = "SNAPSHOT Data Logged (". $file .")";
+            ErrorLog($errmsg, 3);
+        }
+        else
+        {
+            $errmsg = "Unable to create a new SNAPSHOT Data Logfile (". $file . ")! Please make sure SNAPSHOT paths are writable!";
+            ErrorLog($errmsg, 1);
+        }
         
         // Tell the game server that the snapshot has been received
         $out = "O\n" .
