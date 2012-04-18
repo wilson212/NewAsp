@@ -18,6 +18,7 @@ $admin_hosts = array('127.0.0.1','192.168.2.0/24','localhost','192.168.1.102','1
 $admin_backup_path = 'C:/wamp/www/ASP/system/database/backups/';
 $admin_backup_ext = '.bak';
 $admin_ignore_ai = 0;
+$stats_ignore_ai = 0;
 $stats_min_game_time = 0;
 $stats_min_player_game_time = 0;
 $stats_players_min = 1;

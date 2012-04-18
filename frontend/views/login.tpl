@@ -42,7 +42,7 @@
 
     <div id="mws-login-wrapper">
         <div id="mws-login">
-            <h1><img src="frontend/images/bf2_icon.png">Private Stats Admin Login</h1>
+            <h1><img src="frontend/images/bf2_icon.png">Private Stats Admin</h1>
             <div class="mws-login-lock"><img src="frontend/css/icons/24/locked-2.png" alt="" /></div>
             <div id="mws-login-form">
                 <form class="mws-form" action="index.php?task=<?php echo $_GET['task']; ?>" method="post">

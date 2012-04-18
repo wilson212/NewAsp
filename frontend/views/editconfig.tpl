@@ -53,6 +53,15 @@
                 <!-- Stats Processing -->
                 <h3 style="margin-left: 50px; margin-top: 35px;">Stats Processing Options</h3>
                 <div class="mws-form-row">
+                    <label>Ignore AI Players:</label>
+                    <div class="mws-form-item small">
+                        <select name="cfg__stats_ignore_ai" title="Ignore AI Player (Bots) stats? Enabling this will force AI player stats to *NOT* be saved at the end of the round.">
+                            <option value="1" <?php if('{config.stats_ignore_ai}' == '1') echo 'selected="selected"'; ?>>Yes</option>
+                            <option value="0" <?php if('{config.stats_ignore_ai}' == '0') echo 'selected="selected"'; ?>>No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mws-form-row">
                     <label>Min. Game Time (Round):</label>
                     <div class="mws-form-item small">
                         <input type="text" class="mws-textinput required" name="cfg__stats_min_game_time" value="{config.stats_min_game_time}" title="Minimum game time of total round in SNAPSHOT before processing (Seconds)?"/>
@@ -67,13 +76,13 @@
                 <div class="mws-form-row">
                     <label>Min. Players:</label>
                     <div class="mws-form-item small">
-                        <input type="text" class="mws-textinput required" name="cfg__stats_players_min" value="{config.stats_players_min}" title="Minimum players in SNAPSHOT before processing?"/>
+                        <input type="text" class="mws-textinput required" name="cfg__stats_players_min" value="{config.stats_players_min}" title="Minimum players in SNAPSHOT before processing? Includes Bots."/>
                     </div>
                 </div>
                 <div class="mws-form-row">
                     <label>Max. Players:</label>
                     <div class="mws-form-item small">
-                        <input type="text" class="mws-textinput required" name="cfg__stats_players_max" value="{config.stats_players_max}" title="Maximum players in SNAPSHOT before stopping processing (used to stop data hole loops)?"/>
+                        <input type="text" class="mws-textinput required" name="cfg__stats_players_max" value="{config.stats_players_max}" title="Maximum players in SNAPSHOT before stopping processing (used to stop data hole loops). Includes Bots."/>
                     </div>
                 </div>
                 <div class="mws-form-row">

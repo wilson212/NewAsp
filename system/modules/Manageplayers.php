@@ -158,7 +158,7 @@ class Manageplayers
 			{
 				$sWhere .= " AND ";
 			}
-			$sWhere .= " ip <> '127.0.0.1' ";
+			$sWhere .= " isbot = 0 ";
 		}
 		
 		/*

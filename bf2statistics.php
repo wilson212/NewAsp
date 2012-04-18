@@ -304,12 +304,19 @@
         /********************************
         * Process 'Player Data'
         ********************************/
+        $ignore_ai = $cfg->get('stats_ignore_ai');
+        if($ignore_ai == 1) ErrorLog(" - Ignore AI stats enabled, Skipping all Bot players", 3);
         $totalplayers = $data['pc'];
+        
+        // Loop through each player
         for ($x = 0; $x < $totalplayers; $x++)
         {
             // Check player exisits in SNAPSHOT and that they meet the minimum required play time
-            if ($data["pID_$x"] && ($data["ctime_$x"] >= $cfg->get('stats_min_player_game_time'))) 
+            if (isset($data["pID_$x"]) && ($data["ctime_$x"] >= $cfg->get('stats_min_player_game_time'))) 
             {
+                // Check to see IF the player is a bot, AND if the admin wants bot stats ignored
+                if($data["ai_$x"] == 1 && $ignore_ai == 1) continue;
+                
                 // Set global variables
                 $globals['mapscore'] += $data["rs_$x"];
                 $globals['mapkills'] += $data["kills_$x"];
@@ -429,7 +436,8 @@
                         lastonline = " . time() . ",
                         mode0 = " . $globals['mode0'] . ",
                         mode1 = " . $globals['mode1'] . ",
-                        mode2 = " . $globals['mode2'] . "
+                        mode2 = " . $globals['mode2'] . ",
+                        isbot = ". $data["ai_$x"] . "
                     ";
                     $result = $DB->query( $query )->result();
                     checkSQLResult ($result, $query);
@@ -564,7 +572,8 @@
                         mode1 = `mode1` + " . $globals['mode1'] . ",
                         mode2 = `mode2` + " . $globals['mode2'] . ",
                         chng = {$chng},
-                        decr = {$decr}
+                        decr = {$decr},
+                        isbot = ". $data["ai_$x"] . "
                         WHERE id = " . $data["pID_$x"] . "
                     ";
                     $result = $DB->query( $query )->result();

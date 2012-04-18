@@ -126,6 +126,10 @@ $sqlupgrade[] = array('Alter Servers Table (Add Rcon Port / Password)', '1.5.0',
 	"ALTER TABLE `servers`
 		ADD COLUMN `rcon_port` int(6) unsigned default '4711' AFTER `queryport`,
 		ADD COLUMN `rcon_password` varchar(50) default NULL AFTER `rcon_port`;");
+        
+$sqlupgrade[] = array('Alter Player Table (Add `isbot` column)', '1.5.0',
+	"ALTER TABLE `player`
+		ADD COLUMN `isbot` tinyint(1) unsigned NOT NULL default '0';");
 	
 $sqlupgrade[] = array('Update Version Table', $Config->get('db_expected_ver'),
 	"INSERT INTO `_version` VALUES ('".$Config->get('db_expected_ver')."', ".time().");");
