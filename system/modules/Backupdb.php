@@ -99,7 +99,7 @@ class Backupdb
             echo json_encode( 
                 array(
                     'success' => true,
-                    'message' => 'System Data Backup Successfull!'
+                    'message' => 'System Data Backup Successfull! Backup Directory Used: '. $backupPath
                 )
             );
         }

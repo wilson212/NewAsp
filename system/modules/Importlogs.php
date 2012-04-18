@@ -114,9 +114,6 @@ class Importlogs
                 fwrite($fh, "Content-Length: " . strlen($data) . "\r\n\r\n");
                 fwrite($fh, $data . "\r\n");
                 fclose($fh);
-                
-                // Remove the old unprocesed file
-                unlink($file[0] . $file[1]);
                 $total++;
             }
 		}

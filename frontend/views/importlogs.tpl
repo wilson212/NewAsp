@@ -13,7 +13,8 @@
 				<br />				
 				By clicking "Re-Import ALL Logs"... ALL logs including previouly processed logs will be Re-imported into the database. (not recomended unless restoring database)
 				<br /><br />
-				<font color="red">Note:</font> Please ensure you a have a full backup of your existing database before proceeding! 
+				<font color="red">Note:</font> Please ensure you a have a full backup of your existing database before proceeding! <br />
+				<font color="red">Warning:</font> SNAPSHOTS from bf2statistics 1.4.7 or older will *NOT* work. Please make sure the only snapshots are from 1.5.0 or newer!
 				<br /><br />
 				<center>
 					<input type="button" id="import-up" class="mws-button blue" value="Import Unprocessed Logs" />
