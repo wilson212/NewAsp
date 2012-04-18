@@ -34,7 +34,7 @@ class Testconfig
         // Define Test Snapshot String (PID: 111)
         $tst_prefix = 'TST'.uniqid(rand());
         $tst_snapshot = $tst_prefix.'\test_server\queryport\29900\mapname\test_map\mapid\999\mapstart\1157264950.7\mapend\1157266995.57\win\1\gm\0'.
-            '\v\bf2\pc\1\rwa\2\ra1\0\rs1\25\ra2\2\rs2\0\pID_0\999\name_0\Test Player\t_0\2\a_0\0\ctime_0\1559\c_0\1\ip_0\0\rs_0\24\cs_0\0\ss_0\18'.
+            '\v\bf2\pc\1\rwa\2\ra1\0\rs1\25\ra2\2\rs2\0\pID_0\999\name_0\Test Player\t_0\2\a_0\0\ctime_0\1559\c_0\1\ip_0\0\ai_0\0\rs_0\24\cs_0\0\ss_0\18'.
             '\ts_0\6\kills_0\9\deaths_0\17\cpc_0\0\cpn_0\1\cpa_0\0\cpna_0\0\cpd_0\0\ka_0\0\he_0\0\rev_0\0\rsp_0\0\rep_0\0\tre_0\0\drs_0\0\dra_0\4'.
             '\pa_0\0\tmkl_0\0\tmdg_0\0\tmvd_0\0\su_0\0\ks_0\6\ds_0\6\rank_0\3\ban_0\0\kck_0\0\tco_0\0\tsl_0\1559\tsm_0\0\tlw_0\0\ta0_0\1559\ta1_0\0'.
             '\ta2_0\0\ta3_0\0\ta4_0\0\ta5_0\0\ta6_0\0\ta7_0\0\ta8_0\0\ta9_0\0\mvns_0\29000037\mvks_0\1\mvns_0\29000113\mvks_0\1\mvns_0\29000069\mvks_0'.
