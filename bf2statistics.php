@@ -321,6 +321,12 @@
                 $globals['mapscore'] += $data["rs_$x"];
                 $globals['mapkills'] += $data["kills_$x"];
                 $globals['mapdeaths'] += $data["deaths_$x"];
+                
+                // Fix N/A ip addresses and fix negative's
+                if ($data["ip_$x"] == 'N/A') $data["ip_$x"] = '127.0.0.1';
+                if ($data["tlw_$x"] < 0) $data["tlw_$x"] = 0;
+                if ($data["tsm_$x"] < 0) $data["tsm_$x"] = 0;
+                if ($data["tsl_$x"] < 0) $data["tsl_$x"] = 0;
 
                 // Calculate wins/losses 
                 $wins = $losses = 0;
@@ -331,7 +337,7 @@
                 }
 
                 // Fix LAN IP's (ignore LocalHost as that's for 'bots)
-                if(checkPrivateIp($data["ip_$x"]) && $data["ip_$x"] != '127.0.0.1') 
+                if(checkPrivateIp($data["ip_$x"]) && $data["ai_$x"] != 1) 
                 {
                     $data["ip_$x"] = $cfg->get('stats_lan_override');
                 }
@@ -349,12 +355,6 @@
                         }
                     }
                 }
-        
-                // Fix N/A ip addresses and fix negative's
-                if ($data["ip_$x"] == 'N/A') $data["ip_$x"] = '127.0.0.1';
-                if ($data["tlw_$x"] < 0) $data["tlw_$x"] = 0;
-                if ($data["tsm_$x"] < 0) $data["tsm_$x"] = 0;
-                if ($data["tsl_$x"] < 0) $data["tsl_$x"] = 0;
 
                 /********************************
                 * Process 'Player' 

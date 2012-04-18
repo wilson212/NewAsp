@@ -30,6 +30,15 @@ function build_navigation()
                         <li><a href="?task=installdb">Install Database</a></li>
                     </ul>';
                 }
+                elseif(DB_VER !== CODE_VER)
+                {
+                    $html .= '<ul>
+                        <li><a href="?task=editconfig">Edit Configuration</a></li>
+                        <li><a href="?task=installdb">Install Database</a></li>
+                        <li><a href="?task=upgradedb">Upgrade Database</a></li>
+                        <li><a href="?task=backupdb">Backup Database</a></li>
+                    </ul>';
+                }
                 else
                 {
                     $html .= '
