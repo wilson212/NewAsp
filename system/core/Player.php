@@ -304,77 +304,83 @@ class Player
             $query = "SELECT `awd`, `level` FROM `awards` WHERE (id = " . $pid . ") AND (awd = {$award[0]}) LIMIT 1";
             $awardrows = $this->DB->query( $query )->num_rows();
             
-            // Recieveing ribbon awards multiple times is NOT supported
-            if (!$awardrows || $award[2] == 2) 
+            if ($awardrows > 0) $rowawd = $this->DB->fetch_row();
+
+            // Loop through each award, and check the criteria
+            $chkcriteria = false;
+            foreach ($award[3] as $criteria) 
             {
-                // Loop through each award, and check the criteria
-                $chkcriteria = false;
-                foreach ($award[3] as $criteria) 
+                // Recieveing ribbon awards multiple times is NOT supported
+                if ($award[2] == 2) 
                 {
-                    // Recieveing ribbon awards multiple times is NOT supported
-                    if ($award[2] == 2) 
+                    // Can receive multiple times
+                    if ($awardrows > 0) 
                     {
-                        // Can receive multiple times
-                        if ($awardrows > 0) 
-                        {
-                            $rowawd = $this->DB->fetch_row();
-                            $where = str_replace($awards_substr, $rowawd['level'] + 1, $criteria[3]);
-                        } 
-                        else 
-                        {
-                            $where = str_replace($awards_substr, 1, $criteria[3]);
-                        }
+                        $Medal_Next = true;
+                        $where = str_replace($awards_substr, $rowawd['level'] + 1, $criteria[3]);
                     } 
                     else 
                     {
-                        $where = $criteria[3];
+                        $Medal_Next = false;
+                        $where = str_replace($awards_substr, 1, $criteria[3]);
                     }
-                    
-                    // Check to see if the player meets the requirments for the award
-                    $query = "SELECT {$criteria[1]} AS checkval FROM {$criteria[0]} WHERE (id = " . $pid . ") AND ({$where}) ORDER BY id;";
-                    $this->DB->query( $query )->result();
-                    if ($this->DB->num_rows() > 0) 
-                    {
-                        $rowchk = $this->DB->fetch_row();
-                        if ($rowchk['checkval'] >= $criteria[2]) 
-                        {
-                            $chkcriteria = true;
-                        } 
-                        else 
-                        {
-                            $chkcriteria = false;
-                            break;
-                        }
-                    }
+                } 
+                else 
+                {
+                    $where = $criteria[3];
                 }
                 
-                // If player is meets the requirements, but hasnt been awarded the reward...
-                if ($chkcriteria && $awardrows == 0) 
+                // Check to see if the player meets the requirments for the award
+                $query = "SELECT {$criteria[1]} AS checkval FROM {$criteria[0]} WHERE (id = " . $pid . ") AND ({$where}) ORDER BY id;";
+                $this->DB->query( $query )->result();
+                if ($this->DB->num_rows() > 0) 
                 {
-                    // Insert information
-                    $this->log("Award Missing ({$award[0]}) for Player ({$pid}). Adding award to Players Awards...");
-                    $query = "INSERT INTO awards SET
-                        id = " . $pid . ",
-                        awd = {$award[0]},
-                        level = 1,
-                        earned = " . time() . ",
-                        first = 0;";
-                    $this->DB->query( $query ); 
-                }
-                
-                // Else, if Player has award but doesnt meet requirements
-                elseif (!$chkcriteria && $awardrows > 0) 
-                {
-                    if ($rowawd['awd'] == $award[0]) 
+                    $rowchk = $this->DB->fetch_row();
+                    if ($rowchk['checkval'] >= $criteria[2]) 
                     {
-                        // Delete information
-                        $this->log("Player ({$pid}) Has Award ({$award[0]}), but does not meet requirements! Removing award...");
-                        $query = "DELETE FROM awards WHERE (id = " . $pid . " AND awd = {$award[0]});";
-                        $this->DB->query( $query );
+                        $chkcriteria = true;
+                    } 
+                    else 
+                    {
+                        $chkcriteria = false;
+                        break;
                     }
                 }
             }
+            
+            // If player is meets the requirements, but hasnt been awarded the reward...
+            if ($chkcriteria && $awardrows == 0) 
+            {
+                // Insert information
+                $this->log("Award Missing ({$award[0]}) for Player ({$pid}). Adding award to Players Awards...");
+                $query = "INSERT INTO awards SET
+                    id = " . $pid . ",
+                    awd = {$award[0]},
+                    level = 1,
+                    earned = " . time() . ",
+                    first = 0;";
+                $this->DB->query( $query ); 
+            }
+            
+            // Else, if Player has award but doesnt meet requirements
+            elseif (!$chkcriteria && $awardrows > 0) 
+            {
+                // Delete information
+                $this->log("Player ({$pid}) Has Award ({$award[0]}), but does not meet requirements! Removing award...");
+                $query = "DELETE FROM awards WHERE (id = " . $pid . " AND awd = {$award[0]});";
+                $this->DB->query( $query );
+            }
+            
+            // Maybe additional award for medal?
+            elseif($award[2] == 2 &&  $Medal_Next == true && $chkcriteria == true)
+            {
+                // Update Award
+                $this->log("Award Missing ({$award[0]}) for Player ({$pid}). Adding award to Players Awards...");
+                $query = "UPDATE awards SET level = ". ($rowawd['level'] + 1) .", earned = " . time() . " WHERE id = " . $pid . " AND awd = {$award[0]}";
+                $this->DB->query( $query ); 
+            }
         }
+
         return TRUE;
     }
 }

@@ -107,9 +107,9 @@ def onGameStatusChanged(status):
 		host.registerHandler('PlayerBanned', onPlayerBanned)
 		host.registerHandler('PlayerKicked', onPlayerKicked)
 		host.registerHandler('PlayerSpawn', onPlayerSpawn)
-		#host.registerHandler('DeployGrapplingHook', onDeployGrapplingHook)
-		#host.registerHandler('DeployZipLine', onDeployZipLine)
-		#host.registerHandler('DeployTactical', onDeployTactical)
+		host.registerHandler('DeployGrapplingHook', onDeployGrapplingHook)
+		host.registerHandler('DeployZipLine', onDeployZipLine)
+		host.registerHandler('DeployTactical', onDeployTactical)
 		
 		for s in sessionPlayerStatsMap.itervalues():
 			s.reset()

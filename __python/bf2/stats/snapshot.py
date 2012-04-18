@@ -333,91 +333,81 @@ def getPlayerSnapshot(playerStat):
 		return ""
 		
 	playerKeys = 	[
-			
-			# main keys 
-			("pID", 	playerStat.profileId),
 
-# Added by Chump - for bf2statistics stats
-			("name",	playerStat.name),
+		# main keys 
+		("pID", 	playerStat.profileId),
+		("name",	playerStat.name),
+		("t",		playerStat.team),
+		("a",		playerStat.army),
+		("ctime",	int(playerStat.timePlayed)),
+		("c",		playerStat.complete),
+		("ip",		playerStat.ipaddr),
+		("ai",		playerStat.isAIPlayer),
+		
+		# score keys
+		("rs",		playerStat.score),
+		("cs",		playerStat.cmdScore),
+		#("ss", 	playerStat.skillScore), 	// Processed in Backend
+		("ts",		playerStat.teamScore),
+		("kills",	playerStat.kills),
+		("deaths",	playerStat.deaths),
+		("cpc",		playerStat.localScore.cpCaptures + playerStat.localScore.cpNeutralizes),
+		("cpa",		playerStat.localScore.cpAssists + playerStat.localScore.cpNeutralizeAssists),
+		#("cpc",	playerStat.localScore.cpCaptures),			// Processed in backend
+		#("cpn",	playerStat.localScore.cpNeutralizes),		// Processed in backend
+		#("cpa",	playerStat.localScore.cpAssists),			// Processed in backend
+		#("cpna",	playerStat.localScore.cpNeutralizeAssists),	// Processed in backend
+		("cpd",		playerStat.localScore.cpDefends),
+		("ka",		playerStat.localScore.damageAssists),
+		("he",		playerStat.localScore.heals),
+		("rev",		playerStat.localScore.revives),
+		("rsp",		playerStat.localScore.ammos),
+		("rep",		playerStat.localScore.repairs),
+		("tre",		playerStat.localScore.targetAssists),
+		("drs",		playerStat.localScore.driverSpecials + playerStat.localScore.driverAssists),
+		#("drs",	playerStat.localScore.driverSpecials),		// Processed in backend
+		#("dra",	playerStat.localScore.driverAssists),		// Processed in backend
+		#("pa",		playerStat.localScore.passengerAssists),	// Processed in backend
+		
+		# Additional player stats
+		("tmkl",	playerStat.teamkills),
+		("tmdg",	playerStat.localScore.teamDamages),
+		("tmvd",	playerStat.localScore.teamVehicleDamages),
+		("su",		playerStat.localScore.suicides),
+		("ks",		playerStat.longestKillStreak),
+		("ds",		playerStat.longestDeathStreak),
+		("rank",	playerStat.rank),
+		("ban",		playerStat.timesBanned),
+		("kck",		playerStat.timesKicked),		
+		
+		# time keys
+		("tco",		int(playerStat.timeAsCmd)),
+		("tsl",		int(playerStat.timeAsSql)),
+		("tsm",		int(playerStat.timeInSquad - playerStat.timeAsSql)),
+		("tlw",		int(playerStat.timePlayed - playerStat.timeAsCmd - playerStat.timeInSquad)),
+		
+		# Base Game Stuff
+		("ta0",		int(playerStat.timeAsArmy[ARMY_USA])),
+		("ta1",		int(playerStat.timeAsArmy[ARMY_MEC])),
+		("ta2", 	int(playerStat.timeAsArmy[ARMY_CHINESE])),
+		#XPack1 Stuff
+		("ta3", 	int(playerStat.timeAsArmy[ARMY_SEALS])),
+		("ta4", 	int(playerStat.timeAsArmy[ARMY_SAS])),
+		("ta5", 	int(playerStat.timeAsArmy[ARMY_SPETZNAS])),
+		("ta6", 	int(playerStat.timeAsArmy[ARMY_MECSF])),
+		("ta7", 	int(playerStat.timeAsArmy[ARMY_REBELS])),
+		("ta8", 	int(playerStat.timeAsArmy[ARMY_INSURGENTS])),
+		#EF Booster Pack Stuff
+		("ta9", 	int(playerStat.timeAsArmy[ARMY_EURO])),
+		#POE2 Stuff
+		("ta10", 	int(playerStat.timeAsArmy[ARMY_GER])),
+		("ta11", 	int(playerStat.timeAsArmy[ARMY_UKR])),
+		#AIX
+		("ta12",     int(playerStat.timeAsArmy[ARMY_UN])),
+		#CANADIAN FORCES
+		("ta13",     int(playerStat.timeAsArmy[ARMY_CANADIAN])),
 
-			("t",		playerStat.team),
-			("a",		playerStat.army),
-			("ctime",	int(playerStat.timePlayed)),
-			("c",		playerStat.complete),
-			("ip",		playerStat.ipaddr),
-			("ai",		playerStat.isAIPlayer),
-			
-			# score keys
-			("rs",		playerStat.score),
-			("cs",		playerStat.cmdScore),
-			#("ss", 	playerStat.skillScore),
-			("ts",		playerStat.teamScore),
-
-# Added by Chump - for bf2statistics stats
-			("kills",	playerStat.kills),
-			("deaths",	playerStat.deaths),
-
-# Added by Chump - for bf2statistics stats
-			("cpc",		playerStat.localScore.cpCaptures + playerStat.localScore.cpNeutralizes),
-			("cpa",		playerStat.localScore.cpAssists + playerStat.localScore.cpNeutralizeAssists),
-			#("cpc",		playerStat.localScore.cpCaptures),
-			#("cpn",		playerStat.localScore.cpNeutralizes),
-			#("cpa",		playerStat.localScore.cpAssists),
-			#("cpna",	playerStat.localScore.cpNeutralizeAssists),
-
-			("cpd",		playerStat.localScore.cpDefends),
-			("ka",		playerStat.localScore.damageAssists),
-			("he",		playerStat.localScore.heals),
-			("rev",		playerStat.localScore.revives),
-			("rsp",		playerStat.localScore.ammos),
-			("rep",		playerStat.localScore.repairs),
-			("tre",		playerStat.localScore.targetAssists),
-
-# Added by Chump - for bf2statistics stats
-			("drs",		playerStat.localScore.driverSpecials + playerStat.localScore.driverAssists),
-			#("drs",		playerStat.localScore.driverSpecials),
-			#("dra",		playerStat.localScore.driverAssists),
-			#("pa",		playerStat.localScore.passengerAssists),
-
-			("tmkl",	playerStat.teamkills),
-			("tmdg",	playerStat.localScore.teamDamages),
-			("tmvd",	playerStat.localScore.teamVehicleDamages),
-			("su",		playerStat.localScore.suicides),
-			("ks",		playerStat.longestKillStreak),
-			("ds",		playerStat.longestDeathStreak),
-			("rank",	playerStat.rank),
-			("ban",		playerStat.timesBanned),
-			("kck",		playerStat.timesKicked),		
-			
-			# time keys
-			("tco",		int(playerStat.timeAsCmd)),
-			("tsl",		int(playerStat.timeAsSql)),
-			("tsm",		int(playerStat.timeInSquad - playerStat.timeAsSql)),
-			("tlw",		int(playerStat.timePlayed - playerStat.timeAsCmd - playerStat.timeInSquad)),
-			
-			("ta0",		int(playerStat.timeAsArmy[ARMY_USA])),
-			("ta1",		int(playerStat.timeAsArmy[ARMY_MEC])),
-			("ta2", 	int(playerStat.timeAsArmy[ARMY_CHINESE])),
-			#XPack1 Stuff
-			("ta3", 	int(playerStat.timeAsArmy[ARMY_SEALS])),
-			("ta4", 	int(playerStat.timeAsArmy[ARMY_SAS])),
-			("ta5", 	int(playerStat.timeAsArmy[ARMY_SPETZNAS])),
-			("ta6", 	int(playerStat.timeAsArmy[ARMY_MECSF])),
-			("ta7", 	int(playerStat.timeAsArmy[ARMY_REBELS])),
-			("ta8", 	int(playerStat.timeAsArmy[ARMY_INSURGENTS])),
-			#EF Booster Pack Stuff
-			("ta9", 	int(playerStat.timeAsArmy[ARMY_EURO])),
-			#POE2 Stuff
-			("ta10", 	int(playerStat.timeAsArmy[ARMY_GER])),
-			("ta11", 	int(playerStat.timeAsArmy[ARMY_UKR])),
-			#AIX
-			("ta12",     int(playerStat.timeAsArmy[ARMY_UN])),
-			#CANADIAN FORCES
-			("ta13",     int(playerStat.timeAsArmy[ARMY_CANADIAN])),
-
-
-			
-			]
+	]
 	
 	# victims / victimizers
 	statsMap = getStatsMap()
@@ -451,45 +441,45 @@ def getPlayerSnapshot(playerStat):
 	
 	# vehicles
 	vehicleKeys = 	[
-			("tv0",		int(playerStat.vehicles[VEHICLE_TYPE_ARMOR].timeInObject)),
-			("tv1",		int(playerStat.vehicles[VEHICLE_TYPE_AVIATOR].timeInObject)),
-			("tv2",		int(playerStat.vehicles[VEHICLE_TYPE_AIRDEFENSE].timeInObject)),
-			("tv3",		int(playerStat.vehicles[VEHICLE_TYPE_HELICOPTER].timeInObject)),
-			("tv4",		int(playerStat.vehicles[VEHICLE_TYPE_TRANSPORT].timeInObject)),
-			("tv5",		int(playerStat.vehicles[VEHICLE_TYPE_ARTILLERY].timeInObject)),
-			("tv6",		int(playerStat.vehicles[VEHICLE_TYPE_GRNDDEFENSE].timeInObject)),
-			("tvp",		int(playerStat.vehicles[VEHICLE_TYPE_PARACHUTE].timeInObject)),
+		("tv0",		int(playerStat.vehicles[VEHICLE_TYPE_ARMOR].timeInObject)),
+		("tv1",		int(playerStat.vehicles[VEHICLE_TYPE_AVIATOR].timeInObject)),
+		("tv2",		int(playerStat.vehicles[VEHICLE_TYPE_AIRDEFENSE].timeInObject)),
+		("tv3",		int(playerStat.vehicles[VEHICLE_TYPE_HELICOPTER].timeInObject)),
+		("tv4",		int(playerStat.vehicles[VEHICLE_TYPE_TRANSPORT].timeInObject)),
+		("tv5",		int(playerStat.vehicles[VEHICLE_TYPE_ARTILLERY].timeInObject)),
+		("tv6",		int(playerStat.vehicles[VEHICLE_TYPE_GRNDDEFENSE].timeInObject)),
+		("tvp",		int(playerStat.vehicles[VEHICLE_TYPE_PARACHUTE].timeInObject)),
 
-			# Added by Chump - these do not register with onEnterVehicle()
-			# XPack1 Stuff
-			#("tnv",		int(playerStat.vehicles[VEHICLE_TYPE_NIGHTVISION].timeInObject)),
-			#("tgm",		int(playerStat.vehicles[VEHICLE_TYPE_GASMASK].timeInObject)),
-			
-			("kv0",		playerStat.vehicles[VEHICLE_TYPE_ARMOR].kills),
-			("kv1",		playerStat.vehicles[VEHICLE_TYPE_AVIATOR].kills),
-			("kv2",		playerStat.vehicles[VEHICLE_TYPE_AIRDEFENSE].kills),
-			("kv3",		playerStat.vehicles[VEHICLE_TYPE_HELICOPTER].kills),
-			("kv4",		playerStat.vehicles[VEHICLE_TYPE_TRANSPORT].kills),
-			("kv5",		playerStat.vehicles[VEHICLE_TYPE_ARTILLERY].kills),
-			("kv6",		playerStat.vehicles[VEHICLE_TYPE_GRNDDEFENSE].kills),
-			
-			("bv0",		playerStat.vehicles[VEHICLE_TYPE_ARMOR].deaths),
-			("bv1",		playerStat.vehicles[VEHICLE_TYPE_AVIATOR].deaths),
-			("bv2",		playerStat.vehicles[VEHICLE_TYPE_AIRDEFENSE].deaths),
-			("bv3",		playerStat.vehicles[VEHICLE_TYPE_HELICOPTER].deaths),
-			("bv4",		playerStat.vehicles[VEHICLE_TYPE_TRANSPORT].deaths),
-			("bv5",		playerStat.vehicles[VEHICLE_TYPE_ARTILLERY].deaths),
-			("bv6",		playerStat.vehicles[VEHICLE_TYPE_GRNDDEFENSE].deaths),
+		# Added by Chump - these do not register with onEnterVehicle()
+		# XPack1 Stuff
+		#("tnv",		int(playerStat.vehicles[VEHICLE_TYPE_NIGHTVISION].timeInObject)),
+		#("tgm",		int(playerStat.vehicles[VEHICLE_TYPE_GASMASK].timeInObject)),
+		
+		("kv0",		playerStat.vehicles[VEHICLE_TYPE_ARMOR].kills),
+		("kv1",		playerStat.vehicles[VEHICLE_TYPE_AVIATOR].kills),
+		("kv2",		playerStat.vehicles[VEHICLE_TYPE_AIRDEFENSE].kills),
+		("kv3",		playerStat.vehicles[VEHICLE_TYPE_HELICOPTER].kills),
+		("kv4",		playerStat.vehicles[VEHICLE_TYPE_TRANSPORT].kills),
+		("kv5",		playerStat.vehicles[VEHICLE_TYPE_ARTILLERY].kills),
+		("kv6",		playerStat.vehicles[VEHICLE_TYPE_GRNDDEFENSE].kills),
+		
+		("bv0",		playerStat.vehicles[VEHICLE_TYPE_ARMOR].deaths),
+		("bv1",		playerStat.vehicles[VEHICLE_TYPE_AVIATOR].deaths),
+		("bv2",		playerStat.vehicles[VEHICLE_TYPE_AIRDEFENSE].deaths),
+		("bv3",		playerStat.vehicles[VEHICLE_TYPE_HELICOPTER].deaths),
+		("bv4",		playerStat.vehicles[VEHICLE_TYPE_TRANSPORT].deaths),
+		("bv5",		playerStat.vehicles[VEHICLE_TYPE_ARTILLERY].deaths),
+		("bv6",		playerStat.vehicles[VEHICLE_TYPE_GRNDDEFENSE].deaths),
 
-			("kvr0",	playerStat.vehicles[VEHICLE_TYPE_ARMOR].roadKills),
-			("kvr1",	playerStat.vehicles[VEHICLE_TYPE_AVIATOR].roadKills),
-			("kvr2",	playerStat.vehicles[VEHICLE_TYPE_AIRDEFENSE].roadKills),
-			("kvr3",	playerStat.vehicles[VEHICLE_TYPE_HELICOPTER].roadKills),
-			("kvr4",	playerStat.vehicles[VEHICLE_TYPE_TRANSPORT].roadKills),
-			("kvr5",	playerStat.vehicles[VEHICLE_TYPE_ARTILLERY].roadKills),
-			("kvr6",	playerStat.vehicles[VEHICLE_TYPE_GRNDDEFENSE].roadKills),
+		("kvr0",	playerStat.vehicles[VEHICLE_TYPE_ARMOR].roadKills),
+		("kvr1",	playerStat.vehicles[VEHICLE_TYPE_AVIATOR].roadKills),
+		("kvr2",	playerStat.vehicles[VEHICLE_TYPE_AIRDEFENSE].roadKills),
+		("kvr3",	playerStat.vehicles[VEHICLE_TYPE_HELICOPTER].roadKills),
+		("kvr4",	playerStat.vehicles[VEHICLE_TYPE_TRANSPORT].roadKills),
+		("kvr5",	playerStat.vehicles[VEHICLE_TYPE_ARTILLERY].roadKills),
+		("kvr6",	playerStat.vehicles[VEHICLE_TYPE_GRNDDEFENSE].roadKills),
 
-			]
+	]
 
 	vehkeyvals = []
 	for k in vehicleKeys:
@@ -500,30 +490,30 @@ def getPlayerSnapshot(playerStat):
 	
 	# kits
 	kitKeys = 	[
-			("tk0",		int(playerStat.kits[KIT_TYPE_AT].timeInObject)),
-			("tk1",		int(playerStat.kits[KIT_TYPE_ASSAULT].timeInObject)),
-			("tk2",		int(playerStat.kits[KIT_TYPE_ENGINEER].timeInObject)),
-			("tk3",		int(playerStat.kits[KIT_TYPE_MEDIC].timeInObject)),
-			("tk4",		int(playerStat.kits[KIT_TYPE_SPECOPS].timeInObject)),
-			("tk5",		int(playerStat.kits[KIT_TYPE_SUPPORT].timeInObject)),
-			("tk6",		int(playerStat.kits[KIT_TYPE_SNIPER].timeInObject)),
-			
-			("kk0",		playerStat.kits[KIT_TYPE_AT].kills),
-			("kk1",		playerStat.kits[KIT_TYPE_ASSAULT].kills),
-			("kk2",		playerStat.kits[KIT_TYPE_ENGINEER].kills),
-			("kk3",		playerStat.kits[KIT_TYPE_MEDIC].kills),
-			("kk4",		playerStat.kits[KIT_TYPE_SPECOPS].kills),
-			("kk5",		playerStat.kits[KIT_TYPE_SUPPORT].kills),
-			("kk6",		playerStat.kits[KIT_TYPE_SNIPER].kills),
-			
-			("dk0",		playerStat.kits[KIT_TYPE_AT].deaths),
-			("dk1",		playerStat.kits[KIT_TYPE_ASSAULT].deaths),
-			("dk2",		playerStat.kits[KIT_TYPE_ENGINEER].deaths),
-			("dk3",		playerStat.kits[KIT_TYPE_MEDIC].deaths),
-			("dk4",		playerStat.kits[KIT_TYPE_SPECOPS].deaths),
-			("dk5",		playerStat.kits[KIT_TYPE_SUPPORT].deaths),
-			("dk6",		playerStat.kits[KIT_TYPE_SNIPER].deaths),
-			]
+		("tk0",		int(playerStat.kits[KIT_TYPE_AT].timeInObject)),
+		("tk1",		int(playerStat.kits[KIT_TYPE_ASSAULT].timeInObject)),
+		("tk2",		int(playerStat.kits[KIT_TYPE_ENGINEER].timeInObject)),
+		("tk3",		int(playerStat.kits[KIT_TYPE_MEDIC].timeInObject)),
+		("tk4",		int(playerStat.kits[KIT_TYPE_SPECOPS].timeInObject)),
+		("tk5",		int(playerStat.kits[KIT_TYPE_SUPPORT].timeInObject)),
+		("tk6",		int(playerStat.kits[KIT_TYPE_SNIPER].timeInObject)),
+		
+		("kk0",		playerStat.kits[KIT_TYPE_AT].kills),
+		("kk1",		playerStat.kits[KIT_TYPE_ASSAULT].kills),
+		("kk2",		playerStat.kits[KIT_TYPE_ENGINEER].kills),
+		("kk3",		playerStat.kits[KIT_TYPE_MEDIC].kills),
+		("kk4",		playerStat.kits[KIT_TYPE_SPECOPS].kills),
+		("kk5",		playerStat.kits[KIT_TYPE_SUPPORT].kills),
+		("kk6",		playerStat.kits[KIT_TYPE_SNIPER].kills),
+		
+		("dk0",		playerStat.kits[KIT_TYPE_AT].deaths),
+		("dk1",		playerStat.kits[KIT_TYPE_ASSAULT].deaths),
+		("dk2",		playerStat.kits[KIT_TYPE_ENGINEER].deaths),
+		("dk3",		playerStat.kits[KIT_TYPE_MEDIC].deaths),
+		("dk4",		playerStat.kits[KIT_TYPE_SPECOPS].deaths),
+		("dk5",		playerStat.kits[KIT_TYPE_SUPPORT].deaths),
+		("dk6",		playerStat.kits[KIT_TYPE_SNIPER].deaths),
+	]
 
 	kitkeyvals = []
 	for k in kitKeys:
@@ -533,100 +523,100 @@ def getPlayerSnapshot(playerStat):
 		
 	# weapons
 	weaponKeys = 	[
-			("tw0",		int(playerStat.weapons[WEAPON_TYPE_ASSAULT].timeInObject)),
-			("tw1",		int(playerStat.weapons[WEAPON_TYPE_ASSAULTGRN].timeInObject)),
-			("tw2",		int(playerStat.weapons[WEAPON_TYPE_CARBINE].timeInObject)),
-			("tw3",		int(playerStat.weapons[WEAPON_TYPE_LMG].timeInObject)),
-			("tw4",		int(playerStat.weapons[WEAPON_TYPE_SNIPER].timeInObject)),
-			("tw5",		int(playerStat.weapons[WEAPON_TYPE_PISTOL].timeInObject)),
-			("tw6",		int(playerStat.weapons[WEAPON_TYPE_ATAA].timeInObject)),
-			("tw7",		int(playerStat.weapons[WEAPON_TYPE_SMG].timeInObject)),
-			("tw8",		int(playerStat.weapons[WEAPON_TYPE_SHOTGUN].timeInObject)),
-			("te0",		int(playerStat.weapons[WEAPON_TYPE_KNIFE].timeInObject)),
-			("te1",		int(playerStat.weapons[WEAPON_TYPE_C4].timeInObject)),
-			("te3",		int(playerStat.weapons[WEAPON_TYPE_HANDGRENADE].timeInObject)),
-			("te2",		int(playerStat.weapons[WEAPON_TYPE_CLAYMORE].timeInObject)),
-			("te4",		int(playerStat.weapons[WEAPON_TYPE_SHOCKPAD].timeInObject)),
-			("te5",		int(playerStat.weapons[WEAPON_TYPE_ATMINE].timeInObject)),
-			# XPack1 Stuff
-			("te6",		int(playerStat.weapons[WEAPON_TYPE_TACTICAL].timeInObject)),
-			("te7",		int(playerStat.weapons[WEAPON_TYPE_GRAPPLINGHOOK].timeInObject)),
-			("te8",		int(playerStat.weapons[WEAPON_TYPE_ZIPLINE].timeInObject)),
-			
-			("kw0",		playerStat.weapons[WEAPON_TYPE_ASSAULT].kills),
-			("kw1",		playerStat.weapons[WEAPON_TYPE_ASSAULTGRN].kills),
-			("kw2",		playerStat.weapons[WEAPON_TYPE_CARBINE].kills),
-			("kw3",		playerStat.weapons[WEAPON_TYPE_LMG].kills),
-			("kw4",		playerStat.weapons[WEAPON_TYPE_SNIPER].kills),
-			("kw5",		playerStat.weapons[WEAPON_TYPE_PISTOL].kills),
-			("kw6",		playerStat.weapons[WEAPON_TYPE_ATAA].kills),
-			("kw7",		playerStat.weapons[WEAPON_TYPE_SMG].kills),
-			("kw8",		playerStat.weapons[WEAPON_TYPE_SHOTGUN].kills),
-			("ke0",		playerStat.weapons[WEAPON_TYPE_KNIFE].kills),
-			("ke1",		playerStat.weapons[WEAPON_TYPE_C4].kills),
-			("ke3",		playerStat.weapons[WEAPON_TYPE_HANDGRENADE].kills),
-			("ke2",		playerStat.weapons[WEAPON_TYPE_CLAYMORE].kills),
-			("ke4",		playerStat.weapons[WEAPON_TYPE_SHOCKPAD].kills),
-			("ke5",		playerStat.weapons[WEAPON_TYPE_ATMINE].kills),
+		("tw0",		int(playerStat.weapons[WEAPON_TYPE_ASSAULT].timeInObject)),
+		("tw1",		int(playerStat.weapons[WEAPON_TYPE_ASSAULTGRN].timeInObject)),
+		("tw2",		int(playerStat.weapons[WEAPON_TYPE_CARBINE].timeInObject)),
+		("tw3",		int(playerStat.weapons[WEAPON_TYPE_LMG].timeInObject)),
+		("tw4",		int(playerStat.weapons[WEAPON_TYPE_SNIPER].timeInObject)),
+		("tw5",		int(playerStat.weapons[WEAPON_TYPE_PISTOL].timeInObject)),
+		("tw6",		int(playerStat.weapons[WEAPON_TYPE_ATAA].timeInObject)),
+		("tw7",		int(playerStat.weapons[WEAPON_TYPE_SMG].timeInObject)),
+		("tw8",		int(playerStat.weapons[WEAPON_TYPE_SHOTGUN].timeInObject)),
+		("te0",		int(playerStat.weapons[WEAPON_TYPE_KNIFE].timeInObject)),
+		("te1",		int(playerStat.weapons[WEAPON_TYPE_C4].timeInObject)),
+		("te3",		int(playerStat.weapons[WEAPON_TYPE_HANDGRENADE].timeInObject)),
+		("te2",		int(playerStat.weapons[WEAPON_TYPE_CLAYMORE].timeInObject)),
+		("te4",		int(playerStat.weapons[WEAPON_TYPE_SHOCKPAD].timeInObject)),
+		("te5",		int(playerStat.weapons[WEAPON_TYPE_ATMINE].timeInObject)),
+		# XPack1 Stuff
+		("te6",		int(playerStat.weapons[WEAPON_TYPE_TACTICAL].timeInObject)),
+		("te7",		int(playerStat.weapons[WEAPON_TYPE_GRAPPLINGHOOK].timeInObject)),
+		("te8",		int(playerStat.weapons[WEAPON_TYPE_ZIPLINE].timeInObject)),
+		
+		("kw0",		playerStat.weapons[WEAPON_TYPE_ASSAULT].kills),
+		("kw1",		playerStat.weapons[WEAPON_TYPE_ASSAULTGRN].kills),
+		("kw2",		playerStat.weapons[WEAPON_TYPE_CARBINE].kills),
+		("kw3",		playerStat.weapons[WEAPON_TYPE_LMG].kills),
+		("kw4",		playerStat.weapons[WEAPON_TYPE_SNIPER].kills),
+		("kw5",		playerStat.weapons[WEAPON_TYPE_PISTOL].kills),
+		("kw6",		playerStat.weapons[WEAPON_TYPE_ATAA].kills),
+		("kw7",		playerStat.weapons[WEAPON_TYPE_SMG].kills),
+		("kw8",		playerStat.weapons[WEAPON_TYPE_SHOTGUN].kills),
+		("ke0",		playerStat.weapons[WEAPON_TYPE_KNIFE].kills),
+		("ke1",		playerStat.weapons[WEAPON_TYPE_C4].kills),
+		("ke3",		playerStat.weapons[WEAPON_TYPE_HANDGRENADE].kills),
+		("ke2",		playerStat.weapons[WEAPON_TYPE_CLAYMORE].kills),
+		("ke4",		playerStat.weapons[WEAPON_TYPE_SHOCKPAD].kills),
+		("ke5",		playerStat.weapons[WEAPON_TYPE_ATMINE].kills),
 
-			("bw0",		playerStat.weapons[WEAPON_TYPE_ASSAULT].deaths),
-			("bw1",		playerStat.weapons[WEAPON_TYPE_ASSAULTGRN].deaths),
-			("bw2",		playerStat.weapons[WEAPON_TYPE_CARBINE].deaths),
-			("bw3",		playerStat.weapons[WEAPON_TYPE_LMG].deaths),
-			("bw4",		playerStat.weapons[WEAPON_TYPE_SNIPER].deaths),
-			("bw5",		playerStat.weapons[WEAPON_TYPE_PISTOL].deaths),
-			("bw6",		playerStat.weapons[WEAPON_TYPE_ATAA].deaths),
-			("bw7",		playerStat.weapons[WEAPON_TYPE_SMG].deaths),
-			("bw8",		playerStat.weapons[WEAPON_TYPE_SHOTGUN].deaths),
-			("be0",		playerStat.weapons[WEAPON_TYPE_KNIFE].deaths),
-			("be1",		playerStat.weapons[WEAPON_TYPE_C4].deaths),
-			("be3",		playerStat.weapons[WEAPON_TYPE_HANDGRENADE].deaths),
-			("be2",		playerStat.weapons[WEAPON_TYPE_CLAYMORE].deaths),
-			("be4",		playerStat.weapons[WEAPON_TYPE_SHOCKPAD].deaths),
-			("be5",		playerStat.weapons[WEAPON_TYPE_ATMINE].deaths),
-			# XPack1 Stuff
-			("be8",		playerStat.weapons[WEAPON_TYPE_ZIPLINE].deaths),
-			("be9",		playerStat.weapons[WEAPON_TYPE_GRAPPLINGHOOK].deaths),
+		("bw0",		playerStat.weapons[WEAPON_TYPE_ASSAULT].deaths),
+		("bw1",		playerStat.weapons[WEAPON_TYPE_ASSAULTGRN].deaths),
+		("bw2",		playerStat.weapons[WEAPON_TYPE_CARBINE].deaths),
+		("bw3",		playerStat.weapons[WEAPON_TYPE_LMG].deaths),
+		("bw4",		playerStat.weapons[WEAPON_TYPE_SNIPER].deaths),
+		("bw5",		playerStat.weapons[WEAPON_TYPE_PISTOL].deaths),
+		("bw6",		playerStat.weapons[WEAPON_TYPE_ATAA].deaths),
+		("bw7",		playerStat.weapons[WEAPON_TYPE_SMG].deaths),
+		("bw8",		playerStat.weapons[WEAPON_TYPE_SHOTGUN].deaths),
+		("be0",		playerStat.weapons[WEAPON_TYPE_KNIFE].deaths),
+		("be1",		playerStat.weapons[WEAPON_TYPE_C4].deaths),
+		("be3",		playerStat.weapons[WEAPON_TYPE_HANDGRENADE].deaths),
+		("be2",		playerStat.weapons[WEAPON_TYPE_CLAYMORE].deaths),
+		("be4",		playerStat.weapons[WEAPON_TYPE_SHOCKPAD].deaths),
+		("be5",		playerStat.weapons[WEAPON_TYPE_ATMINE].deaths),
+		# XPack1 Stuff
+		("be8",		playerStat.weapons[WEAPON_TYPE_ZIPLINE].deaths),
+		("be9",		playerStat.weapons[WEAPON_TYPE_GRAPPLINGHOOK].deaths),
 
-			# XPack1 Stuff
-			("de6",		playerStat.weapons[WEAPON_TYPE_TACTICAL].deployed),
-			("de7",		playerStat.weapons[WEAPON_TYPE_GRAPPLINGHOOK].deployed),
-			("de8",		playerStat.weapons[WEAPON_TYPE_ZIPLINE].deployed),
-			
-			("sw0",		playerStat.weapons[WEAPON_TYPE_ASSAULT].bulletsFired),
-			("sw1",		playerStat.weapons[WEAPON_TYPE_ASSAULTGRN].bulletsFired),
-			("sw2",		playerStat.weapons[WEAPON_TYPE_CARBINE].bulletsFired),
-			("sw3",		playerStat.weapons[WEAPON_TYPE_LMG].bulletsFired),
-			("sw4",		playerStat.weapons[WEAPON_TYPE_SNIPER].bulletsFired),
-			("sw5",		playerStat.weapons[WEAPON_TYPE_PISTOL].bulletsFired),
-			("sw6",		playerStat.weapons[WEAPON_TYPE_ATAA].bulletsFired),
-			("sw7",		playerStat.weapons[WEAPON_TYPE_SMG].bulletsFired),
-			("sw8",		playerStat.weapons[WEAPON_TYPE_SHOTGUN].bulletsFired),
-			
-			("se0",		playerStat.weapons[WEAPON_TYPE_KNIFE].bulletsFired),
-			("se1",		playerStat.weapons[WEAPON_TYPE_C4].bulletsFired),
-			("se2",		playerStat.weapons[WEAPON_TYPE_CLAYMORE].bulletsFired),
-			("se3",		playerStat.weapons[WEAPON_TYPE_HANDGRENADE].bulletsFired),
-			("se4",		playerStat.weapons[WEAPON_TYPE_SHOCKPAD].bulletsFired),
-			("se5",		playerStat.weapons[WEAPON_TYPE_ATMINE].bulletsFired),
+		# XPack1 Stuff
+		("de6",		playerStat.weapons[WEAPON_TYPE_TACTICAL].deployed),
+		("de7",		playerStat.weapons[WEAPON_TYPE_GRAPPLINGHOOK].deployed),
+		("de8",		playerStat.weapons[WEAPON_TYPE_ZIPLINE].deployed),
+		
+		("sw0",		playerStat.weapons[WEAPON_TYPE_ASSAULT].bulletsFired),
+		("sw1",		playerStat.weapons[WEAPON_TYPE_ASSAULTGRN].bulletsFired),
+		("sw2",		playerStat.weapons[WEAPON_TYPE_CARBINE].bulletsFired),
+		("sw3",		playerStat.weapons[WEAPON_TYPE_LMG].bulletsFired),
+		("sw4",		playerStat.weapons[WEAPON_TYPE_SNIPER].bulletsFired),
+		("sw5",		playerStat.weapons[WEAPON_TYPE_PISTOL].bulletsFired),
+		("sw6",		playerStat.weapons[WEAPON_TYPE_ATAA].bulletsFired),
+		("sw7",		playerStat.weapons[WEAPON_TYPE_SMG].bulletsFired),
+		("sw8",		playerStat.weapons[WEAPON_TYPE_SHOTGUN].bulletsFired),
+		
+		("se0",		playerStat.weapons[WEAPON_TYPE_KNIFE].bulletsFired),
+		("se1",		playerStat.weapons[WEAPON_TYPE_C4].bulletsFired),
+		("se2",		playerStat.weapons[WEAPON_TYPE_CLAYMORE].bulletsFired),
+		("se3",		playerStat.weapons[WEAPON_TYPE_HANDGRENADE].bulletsFired),
+		("se4",		playerStat.weapons[WEAPON_TYPE_SHOCKPAD].bulletsFired),
+		("se5",		playerStat.weapons[WEAPON_TYPE_ATMINE].bulletsFired),
 
-			("hw0",		playerStat.weapons[WEAPON_TYPE_ASSAULT].bulletsHit),
-			("hw1",		playerStat.weapons[WEAPON_TYPE_ASSAULTGRN].bulletsHit),
-			("hw2",		playerStat.weapons[WEAPON_TYPE_CARBINE].bulletsHit),
-			("hw3",		playerStat.weapons[WEAPON_TYPE_LMG].bulletsHit),
-			("hw4",		playerStat.weapons[WEAPON_TYPE_SNIPER].bulletsHit),
-			("hw5",		playerStat.weapons[WEAPON_TYPE_PISTOL].bulletsHit),
-			("hw6",		playerStat.weapons[WEAPON_TYPE_ATAA].bulletsHit),
-			("hw7",		playerStat.weapons[WEAPON_TYPE_SMG].bulletsHit),
-			("hw8",		playerStat.weapons[WEAPON_TYPE_SHOTGUN].bulletsHit),
-			
-			("he0",		playerStat.weapons[WEAPON_TYPE_KNIFE].bulletsHit),
-			("he1",		playerStat.weapons[WEAPON_TYPE_C4].bulletsHit),
-			("he2",		playerStat.weapons[WEAPON_TYPE_CLAYMORE].bulletsHit),
-			("he3",		playerStat.weapons[WEAPON_TYPE_HANDGRENADE].bulletsHit),
-			("he4",		playerStat.weapons[WEAPON_TYPE_SHOCKPAD].bulletsHit),
-			("he5",		playerStat.weapons[WEAPON_TYPE_ATMINE].bulletsHit),
-			]
+		("hw0",		playerStat.weapons[WEAPON_TYPE_ASSAULT].bulletsHit),
+		("hw1",		playerStat.weapons[WEAPON_TYPE_ASSAULTGRN].bulletsHit),
+		("hw2",		playerStat.weapons[WEAPON_TYPE_CARBINE].bulletsHit),
+		("hw3",		playerStat.weapons[WEAPON_TYPE_LMG].bulletsHit),
+		("hw4",		playerStat.weapons[WEAPON_TYPE_SNIPER].bulletsHit),
+		("hw5",		playerStat.weapons[WEAPON_TYPE_PISTOL].bulletsHit),
+		("hw6",		playerStat.weapons[WEAPON_TYPE_ATAA].bulletsHit),
+		("hw7",		playerStat.weapons[WEAPON_TYPE_SMG].bulletsHit),
+		("hw8",		playerStat.weapons[WEAPON_TYPE_SHOTGUN].bulletsHit),
+		
+		("he0",		playerStat.weapons[WEAPON_TYPE_KNIFE].bulletsHit),
+		("he1",		playerStat.weapons[WEAPON_TYPE_C4].bulletsHit),
+		("he2",		playerStat.weapons[WEAPON_TYPE_CLAYMORE].bulletsHit),
+		("he3",		playerStat.weapons[WEAPON_TYPE_HANDGRENADE].bulletsHit),
+		("he4",		playerStat.weapons[WEAPON_TYPE_SHOCKPAD].bulletsHit),
+		("he5",		playerStat.weapons[WEAPON_TYPE_ATMINE].bulletsHit),
+	]
 
 	weapkeyvals = []
 	for k in weaponKeys:
