@@ -32,7 +32,7 @@ class Rcon
         $this->version = $this->read(true);
         
         // If we dont have a password, dont login!
-        if($password != null)
+        if($password == null)
         {
             $this->close();
             return -1;
@@ -74,14 +74,14 @@ class Rcon
 
     protected function write($line, $bare = false)
     {
-        fputs($this->socket, ($bare ? '' : "\x02").$line."\n");
+        @fputs($this->socket, ($bare ? '' : "\x02").$line."\n");
     }
 
     protected function read($bare = false)
     {
         $delim = $bare ? "\n" : "\x04";
         $buffer = '';
-        while(($char = fgetc($this->socket)) != $delim)
+        while(($char = @fgetc($this->socket)) != $delim)
         {
             if($char === false) break;
             $buffer .= $char;
