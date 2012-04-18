@@ -56,7 +56,7 @@ else
 	$cfg = load_class('Config');
 	
 	// Connect to the database
-	$connection = @mysql_connect($cfg->get('db_host'), $cfg->get('db_user'), $cfg->get('db_pass'));
+	$connection = @mysql_connect($cfg->get('db_host'), $cfg->get('db_user'), $cfg->get('db_pass')) or die();
 	@mysql_select_db($cfg->get('db_name'), $connection);
 	
 	// Prepare our output header

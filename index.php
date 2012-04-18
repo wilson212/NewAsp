@@ -10,9 +10,10 @@
 |
 | I would like to take a moment and Thank all of those involved
 | in the creation if BF2statistics. It is an amazing system in
-| which I, myself have enjoyed so many hours on. This admin Util
-| was written by me mostly, But i take no credit for creating
-| the Original ASP.
+| which I, myself have enjoyed so many hours on. The core of This 
+| admin Util was written by myself, But alot of code was borrowed 
+| from the original ASP... I take no credit for creating the 
+| Original bf2statistics ASP.
 |
 */
 

@@ -60,6 +60,14 @@ if (!is_numeric($listtype))
 } 
 else 
 {
+	// Import configuration
+	$cfg = load_class('Config');
+
+	// Establish Database connection
+	$connection = @mysql_connect($cfg->get('db_host'), $cfg->get('db_user'), $cfg->get('db_pass')) or die();
+	@mysql_select_db($cfg->get('db_name'), $connection);
+	
+	// Build our criteria based on $_GET['type']
 	$where = "";
 	switch ($listtype) 
 	{
@@ -71,7 +79,7 @@ else
 			if ($_GET['clantag']) 
 			{
 				$paramLen = strlen($_GET['clantag']);
-				$where .= " AND `clantag` = '" . $_GET['clantag'] . "'  AND `permban` = 0";
+				$where .= " AND `clantag` = '" . quote_smart($_GET['clantag']) . "'  AND `permban` = 0";
 			}
 			break;
 		case 2:		#Greylist
@@ -107,13 +115,6 @@ else
 			}
 			break;
 	}
-
-	// Import configuration
-	$cfg = load_class('Config');
-
-	// Establish Database connection
-	$connection = @mysql_connect($cfg->get('db_host'), $cfg->get('db_user'), $cfg->get('db_pass'));
-	@mysql_select_db($cfg->get('db_name'), $connection);
 
 	// Prepare output header
 	$out = "O\n" .

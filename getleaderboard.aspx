@@ -56,7 +56,7 @@ else
 	$cfg = load_class('Config');
 	
 	// Establish a database connection
-	$connection = @mysql_connect($cfg->get('db_host'), $cfg->get('db_user'), $cfg->get('db_pass'));
+	$connection = @mysql_connect($cfg->get('db_host'), $cfg->get('db_user'), $cfg->get('db_pass')) or die();
 	@mysql_select_db($cfg->get('db_name'), $connection);
 
 	// Prepare our output header
@@ -66,8 +66,8 @@ else
 	$num = strlen(preg_replace('/[\t\n]/','',$head));
 	print $head;
 
-	$id  = (isset($_GET['id'])) ? $_GET['id'] : false;
-	$pid = (isset($_GET['pid'])) ? $_GET['pid'] : false;
+	$id  = (isset($_GET['id'])) ? mysql_real_escape_string($_GET['id']) : false;
+	$pid = (isset($_GET['pid'])) ? mysql_real_escape_string($_GET['pid']) : false;
 
 	// Optional parameters
 	$after  = (isset($_GET['after'])) ? $_GET['after'] : 0;

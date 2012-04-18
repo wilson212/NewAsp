@@ -62,6 +62,9 @@ class Serverinfo
             {
                 $status = '<font color="green">Online</font>';
             }
+            
+            // Close the connection
+            $Rcon->close();
             $data[$server['id']] = $status;
         }
         

@@ -219,12 +219,16 @@ class Manageplayers
 				}
 			}
 			
+			// Fix name and clantag for special characters
+			$row[1] = htmlspecialchars($row[1]);
+			$row[2] = htmlspecialchars($row[2]);
+			
 			// Add manage button and country flag... also fancy little permban yes/no
 			$C = ($row[5] == '') ? 'US' : strtoupper($row[5]);
 			$flag = $C .'.png';
 			$row[5] = '<img src="frontend/images/flags/'. $flag .'" height="16" width="24" alt="'. $C .'">';
 			$row[6] = ($row[6] == 1) ? '<font color="red">Yes</font>' : '<font color="green">No</font>';
-			$row[] = "<a id='edit' name='". $aRow[0] ."|". $aRow[1]."' href='#'>Manage</a>";
+			$row[] = "<a id='edit' name='". $row[0] ."|". $row[1]."' href='#'>Manage</a>";
 			$output['aaData'][] = $row;
 		}
 		

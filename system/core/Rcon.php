@@ -1,9 +1,14 @@
 <?php
-/*
+/* 
+| --------------------------------------------------------------
+| BF2 Statistics Admin Util
+| --------------------------------------------------------------
+| Author:       Steven Wilson 
+| Copyright:    Copyright (c) 2012
+| License:      GNU GPL v3
 | ---------------------------------------------------------------
 | Class Rcon
 | ---------------------------------------------------------------
-|
 | Author: jamie.rfurness@gmail.com
 | Modified / Improved By: Wilson212
 | Source: http://code.google.com/p/bf2php/
@@ -26,11 +31,19 @@ class Rcon
         // Read the bf2 rcon version info
         $this->version = $this->read(true);
         
+        // If we dont have a password, dont login!
+        if($password != null)
+        {
+            $this->close();
+            return -1;
+        }
+
         // Login... If password is incorect, return -1
         $result = $this->query('login '. md5(substr($this->read(true), 17) . $password));
         if($result != 'Authentication successful, rcon ready.')
         {
             $this->message = $result;
+            $this->close();
             return -1;
         }
         
@@ -43,7 +56,7 @@ class Rcon
         return $this->version;
     }
 
-    protected function query($line, $bare = false) 
+    protected function query($line, $bare = false)
     {
         // Make sure the socket is open!
         if(!$this->socket) throw new Exception('Not connected to an Rcon socket');
@@ -59,23 +72,32 @@ class Rcon
         return $result;
     }
 
-    protected function write($line, $bare = false) 
+    protected function write($line, $bare = false)
     {
         fputs($this->socket, ($bare ? '' : "\x02").$line."\n");
     }
 
-    protected function read($bare = false) 
+    protected function read($bare = false)
     {
         $delim = $bare ? "\n" : "\x04";
-        for($buffer = '';($char = fgetc($this->socket)) != $delim;$buffer .= $char);
+        $buffer = '';
+        while(($char = fgetc($this->socket)) != $delim)
+        {
+            if($char === false) break;
+            $buffer .= $char;
+        }
 
         return trim($buffer);
     }
 
-    public function __destruct() 
+    public function __destruct()
     {
-        if ($this->socket)
-            @fclose($this->socket);
+        $this->close();
+    }
+    
+    public function close()
+    {
+        if ($this->socket) @fclose($this->socket);
     }
     
 /*

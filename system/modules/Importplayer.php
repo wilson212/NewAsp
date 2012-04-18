@@ -64,7 +64,7 @@ class Importplayer
 			// Insert information
 			$query = "INSERT INTO player SET
 				id = {$pid},
-				name = '" . $playerinfoData1["nick"] . "',
+				name = '" . quote_smart($playerinfoData1["nick"]) . "',
 				country = 'xx',
 				time = " . $playerinfoData1["time"] . ",
 				rounds = " . $playerinfoData1["mode0"] . ",

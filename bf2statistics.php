@@ -93,7 +93,7 @@
     // Convret snapshot string into an array
     $gooddata = explode('\\', $rawdata);
     $prefix = $gooddata[0];
-    $mapname = strtolower($gooddata[1]);
+    $servername = $gooddata[1];
     
     // Convert all the data into key => value pairs
     $size = count($gooddata);
@@ -111,6 +111,7 @@
     }
 
     // Generate SNAPSHOT Filename
+    $mapname = strtolower($data['mapname']);
     $mapdate = date('Ymd_Hi', (int)$data['mapstart']);
     $stats_filename  = '';
     if ($prefix != '') 
@@ -244,7 +245,7 @@
         /********************************
         * Check for 'Custom Map'
         ********************************/
-        if ($data['m'] == 99) 
+        if ($data['mapid'] == 99) 
         {
             // Set Custom Map Bit
             $globals['custommap'] = 1;
@@ -285,16 +286,16 @@
                 ErrorLog(" - New Custom Map ($mapid)...",2);
             }
         } 
-        elseif ($data['m'] >= $cfg->get('game_custom_mapid')) 
+        elseif ($data['mapid'] >= $cfg->get('game_custom_mapid')) 
         {
             // Set Custom Map Bit
             $globals['custommap'] = 1;
-            $mapid = $data['m'];
+            $mapid = $data['mapid'];
             ErrorLog(" - Predefined Custom Map ($mapid)...",3);
         } 
         else 
         {
-            $mapid = $data['m'];
+            $mapid = $data['mapid'];
             ErrorLog(" - Standard Map ($mapid)...",3);
         }
         
@@ -1240,17 +1241,19 @@
         // Note: Code borrowed from release by ArmEagle (armeagle@gmail.com)
         $gamesrv_ip   = $_SERVER['REMOTE_ADDR'];
         ErrorLog("Processing Game Server: {$gamesrv_ip}", 3);
-        $gamesrv_port = (isset($data['gameport'])) ? $data['gameport'] : 16567;	//Set to Default if no data
-        $gamesrv_qryport = (isset($data['queryport'])) ? $data['queryport'] : 29900;	//Set to Default if no data
-        $query = "SELECT * FROM servers WHERE ip = '{$gamesrv_ip}' AND prefix = '{$prefix}'";
+        
+        // Get our server's game port and Queryport
+        $gamesrv_port = (isset($data['gameport'])) ? $data['gameport'] : 16567;
+        $gamesrv_qryport = (isset($data['queryport'])) ? $data['queryport'] : 29900;
+        $query = "SELECT * FROM servers WHERE ip = '{$gamesrv_ip}' AND prefix = '". quote_smart($prefix) ."'";
         $result = $DB->query( $query )->result();
         checkSQLResult ($result, $query);
         if (!mysql_num_rows($result)) 
         {
             $query = "INSERT INTO servers SET ".
                 "ip = '{$gamesrv_ip}', ".
-                "name = '{$prefix}', ".
-                "prefix = '{$prefix}', ".
+                "name = '". quote_smart($servername) ."', ".
+                "prefix = '". quote_smart($prefix) ."', ".
                 "port = '{$gamesrv_port}', ".
                 "queryport = {$gamesrv_qryport}, ".
                 "lastupdate = NOW() ";
@@ -1262,10 +1265,11 @@
         {
             $row = mysql_fetch_assoc($result);
             $query = "UPDATE servers SET ".
+                "name = '". quote_smart($servername) ."', ".
                 "port = '{$gamesrv_port}', ".
                 "queryport = {$gamesrv_qryport}, ".
                 "lastupdate = NOW() ".
-                "WHERE ip = '{$gamesrv_ip}' AND prefix = '{$prefix}' ";
+                "WHERE ip = '{$gamesrv_ip}' AND prefix = '". quote_smart($prefix) ."' ";
             $result = $DB->query( $query )->result();
             checkSQLResult ($result, $query);
             $serverid = $row['id'];

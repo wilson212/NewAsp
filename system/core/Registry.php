@@ -1,15 +1,11 @@
 <?php
 /* 
 | --------------------------------------------------------------
-| 
-| Frostbite Framework
-|
+| BF2 Statistics Admin Util
 | --------------------------------------------------------------
-|
-| Author:       Steven Wilson
-| Copyright:    Copyright (c) 2011, Steven Wilson
+| Author:       Steven Wilson 
+| Copyright:    Copyright (c) 2012
 | License:      GNU GPL v3
-|
 | ---------------------------------------------------------------
 | Class: Registry()
 | ---------------------------------------------------------------
