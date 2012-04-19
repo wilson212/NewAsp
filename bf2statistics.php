@@ -103,7 +103,7 @@
     }
 
     // Check for Complete Snapshot data
-    if ($data['EOF'] != 1)
+    if (!isset($data['EOF']) || $data['EOF'] != 1)
     {
         $errmsg = "SNAPSHOT Data NOT complete!";
         ErrorLog($errmsg, 1);
