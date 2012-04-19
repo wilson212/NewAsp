@@ -1431,55 +1431,61 @@
             $awdresult = $DB->query( $query )->result();
             checkSQLResult ($awdresult, $query);
             $awardrows = $DB->num_rows();
+            
+            // Fetch current award only if there is a row to fetch
+            if($awardrows > 0) $rowawd = $DB->fetch_row();
 
-            // Recieveing ribbon awards multiple times is NOT supported
-            if (!$awardrows || $award[2] == 2) 
+            // Check Criteria
+            $chkcriteria = false;
+            foreach ($award[3] as $criteria) 
             {
-                // Check Criteria
-                $chkcriteria = false;
-                foreach ($award[3] as $criteria) 
+                // If award is medal, We Can receive multiple times
+                if ($award[2] == 2) 
                 {
-                    // If award is medal, We Can receive multiple times
-                    if ($award[2] == 2) 
+                    // Can receive multiple times
+                    if ($awardrows > 0) 
                     {
-                        // Can receive multiple times
-                        if ($awardrows > 0) 
-                        {
-                            $rowawd = $DB->fetch_row();
-                            $where = str_replace($awards_substr, $rowawd['level'] + 1, $criteria[3]);
-                        } 
-                        else 
-                        {
-                            $where = str_replace($awards_substr, 1, $criteria[3]);
-                        }
+                        $where = str_replace($awards_substr, $rowawd['level'] + 1, $criteria[3]);
+                    } 
+                    else
+                    {
+                        $where = str_replace($awards_substr, 1, $criteria[3]);
+                    }
+                } 
+                else 
+                {
+                    $where = $criteria[3];
+                }
+                
+                // Check to see if the player meets the requirments for the award
+                $query = "SELECT {$criteria[1]} AS checkval FROM {$criteria[0]} WHERE (id = " . $data["pID_$x"]. ") AND ({$where}) ORDER BY id;";
+                $chkresult = $DB->query( $query )->result();
+                checkSQLResult ($chkresult, $query);
+                if ($DB->num_rows() > 0) 
+                {
+                    $rowchk = $DB->fetch_row();
+                    if ($rowchk['checkval'] >= $criteria[2]) 
+                    {
+                        $chkcriteria = true;
                     } 
                     else 
                     {
-                        $where = $criteria[3];
-                    }
-                    
-                    // Check to see if the player meets the requirments for the award
-                    $query = "SELECT {$criteria[1]} AS checkval FROM {$criteria[0]} WHERE (id = " . $data["pID_$x"]. ") AND ({$where}) ORDER BY id;";
-                    $chkresult = $DB->query( $query )->result();
-                    checkSQLResult ($chkresult, $query);
-                    if ($DB->num_rows() > 0) 
-                    {
-                        $rowchk = $DB->fetch_row();
-                        if ($rowchk['checkval'] >= $criteria[2]) 
-                        {
-                            $chkcriteria = true;
-                        } 
-                        else 
-                        {
-                            $chkcriteria = false;
-                            break;
-                        }
+                        $chkcriteria = false;
+                        break;
                     }
                 }
-                
-                // If the player meets the reqs... award the award
-                if ($chkcriteria) 
-                {	
+            }
+            
+            // If the player meets the reqs... award the award
+            if ($chkcriteria) 
+            {
+                // Recieveing ribbon awards multiple times is NOT supported
+                if($award[2] == 1 && $awardrows > 0)
+                {
+                    continue;
+                }
+                else
+                {
                     $data[$award[1] . "_$x"] = 1;
                 }
             }

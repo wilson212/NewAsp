@@ -126,26 +126,30 @@ class Database
 |
 */
 
-	public function fetch_array()
+	public function fetch_array($result = null)
 	{
+		// Check for a given result
+		if($result == null) $result = $this->sql;
+
 		// Make sure we have someting to return
-		if($this->result() == false || mysql_num_rows($this->sql) == 0)
+		if($result == false || mysql_num_rows($result) == 0)
 		{
 			return FALSE;
 		}
 		else
 		{
 			$i = 0;
-			while($row = mysql_fetch_array($this->sql))
+			$return = array();
+			while($row = mysql_fetch_array($result))
 			{
 				foreach($row as $colname => $value)
 				{
-					$result[$i][$colname] = $value;
+					$return[$i][$colname] = $value;
 				}
 				++$i;
 			}
 			
-			return $result;
+			return $return;
 		}
 	}
 
@@ -157,16 +161,19 @@ class Database
 | Returns a single row of data from the database
 |
 */
-	public function fetch_row()
+	public function fetch_row($result = null)
 	{
+		// Check for a given result
+		if($result == null) $result = $this->sql;
+		
 		// Make sure we have someting to return
-		if($this->result() == false || mysql_num_rows($this->sql) == 0)
+		if($result == false || mysql_num_rows($result) == 0)
 		{
 			return FALSE;
 		}
 		else
 		{
-			return mysql_fetch_array($this->sql);
+			return mysql_fetch_array($result);
 		}
 	}
 	
@@ -178,16 +185,19 @@ class Database
 | Returns a single column's value as a string / Int
 |
 */
-	public function fetch_column()
+	public function fetch_column($result = null)
 	{
+		// Check for a given result
+		if($result == null) $result = $this->sql;
+		
 		// Make sure we have someting to return
-		if($this->result() == false || mysql_num_rows($this->sql) == 0)
+		if($result == false || mysql_num_rows($result) == 0)
 		{
 			return FALSE;
 		}
 		else
 		{
-			return mysql_result($this->sql,0);
+			return mysql_result($result, 0);
 		}
 	}
 	
@@ -200,10 +210,13 @@ class Database
 | @Return: (int)
 |
 */ 
-	public function num_rows()
+	public function num_rows($result = null)
 	{
-		if($this->result() == false) return 0;
-		return mysql_num_rows($this->sql);
+		// Check for a given result
+		if($result == null) $result = $this->sql;
+		
+		if($result == false) return 0;
+		return mysql_num_rows($result);
 	}
     
 /*
@@ -215,9 +228,11 @@ class Database
 | @Return: (int)
 |
 */
-    public function insert_id()
+    public function insert_id($result = null)
     {
-        return mysql_insert_id($this->sql);
+		// Check for a given result
+		if($result == null) $result = $this->sql;
+        return mysql_insert_id($result);
     }
 
 /*

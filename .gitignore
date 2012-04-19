@@ -1,0 +1,4 @@
+system/config/*.bak
+system/database/backups/*
+system/snapshots/temp/*.txt
+system/snapshots/processed/*.txt

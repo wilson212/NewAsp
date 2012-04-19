@@ -1,21 +1,21 @@
 <?php
 
 /*
-	Copyright (C) 2006-2012  BF2Statistics
+    Copyright (C) 2006-2012  BF2Statistics
 
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 if(!function_exists('buildAwardsData'))
@@ -70,7 +70,7 @@ if(!function_exists('buildAwardsData'))
         $awardsdata[] = array(3190605, "Fsr", 1);
         
         // EF ribbon and AF ribbon added by Wolverine
-        $awardsdata[] = array(3270519, "Esr", 1);
+        // $awardsdata[] = array(3270519, "Esr", 1); // Removed by EA
         $awardsdata[] = array(3271401, "Nas", 1);
         
         #medals
@@ -196,13 +196,13 @@ if(!function_exists('buildBackendAwardsData'))
                             )
                         );
         
-        #European Union Service ribbon
-        $awardsdata[] = array(3270519, "Eum", 1,
+        #European Union Service ribbon ( Removed by EA... Not obtainable! )
+        /* $awardsdata[] = array(3270519, "Eum", 1,
                             array(
                                 array('maps', 'count(*)', 3, 'mapid IN (200,201,202) AND `time` >= 1'),
                                 array('maps', 'sum(`time`)', 90000, 'mapid IN (200,201,202) AND `time` >= 1')
                             )
-                        );
+                        ); */
         
         #North American Service Ribbon
         $awardsdata[] = array(3271401, "Nas", 1,
