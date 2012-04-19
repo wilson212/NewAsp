@@ -882,7 +882,7 @@ medal_data = (
 					has_medal ('1031115_2'),
 					has_medal ('1031121_2'),
 					has_medal ('1031105_2'),
-					has_medal ('1031113_2')\
+					has_medal ('1031113_2')
 				)
 			),
 

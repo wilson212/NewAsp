@@ -60,11 +60,13 @@ snapshot_prefix = 'BF2'
 # ------------------------------------------------------------------------------
 # Medals Processing
 # ------------------------------------------------------------------------------
-medals_custom_data = ''		# Suffix for your custom medals file(s)
+# Suffix for your custom medals file(s). 
+# Example "custom" = medal_data_custom.py AND medal_data_xpack_custom.py (for SF).
+medals_custom_data = ''
 
 # Removing medal requirements can mess up the keystring, Use this to force the correct string
-# Recomended to enable if some medal requirement are removed from the medal_data.py
-medals_force_keystring = 0		
+# Recomended to enable if some medal requirements are removed from the medal_data.py
+medals_force_keystring = 0
 
 # ------------------------------------------------------------------------------
 # Player Manager

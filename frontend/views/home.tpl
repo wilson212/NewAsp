@@ -6,7 +6,7 @@
 		<div class="mws-panel-content">
 <pre>
 ====================================================================================
-BF2Statistics Unofficial <?php echo CODE_VER; ?> Release - Private Statistics System for Battlefield 2
+BF2Statistics Official <?php echo CODE_VER; ?> Release - Private Statistics System for Battlefield 2
 ====================================================================================
 
 Released by:  		Wilson212 (based on the work of The Shadow, MrNiceGuy, Chump, nylOn, Wolverine, and others)
