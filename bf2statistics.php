@@ -586,8 +586,10 @@
                 // Insert Player History (for Rising Star Leaderboard) 
                 $query = "INSERT INTO player_history SET
                     id = " . $data["pID_$x"] . ",
+                    gameport = " . $data["gameport"] . ",
                     timestamp = " . time() . ",
                     time = " . $data["ctime_$x"] . ",
+                    army = " . $data["a_$x"] . ",
                     score = " . $data["rs_$x"] . ",
                     cmdscore = " . $data["cs_$x"] . ",
                     skillscore = (" . $data["kk0_$x"] . " + " . $data["kk1_$x"] . " + " . $data["kk2_$x"] . " + " . $data["kk3_$x"] . " + " . $data["kk4_$x"] . " + " . $data["kk5_$x"] . " + " . $data["kk6_$x"] . ") * ". Killscore .",
@@ -1328,6 +1330,7 @@
         ErrorLog("Processing Round History Data",3);
         $query = "INSERT INTO round_history SET
             `timestamp` = {$data['mapstart']},
+            `gameport` = {$data[gameport]},
             `mapid` = {$mapid},
             `time` = {$globals['roundtime']},
             `team1` = {$data['ra1']},
