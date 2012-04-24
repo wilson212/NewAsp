@@ -47,17 +47,17 @@ $(document).ready(function() {
             url: '?task=importlogs',
             data: { action : 'import', type: mode },
             dataType: "json",
-            timeout: 30000, // in milliseconds
+            timeout: 300000, // in milliseconds
             success: function(result) 
             {
 				// Create our message!
 				if(result.success == true)
 				{
-					var message = '<div class="alert success">All System Snapshots Processed! Total logs imported: ' + result.message + '</div><br />';
+					var message = '<div class="alert '+ result.type +'">'+ result.message +'</div><br />';
 				}
 				else
 				{
-					var message = '<div class="alert error">Importing Logs Failed!' + result.message + '</div><br />';
+					var message = '<div class="alert '+ result.type +'">Importing Logs Failed!' + result.message + '</div><br />';
 				}
 				// Create our button
 				var button = '<br /><br /><center><input id="refresh" type="button" class="mws-button blue" value="Refresh Window" onClick="window.location.reload();"/></center>';

@@ -61,10 +61,10 @@ class Importplayer
 		}
 		else
 		{            	                      
-			// Insert information
+			// Insert information. Add a space infront the name to signify an online account!
 			$query = "INSERT INTO player SET
 				id = {$pid},
-				name = '" . quote_smart($playerinfoData1["nick"]) . "',
+				name = ' " . quote_smart( trim($playerinfoData1["nick"]) ) . "',
 				country = 'xx',
 				time = " . $playerinfoData1["time"] . ",
 				rounds = " . $playerinfoData1["mode0"] . ",

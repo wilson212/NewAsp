@@ -66,16 +66,16 @@ $(document).ready(function() {
 			name: "Euro Force", 
 			logo: "bf2eflogo.png",
 			baseColor: "35353a", 
-			highlightColor: "2761bc", 
-			textColor: "2761bc", 
+			highlightColor: "348de7", 
+			textColor: "348de7", 
 			textGlowColor: {r: 17, g: 17, b: 17, a: 0.5}
 		},
 		AF: {
 			name: "Armored Fury",
 			logo: "bf2aflogo.png",			
 			baseColor: "35353a", 
-			highlightColor: "e78933", 
-			textColor: "e78933", 
+			highlightColor: "e79d3a", 
+			textColor: "e79d3a", 
 			textGlowColor: {r: 17, g: 17, b: 17, a: 0.5}
 		}
 	};

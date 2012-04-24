@@ -69,7 +69,7 @@ class Database
     public function query($query, $supress = false)
     {
         // Add query to the last query and benchmark
-        $bench['query'] = $query;
+        // $bench['query'] = $query;
 
         // Time, and process our query
         $start = microtime(true);
@@ -85,14 +85,14 @@ class Database
         }
         
         // Get our benchmark time
-        $bench['time'] = round(microtime(true) - $start, 5);
+        $bench = round(microtime(true) - $start, 5);
 
         // Add the query to the list of queries
-        $this->queries[] = $bench;
+        //$this->queries[] = $bench;
 
         // Up our statistic count
         ++$this->statistics['total_queries'];
-        $this->statistics['total_time'] = ($this->statistics['total_time'] + $bench['time']);
+        $this->statistics['total_time'] = ($this->statistics['total_time'] + $bench);
         return $this;
     }
     
@@ -306,21 +306,6 @@ class Database
     public function statistics()
     {
         return $this->statistics;
-    }
-    
-/*
-| ---------------------------------------------------------------
-| Function: get_all_queries()
-| ---------------------------------------------------------------
-|
-| Returns an array of all queries thus far and each quesries
-|   statistical data such as query time.
-| @Return: (Array)
-|
-*/ 
-    public function get_all_queries()
-    {
-        return $this->queries;
     }
     
 

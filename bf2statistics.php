@@ -1378,17 +1378,24 @@
         }
         else
         {
-            $errmsg = "SNAPSHOT Log File Does Exists! Unable to move to storage path ({$fn_src})";
-            ErrorLog($errmsg, 2);
+            if(isset($data['import']) && $data['import'] != 1)
+            {
+                $errmsg = "SNAPSHOT Log File Does Not Exist! Unable to move to storage path ({$fn_src})";
+                ErrorLog($errmsg, 2);
+            }
         }
 
         $time = (microtime(1) - (float)TIME_START);
-        $errmsg = "SNAPSHOT Data File Processed: {$stats_filename} in ". round($time, 3) ." seconds, using ". get_database_stats(1) ." database queries";
+        $errmsg = "SNAPSHOT Data File Processed: {$stats_filename} in ". round($time, 3) ." seconds, using ". get_database_stats(1) ." database queries (". get_database_stats(2) .")";
         ErrorLog($errmsg, -1);
+        
+        // If this is an import, tell the browser we recieved the snapshot OK
+        if(isset($data['import']) && $data['import'] == 1)
+        {
+            // Out to the browser now! 
+            echo "$\tOK\t$";
+        }
     }
-
-    // Close database connection
-    @mysql_close($connection);
 
 
 
