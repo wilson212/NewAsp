@@ -26,7 +26,7 @@
                         <td><div id="status_{id}" style="text-align: center;"><img src="frontend/images/core/alerts/loading.gif"></div></td>
                         <td>
                             <center>
-                                <a href="?task=serverinfo&id={id}">Live</a>&nbsp; - &nbsp;<a id="view" name="{id}" href="#">Configure Rcon</a>
+                                <a href="?task=serverinfo&id={id}">View Server</a>&nbsp; - &nbsp;<a id="view" name="{id}" href="#">Set Rcon Data</a>
                             </center>
                         </td>
                     </tr>
@@ -44,7 +44,7 @@
                     
                     <div class="mws-form-inline">
                         <div class="mws-form-row">
-                            <label>Rcon Port (<font color="red">Required</font>):</label>
+                            <label>Rcon Port:</label>
                             <div class="mws-form-item large">
                                 <input id="rcon-port" type="text" name="port" class="mws-textinput required" />
                             </div>

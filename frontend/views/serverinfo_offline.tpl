@@ -6,7 +6,7 @@
 		<div class="content">
 			<div class="mws-panel-content">
 				<p>
-					<div class="alert error">Server "{name}" is Currently Offline.</div>
+					<div class="alert error">Server "{name}" is Currently Offline. Please come back when the server is online again.</div>
 				</p>
 			</div>
 		</div>
