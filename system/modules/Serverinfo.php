@@ -229,6 +229,7 @@ class Serverinfo
         $tags = explode("\\",$players);
 
         $index = 0;
+		$player = array();
         $currentProp = "";
         $newIndexFlag = false;
         $propCount = 0;

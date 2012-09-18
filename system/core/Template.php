@@ -345,7 +345,7 @@ class Template
         else
         {	
             // Check if variable exists in $array
-            if(isset($array[$key]))
+            if(array_key_exists($key, $array))
             {
                 return $array[$key];
             }

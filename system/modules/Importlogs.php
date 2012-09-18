@@ -100,7 +100,7 @@ class Importlogs
                 $data = "&action=import&fprocess=1&type=". urlencode($_POST['type']); 
                 
                 // Post the headers and snapshot data
-                fwrite($fh, "POST /ASP/index.php?task=importlogs&test HTTP/1.1\r\n");
+                fwrite($fh, "POST /ASP/index.php?task=importlogs HTTP/1.1\r\n");
                 fwrite($fh, "HOST: ". $_SERVER['HTTP_HOST'] ."\r\n");
                 fwrite($fh, "Cookie: " . session_name() . "=" . session_id() . "; path=/\r\n");
                 fwrite($fh, "Content-Type: application/x-www-form-urlencoded\r\n");

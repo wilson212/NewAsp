@@ -92,8 +92,8 @@ else
 			$rank = $row['rank'];
 			
 			// Determine Earned Unlocks due to Rank
-			$score = $row['score'];
-			$rankunlocks = getRankUnlocks($score);
+			// $score = $row['score'];
+			$rankunlocks = getRankUnlocks($rank);
 			
 			// Determine Bonus Unlocks due to Kit Bdages
 			$bonusunlocks = getBonusUnlocks($pid, $rank);
@@ -192,16 +192,16 @@ function checkUnlock($want, $need)
 	return $return;
 }
 
-function getRankUnlocks($score) 
+function getRankUnlocks($rank) 
 {
 	// Determine Earned Unlocks due to Rank
-	if ($score >= 50000) {$rankunlocks = 7;}
-	elseif ($score >= 20000) {$rankunlocks = 6;}
-	elseif ($score >= 8000) {$rankunlocks = 5;}
-	elseif ($score >= 5000) {$rankunlocks = 4;}
-	elseif ($score >= 2500) {$rankunlocks = 3;}
-	elseif ($score >= 800) {$rankunlocks = 2;}
-	elseif ($score >= 500) {$rankunlocks = 1;}
+	if ($rank >= 9) {$rankunlocks = 7;}          // Unlock7 => Master Gunnery Sergeant
+	elseif ($rank >= 7) {$rankunlocks = 6;}      // Unlock6 => Master Sergeant
+	elseif ($rank >= 6) {$rankunlocks = 5;}      // Unlock5 => Gunnery Sergeant
+	elseif ($rank >= 5) {$rankunlocks = 4;}      // Unlock4 => Staff Sergeant
+	elseif ($rank >= 4) {$rankunlocks = 3;}      // Unlock3 => Sergeant
+	elseif ($rank >= 3) {$rankunlocks = 2;}      // Unlock2 => Corporal
+	elseif ($rank >= 2) {$rankunlocks = 1;}      // Unlock1 => Lance Corporal
 	else {$rankunlocks = 0;}
 	return $rankunlocks;
 }
