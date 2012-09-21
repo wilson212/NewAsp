@@ -255,10 +255,10 @@ class Player
                 // Log
                 $this->log(
                     " -> Rank Correction (".$row['id']."):". PHP_EOL
-                    ."\tScore: ". $score . PHP_EOL
-                    ."\tExpected: ". $expRank . PHP_EOL
-                    ."\tFound: ".$rank . PHP_EOL
-                    ."\tNew Rank: ".$setRank
+                    ."\tPlayer Score: ". $score . PHP_EOL
+                    ."\tExpected Rank: ". $expRank . PHP_EOL
+                    ."\tFound Rank: ". $rank . PHP_EOL
+                    ."\tNew Rank: ". $setRank
                 );
                 
                 // Query the update
@@ -352,7 +352,7 @@ class Player
             if ($chkcriteria && $awardrows == 0) 
             {
                 // Insert information
-                $this->log("Award Missing ({$award[0]}) for Player ({$pid}). Adding award to Players Awards...");
+                $this->log(" -> Award Missing ({$award[0]}) for Player ({$pid}). Adding award to Players Awards...");
                 $query = "INSERT INTO awards SET
                     id = " . $pid . ",
                     awd = {$award[0]},
@@ -366,7 +366,7 @@ class Player
             elseif (!$chkcriteria && $awardrows > 0) 
             {
                 // Delete information
-                $this->log("Player ({$pid}) Has Award ({$award[0]}), but does not meet requirements! Removing award...");
+                $this->log(" -> Player ({$pid}) Has Award ({$award[0]}), but does not meet requirements! Removing award...");
                 $query = "DELETE FROM awards WHERE (id = " . $pid . " AND awd = {$award[0]});";
                 $this->DB->query( $query );
             }
@@ -375,7 +375,7 @@ class Player
             elseif($award[2] == 2 &&  $Medal_Next == true && $chkcriteria == true)
             {
                 // Update Award
-                $this->log("Award Missing ({$award[0]}) for Player ({$pid}). Adding award to Players Awards...");
+                $this->log(" -> Award Missing ({$award[0]}) for Player ({$pid}). Adding award to Players Awards...");
                 $query = "UPDATE awards SET level = ". ($rowawd['level'] + 1) .", earned = " . time() . " WHERE id = " . $pid . " AND awd = {$award[0]}";
                 $this->DB->query( $query ); 
             }
