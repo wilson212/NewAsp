@@ -309,6 +309,8 @@ $sqlschema[] = array('Player History Table',
 	`kills` int(10) unsigned NOT NULL default '0',
 	`deaths` int(10) unsigned NOT NULL default '0',
 	`rank` tinyint(2) unsigned NOT NULL default '0',
+	`army` tinyint(2) unsigned NOT NULL default '0',
+	`gameport` smallint(5) NOT NULL default '16567',
   PRIMARY KEY  (`id`, `timestamp`),
   KEY (`score`)
 );");
@@ -331,6 +333,7 @@ $sqlschema[] = array('Round History Table',
 		`pids1_end` int(10) unsigned NOT NULL default '0',
 		`pids2` int(10) unsigned NOT NULL default '0',
 		`pids2_end` int(10) unsigned NOT NULL default '0',
+		`gameport` smallint(5) NOT NULL default '16567',
 		PRIMARY KEY  (`id`),
 		KEY `timestamp` (`timestamp`),
 		KEY `mapid` (`mapid`)
